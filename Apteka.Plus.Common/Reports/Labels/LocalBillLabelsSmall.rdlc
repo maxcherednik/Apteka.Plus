@@ -1,0 +1,217 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <DataSources>
+    <DataSource Name="DummyDataSource">
+      <rd:DataSourceID>e1739a6a-a14c-4c54-bed3-f27c6f8df00a</rd:DataSourceID>
+      <ConnectionProperties>
+        <DataProvider>SQL</DataProvider>
+        <ConnectString />
+      </ConnectionProperties>
+    </DataSource>
+  </DataSources>
+  <InteractiveHeight>11in</InteractiveHeight>
+  <rd:DrawGrid>true</rd:DrawGrid>
+  <InteractiveWidth>8.5in</InteractiveWidth>
+  <rd:GridSpacing>0.07cm</rd:GridSpacing>
+  <rd:SnapToGrid>true</rd:SnapToGrid>
+  <RightMargin>0.5cm</RightMargin>
+  <LeftMargin>0.5cm</LeftMargin>
+  <BottomMargin>0.5cm</BottomMargin>
+  <rd:ReportID>c1f373ae-a2dd-4705-9db1-cb4a4968ecb7</rd:ReportID>
+  <PageWidth>21cm</PageWidth>
+  <DataSets>
+    <DataSet Name="Apteka_Plus_Logic_BLL_Entities_LocalBillsRowEx">
+      <Fields>
+        <Field Name="Amount">
+          <DataField>Amount</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Country">
+          <DataField>Country</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="CurrentPrice">
+          <DataField>CurrentPrice</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="DateAccepted">
+          <DataField>DateAccepted</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="DateDisposal">
+          <DataField>DateDisposal</DataField>
+          <rd:TypeName>System.Nullable`1[System.DateTime]</rd:TypeName>
+        </Field>
+        <Field Name="DateSupply">
+          <DataField>DateSupply</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="DaysDisposal">
+          <DataField>DaysDisposal</DataField>
+          <rd:TypeName>System.Nullable`1[System.Int32]</rd:TypeName>
+        </Field>
+        <Field Name="ID">
+          <DataField>ID</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="IsDelayed">
+          <DataField>IsDelayed</DataField>
+          <rd:TypeName>System.Boolean</rd:TypeName>
+        </Field>
+        <Field Name="IsPriceUpdated">
+          <DataField>IsPriceUpdated</DataField>
+          <rd:TypeName>System.Boolean</rd:TypeName>
+        </Field>
+        <Field Name="LocalBillNumber">
+          <DataField>LocalBillNumber</DataField>
+          <rd:TypeName>System.Int64</rd:TypeName>
+        </Field>
+        <Field Name="MainStoreRow">
+          <DataField>MainStoreRow</DataField>
+          <rd:TypeName>Apteka.Plus.Logic.BLL.Entities.MainStoreRow</rd:TypeName>
+        </Field>
+        <Field Name="MyStore">
+          <DataField>MyStore</DataField>
+          <rd:TypeName>Apteka.Plus.Logic.BLL.Entities.MyStore</rd:TypeName>
+        </Field>
+        <Field Name="PackageName">
+          <DataField>PackageName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="ProductName">
+          <DataField>ProductName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="StartAmount">
+          <DataField>StartAmount</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="StartPrice">
+          <DataField>StartPrice</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="SupplierName">
+          <DataField>SupplierName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="SupplierPrice">
+          <DataField>SupplierPrice</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DummyDataSource</DataSourceName>
+        <CommandText />
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <rd:DataSetInfo>
+        <rd:DataSetName>Apteka.Plus.Logic.BLL.Entities</rd:DataSetName>
+        <rd:TableName>LocalBillsRowEx</rd:TableName>
+        <rd:ObjectDataSourceType>Apteka.Plus.Logic.BLL.Entities.LocalBillsRowEx, Apteka.Plus.Logic, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</rd:ObjectDataSourceType>
+      </rd:DataSetInfo>
+    </DataSet>
+  </DataSets>
+  <Code />
+  <Width>3.1cm</Width>
+  <Body>
+    <ColumnSpacing>0cm</ColumnSpacing>
+    <ReportItems>
+      <List Name="list1">
+        <DataSetName>Apteka_Plus_Logic_BLL_Entities_LocalBillsRowEx</DataSetName>
+        <KeepTogether>true</KeepTogether>
+        <ReportItems>
+          <Rectangle Name="rectangle2">
+            <ReportItems>
+              <Rectangle Name="rectangle1">
+                <Left>0.05cm</Left>
+                <ReportItems>
+                  <Textbox Name="textbox2">
+                    <Top>1.96cm</Top>
+                    <Width>2.87cm</Width>
+                    <Style>
+                      <FontSize>6pt</FontSize>
+                      <TextAlign>Right</TextAlign>
+                    </Style>
+                    <ZIndex>4</ZIndex>
+                    <CanGrow>true</CanGrow>
+                    <Left>0.07cm</Left>
+                    <Height>0.165cm</Height>
+                    <Value>=Fields!Country.Value</Value>
+                  </Textbox>
+                  <Textbox Name="textbox1">
+                    <Top>1.16026cm</Top>
+                    <Style>
+                      <FontSize>12pt</FontSize>
+                      <FontWeight>700</FontWeight>
+                      <TextAlign>Center</TextAlign>
+                    </Style>
+                    <ZIndex>3</ZIndex>
+                    <CanGrow>true</CanGrow>
+                    <Height>0.49cm</Height>
+                    <Value>=FormatNumber(Fields!StartPrice.Value,2)</Value>
+                  </Textbox>
+                  <Textbox Name="textbox4">
+                    <Top>1.7528cm</Top>
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                      <Format>=FormatDateTime(Fields!DateSupply.Value, DateFormat.ShortDate)</Format>
+                      <TextAlign>Left</TextAlign>
+                      <PaddingLeft>2pt</PaddingLeft>
+                      <PaddingRight>2pt</PaddingRight>
+                    </Style>
+                    <ZIndex>2</ZIndex>
+                    <CanGrow>true</CanGrow>
+                    <Height>0.35cm</Height>
+                    <Value>=Fields!DateSupply.Value</Value>
+                  </Textbox>
+                  <Textbox Name="textbox6">
+                    <rd:DefaultName>textbox6</rd:DefaultName>
+                    <Top>0.31608cm</Top>
+                    <Style>
+                      <FontSize>8pt</FontSize>
+                      <PaddingLeft>2pt</PaddingLeft>
+                      <PaddingRight>2pt</PaddingRight>
+                    </Style>
+                    <ZIndex>1</ZIndex>
+                    <CanGrow>true</CanGrow>
+                    <Height>0.77746cm</Height>
+                    <Value>=Fields!ProductName.Value &amp; " " &amp; Fields!PackageName.Value</Value>
+                  </Textbox>
+                  <Textbox Name="textbox7">
+                    <Style>
+                      <FontSize>6pt</FontSize>
+                      <TextAlign>Center</TextAlign>
+                    </Style>
+                    <CanGrow>true</CanGrow>
+                    <Height>0.25cm</Height>
+                    <Value>ООО "ЧИА-Фарм"</Value>
+                  </Textbox>
+                </ReportItems>
+                <Top>0.05cm</Top>
+                <Width>3cm</Width>
+                <Style>
+                  <BorderStyle>
+                    <Default>Solid</Default>
+                  </BorderStyle>
+                  <BorderWidth>
+                    <Default>2pt</Default>
+                  </BorderWidth>
+                </Style>
+              </Rectangle>
+            </ReportItems>
+            <Style>
+              <BorderStyle>
+                <Default>Dotted</Default>
+              </BorderStyle>
+            </Style>
+          </Rectangle>
+        </ReportItems>
+      </List>
+    </ReportItems>
+    <Height>2.23217cm</Height>
+    <Columns>6</Columns>
+  </Body>
+  <Language>ru-RU</Language>
+  <TopMargin>0.5cm</TopMargin>
+  <PageHeight>29.7cm</PageHeight>
+</Report>

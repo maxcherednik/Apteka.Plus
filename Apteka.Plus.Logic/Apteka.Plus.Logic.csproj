@@ -1,0 +1,169 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{37A7F3FC-0C1C-4ED6-BAA1-882651F4B069}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Apteka.Plus.Logic</RootNamespace>
+    <AssemblyName>Apteka.Plus.Logic</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BLToolkit.2, Version=2.0.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Assemblies\BLToolkit.2.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.85.4.369, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Assemblies\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Assemblies\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.Common, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.ReportViewer.WinForms, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.ServiceModel">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BLL\Collections\FullProductsInfoCollection.cs" />
+    <Compile Include="BLL\Collections\MyStoresCollection.cs" />
+    <Compile Include="BLL\Collections\SuppliersCollection.cs" />
+    <Compile Include="BLL\Session.cs" />
+    <Compile Include="BLL\Entities\Client.cs" />
+    <Compile Include="BLL\Entities\ClientSummaryRow.cs" />
+    <Compile Include="BLL\Entities\DataGridViewColumnSettingsRow.cs" />
+    <Compile Include="BLL\Entities\DefectExceptionRow.cs" />
+    <Compile Include="BLL\Entities\DefectList.cs" />
+    <Compile Include="BLL\Entities\DefectListCriteria.cs" />
+    <Compile Include="BLL\Entities\FinanceCollectionRow.cs" />
+    <Compile Include="BLL\Entities\FinanceRow.cs" />
+    <Compile Include="BLL\Entities\LocalBillsTransferInfoRow.cs" />
+    <Compile Include="BLL\Entities\LocalBillsTransferRow.cs" />
+    <Compile Include="BLL\Entities\MainStoreInsertRow.cs" />
+    <Compile Include="BLL\Entities\PriceChangeRow.cs" />
+    <Compile Include="BLL\Entities\ProductGroup.cs" />
+    <Compile Include="BLL\Entities\ProductGroupInfo.cs" />
+    <Compile Include="BLL\Entities\ProductIntegrationInfo.cs" />
+    <Compile Include="BLL\Entities\Property.cs" />
+    <Compile Include="BLL\Entities\RemoteAction.cs" />
+    <Compile Include="BLL\Entities\SalesReturnHistoryRow.cs" />
+    <Compile Include="BLL\Entities\SmartDefectRow.cs" />
+    <Compile Include="BLL\Entities\Employee.cs" />
+    <Compile Include="BLL\Entities\LocalBillsRowEx.cs" />
+    <Compile Include="BLL\Entities\MainStoreRow.cs" />
+    <Compile Include="BLL\Entities\MyStore.cs" />
+    <Compile Include="BLL\Entities\FullProductInfo.cs" />
+    <Compile Include="BLL\Entities\SalesRow.cs" />
+    <Compile Include="BLL\Entities\Supplier.cs" />
+    <Compile Include="BLL\Entities\SupplierSummary.cs" />
+    <Compile Include="BLL\Entities\SuppliesReturnHistoryRow.cs" />
+    <Compile Include="BLL\Entities\TableInfo.cs" />
+    <Compile Include="BLL\Enums\RemoteActionEnum.cs" />
+    <Compile Include="BLL\Enums\SmartDefectRowStatusEnum.cs" />
+    <Compile Include="BLL\Enums\SuppliesReturnReasonEnum.cs" />
+    <Compile Include="BLL\SateliteDataHelper.cs" />
+    <Compile Include="DAL\Accessors\ClientAccessor.cs" />
+    <Compile Include="DAL\Accessors\ClientsSummaryAccessor.cs" />
+    <Compile Include="DAL\Accessors\LocalBillsAccountingAccessor.cs" />
+    <Compile Include="DAL\Accessors\DataGridViewColumnSettingsAccessor.cs" />
+    <Compile Include="DAL\Accessors\DefectExceptionsAccessor.cs" />
+    <Compile Include="DAL\Accessors\DefectListCriteriaAccessor.cs" />
+    <Compile Include="DAL\Accessors\DefectListsAccessor.cs" />
+    <Compile Include="DAL\Accessors\EmployeesAccessor.cs" />
+    <Compile Include="DAL\Accessors\FinanceAccessor.cs" />
+    <Compile Include="DAL\Accessors\FinanceCollectionAccessor.cs" />
+    <Compile Include="DAL\Accessors\FullProductInfoAccessor.cs" />
+    <Compile Include="DAL\Accessors\LocalBillsAccessor.cs" />
+    <Compile Include="DAL\Accessors\LocalBillsTransfersAccessor.cs" />
+    <Compile Include="DAL\Accessors\MainStoreRowsAccessor.cs" />
+    <Compile Include="DAL\Accessors\MyStoresAccessor.cs" />
+    <Compile Include="DAL\Accessors\PriceChangesAccessor.cs" />
+    <Compile Include="DAL\Accessors\ProductIntegrationInfoAccessor.cs" />
+    <Compile Include="DAL\Accessors\PropertyAccessor.cs" />
+    <Compile Include="DAL\Accessors\RemoteActionAccessor.cs" />
+    <Compile Include="DAL\Accessors\SalesAccessor.cs" />
+    <Compile Include="DAL\Accessors\SalesReturnHistoryAccessor.cs" />
+    <Compile Include="DAL\Accessors\SmartDefectRowsAccessor.cs" />
+    <Compile Include="DAL\Accessors\SuppliersAccessor.cs" />
+    <Compile Include="DAL\Accessors\SuppliesReturnHistoryAccessor.cs" />
+    <Compile Include="DAL\DAL.cs" />
+    <Compile Include="DAL\Accessors\TablesInfoAccessor.cs" />
+    <Compile Include="ISatelite.cs" />
+    <Compile Include="OrderConverter\BLL\PulseOrder.cs" />
+    <Compile Include="OrderConverter\BLL\TopOrder.cs" />
+    <Compile Include="OrderConverter\BLL\IForeignOrderConverter.cs" />
+    <Compile Include="OrderConverter\BLL\LocalOrder.cs" />
+    <Compile Include="OrderConverter\BLL\ProtekOrder.cs" />
+    <Compile Include="OrderConverter\BLL\SIAOrder.cs" />
+    <Compile Include="OrderConverter\DAL\DBFFileReader.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Apteka.Helpers\Apteka.Helpers.csproj">
+      <Project>{09D613E4-8CDF-4239-8D56-21A031523B2D}</Project>
+      <Name>Apteka.Helpers</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,30 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="Apteka.Plus.Satelite.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="MainSplitterDistance" Type="System.Int32" Scope="User">
+      <Value Profile="(Default)">233</Value>
+    </Setting>
+    <Setting Name="CashMemoNumber" Type="System.String" Scope="User">
+      <Value Profile="(Default)">300</Value>
+    </Setting>
+    <Setting Name="CompanyName" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ООО "ЧИА-Фарм" ОГРН 1046870524117</Value>
+    </Setting>
+    <Setting Name="AdditionalInfo" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ИНН/КПП 6827014642/682701001</Value>
+    </Setting>
+    <Setting Name="FontSizeBase" Type="System.String" Scope="User">
+      <Value Profile="(Default)">20</Value>
+    </Setting>
+    <Setting Name="CashRegisterEnabled" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
+    <Setting Name="ConnectionString" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Data Source=.\SQLEXPRESS;Initial Catalog=satelite;User ID=apteka_user;Password=1</Value>
+    </Setting>
+    <Setting Name="SateliteID" Type="System.String" Scope="User">
+      <Value Profile="(Default)">-1</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

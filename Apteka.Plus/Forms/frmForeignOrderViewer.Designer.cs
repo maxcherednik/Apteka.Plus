@@ -50,8 +50,8 @@
             this.producerDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.countryDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.eAN13DataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.localOrderBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.IsLifeImportant = new System.Windows.Forms.DataGridViewCheckBoxColumn();
+            this.localOrderBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvForeignOrder)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.localOrderBindingSource)).BeginInit();
@@ -64,7 +64,7 @@
             this.tsbProcess});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(1613, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(1362, 25);
             this.toolStrip1.TabIndex = 3;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -92,9 +92,9 @@
             this.dgvForeignOrder.AllowUserToDeleteRows = false;
             dataGridViewCellStyle1.BackColor = System.Drawing.Color.AliceBlue;
             this.dgvForeignOrder.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            this.dgvForeignOrder.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvForeignOrder.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvForeignOrder.AutoGenerateColumns = false;
             this.dgvForeignOrder.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvForeignOrder.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -115,7 +115,7 @@
             this.dgvForeignOrder.Name = "dgvForeignOrder";
             this.dgvForeignOrder.ReadOnly = true;
             this.dgvForeignOrder.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvForeignOrder.Size = new System.Drawing.Size(1613, 443);
+            this.dgvForeignOrder.Size = new System.Drawing.Size(1362, 443);
             this.dgvForeignOrder.TabIndex = 0;
             // 
             // SupplierProductName
@@ -209,10 +209,6 @@
             this.eAN13DataGridViewTextBoxColumn.Name = "eAN13DataGridViewTextBoxColumn";
             this.eAN13DataGridViewTextBoxColumn.ReadOnly = true;
             // 
-            // localOrderBindingSource
-            // 
-            this.localOrderBindingSource.DataSource = typeof(OrderConverter.BLL.LocalOrder);
-            // 
             // IsLifeImportant
             // 
             this.IsLifeImportant.DataPropertyName = "IsLifeImportant";
@@ -220,11 +216,15 @@
             this.IsLifeImportant.Name = "IsLifeImportant";
             this.IsLifeImportant.ReadOnly = true;
             // 
+            // localOrderBindingSource
+            // 
+            this.localOrderBindingSource.DataSource = typeof(OrderConverter.BLL.LocalOrder);
+            // 
             // frmForeignOrderViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1613, 471);
+            this.ClientSize = new System.Drawing.Size(1362, 471);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.dgvForeignOrder);
             this.Name = "frmForeignOrderViewer";

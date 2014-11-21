@@ -1,0 +1,253 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <DataSources>
+    <DataSource Name="SalesRow">
+      <rd:DataSourceID>b434a6b0-c2f4-4e23-ba03-0d7a6b7e957b</rd:DataSourceID>
+      <ConnectionProperties>
+        <DataProvider>
+        </DataProvider>
+        <ConnectString>
+        </ConnectString>
+      </ConnectionProperties>
+    </DataSource>
+    <DataSource Name="DummyDataSource">
+      <rd:DataSourceID>1c445d8c-2062-45d8-a3f7-8cbd0945050b</rd:DataSourceID>
+      <ConnectionProperties>
+        <DataProvider>SQL</DataProvider>
+        <ConnectString />
+      </ConnectionProperties>
+    </DataSource>
+  </DataSources>
+  <InteractiveHeight>11in</InteractiveHeight>
+  <rd:DrawGrid>true</rd:DrawGrid>
+  <InteractiveWidth>8.5in</InteractiveWidth>
+  <rd:GridSpacing>0.25cm</rd:GridSpacing>
+  <rd:SnapToGrid>true</rd:SnapToGrid>
+  <RightMargin>2.5cm</RightMargin>
+  <LeftMargin>2.5cm</LeftMargin>
+  <BottomMargin>2.5cm</BottomMargin>
+  <rd:ReportID>6f465a94-8431-4659-a741-601eb37b9640</rd:ReportID>
+  <PageWidth>21cm</PageWidth>
+  <DataSets>
+    <DataSet Name="SalesRow">
+      <Fields>
+        <Field Name="Count">
+          <DataField>Count</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="CustomerNumber">
+          <DataField>CustomerNumber</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="DateAccepted">
+          <DataField>DateAccepted</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="Employee">
+          <DataField>Employee</DataField>
+          <rd:TypeName>Apteka.Plus.Logic.BLL.Entities.Employee</rd:TypeName>
+        </Field>
+        <Field Name="ID">
+          <DataField>ID</DataField>
+          <rd:TypeName>System.Int64</rd:TypeName>
+        </Field>
+        <Field Name="LocalBillsRow">
+          <DataField>LocalBillsRow</DataField>
+          <rd:TypeName>Apteka.Plus.Logic.BLL.Entities.LocalBillsRowEx</rd:TypeName>
+        </Field>
+        <Field Name="PackageName">
+          <DataField>PackageName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="Price">
+          <DataField>Price</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="ProductName">
+          <DataField>ProductName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+        <Field Name="EmployeeName">
+          <DataField>EmployeeName</DataField>
+          <rd:TypeName>System.String</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DummyDataSource</DataSourceName>
+        <CommandText />
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <rd:DataSetInfo>
+        <rd:DataSetName>Apteka.Plus.Logic.BLL.Entities</rd:DataSetName>
+        <rd:TableName>SalesRow</rd:TableName>
+        <rd:ObjectDataSourceType>Apteka.Plus.Logic.BLL.Entities.SalesRow, Apteka.Plus.Logic, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</rd:ObjectDataSourceType>
+      </rd:DataSetInfo>
+    </DataSet>
+  </DataSets>
+  <Width>22.85714cm</Width>
+  <Body>
+    <ColumnSpacing>1cm</ColumnSpacing>
+    <ReportItems>
+      <Chart Name="chart1">
+        <Legend>
+          <Visible>true</Visible>
+          <Style>
+            <BorderStyle>
+              <Default>Solid</Default>
+            </BorderStyle>
+          </Style>
+          <Position>RightCenter</Position>
+        </Legend>
+        <CategoryAxis>
+          <Axis>
+            <Title />
+            <MajorGridLines>
+              <Style>
+                <BorderStyle>
+                  <Default>Solid</Default>
+                </BorderStyle>
+              </Style>
+            </MajorGridLines>
+            <MinorGridLines>
+              <Style>
+                <BorderStyle>
+                  <Default>Solid</Default>
+                </BorderStyle>
+              </Style>
+            </MinorGridLines>
+            <MajorTickMarks>Outside</MajorTickMarks>
+            <Min>0</Min>
+            <Visible>true</Visible>
+          </Axis>
+        </CategoryAxis>
+        <ZIndex>1</ZIndex>
+        <DataSetName>SalesRow</DataSetName>
+        <PlotArea>
+          <Style>
+            <BackgroundColor>LightGrey</BackgroundColor>
+            <BorderStyle>
+              <Default>Solid</Default>
+            </BorderStyle>
+          </Style>
+        </PlotArea>
+        <ThreeDProperties>
+          <Rotation>30</Rotation>
+          <Inclination>30</Inclination>
+          <Shading>Simple</Shading>
+          <WallThickness>50</WallThickness>
+        </ThreeDProperties>
+        <PointWidth>0</PointWidth>
+        <SeriesGroupings>
+          <SeriesGrouping>
+            <DynamicSeries>
+              <Grouping Name="chart1_SeriesGroup1">
+                <GroupExpressions>
+                  <GroupExpression>=Fields!EmployeeName.Value</GroupExpression>
+                </GroupExpressions>
+              </Grouping>
+              <Label>=Fields!EmployeeName.Value</Label>
+            </DynamicSeries>
+          </SeriesGrouping>
+          <SeriesGrouping>
+            <StaticSeries>
+              <StaticMember>
+                <Label>Кол-во покупателей</Label>
+              </StaticMember>
+            </StaticSeries>
+          </SeriesGrouping>
+        </SeriesGroupings>
+        <Top>1.25cm</Top>
+        <Subtype>Smooth</Subtype>
+        <ValueAxis>
+          <Axis>
+            <Title />
+            <MajorGridLines>
+              <ShowGridLines>true</ShowGridLines>
+              <Style>
+                <BorderStyle>
+                  <Default>Solid</Default>
+                </BorderStyle>
+              </Style>
+            </MajorGridLines>
+            <MinorGridLines>
+              <Style>
+                <BorderStyle>
+                  <Default>Solid</Default>
+                </BorderStyle>
+              </Style>
+            </MinorGridLines>
+            <MajorTickMarks>Outside</MajorTickMarks>
+            <Min>0</Min>
+            <Interlaced>true</Interlaced>
+            <Margin>true</Margin>
+            <Visible>true</Visible>
+            <Scalar>true</Scalar>
+          </Axis>
+        </ValueAxis>
+        <Type>Line</Type>
+        <Width>22.25cm</Width>
+        <CategoryGroupings>
+          <CategoryGrouping>
+            <DynamicCategories>
+              <Grouping Name="Время">
+                <GroupExpressions>
+                  <GroupExpression>=Hour(Fields!DateAccepted.Value)</GroupExpression>
+                </GroupExpressions>
+              </Grouping>
+              <Sorting>
+                <SortBy>
+                  <SortExpression>=Hour(Fields!DateAccepted.Value)</SortExpression>
+                  <Direction>Ascending</Direction>
+                </SortBy>
+              </Sorting>
+              <Label />
+            </DynamicCategories>
+          </CategoryGrouping>
+        </CategoryGroupings>
+        <Palette>Default</Palette>
+        <ChartData>
+          <ChartSeries>
+            <DataPoints>
+              <DataPoint>
+                <DataValues>
+                  <DataValue>
+                    <Value>=CountDistinct(Fields!CustomerNumber.Value)</Value>
+                  </DataValue>
+                </DataValues>
+                <DataLabel />
+                <Marker>
+                  <Size>6pt</Size>
+                </Marker>
+              </DataPoint>
+            </DataPoints>
+          </ChartSeries>
+        </ChartData>
+        <Style>
+          <BackgroundColor>White</BackgroundColor>
+        </Style>
+        <Title />
+        <Height>11.25cm</Height>
+      </Chart>
+      <Textbox Name="textbox1">
+        <rd:DefaultName>textbox1</rd:DefaultName>
+        <Style>
+          <Color>SteelBlue</Color>
+          <FontFamily>Tahoma</FontFamily>
+          <FontSize>20pt</FontSize>
+          <FontWeight>700</FontWeight>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+        <CanGrow>true</CanGrow>
+        <Height>0.91429cm</Height>
+        <Value>CustomersFlow</Value>
+      </Textbox>
+    </ReportItems>
+    <Height>14.5cm</Height>
+  </Body>
+  <Language>en-US</Language>
+  <TopMargin>2.5cm</TopMargin>
+  <PageHeight>29.7cm</PageHeight>
+</Report>

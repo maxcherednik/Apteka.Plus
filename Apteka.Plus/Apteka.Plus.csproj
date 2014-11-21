@@ -1,0 +1,736 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{DB79F57D-2DAD-45D9-A397-9F6DE3FEE3E7}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Apteka.Plus</RootNamespace>
+    <AssemblyName>Apteka.Plus</AssemblyName>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <ApplicationIcon>Resources\logo.ico</ApplicationIcon>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkSubset>
+    </TargetFrameworkSubset>
+    <ManifestCertificateThumbprint>F682ED62EAD9F985ABDA65D14EEF793AA1BD0DED</ManifestCertificateThumbprint>
+    <ManifestKeyFile>Apteka.Plus_TemporaryKey.pfx</ManifestKeyFile>
+    <GenerateManifests>true</GenerateManifests>
+    <SignManifests>false</SignManifests>
+    <PublishUrl>C:\Users\user\Desktop\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Unc</InstallFrom>
+    <UpdateEnabled>true</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <InstallUrl>\\gnus\p1\new\main\</InstallUrl>
+    <ProductName>Apteka.Plus</ProductName>
+    <PublisherName>Chia Farm</PublisherName>
+    <WebPage>publish.htm</WebPage>
+    <ApplicationRevision>151</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <CreateDesktopShortcut>true</CreateDesktopShortcut>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <PlatformTarget>x86</PlatformTarget>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BLToolkit.2, Version=2.0.7.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Assemblies\BLToolkit.2.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Assemblies\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.Common, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.WinForms, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Remoting" />
+    <Reference Include="System.ServiceModel">
+      <RequiredTargetFramework>3.0</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web.Extensions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Forms\frmAuth.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmAuth.Designer.cs">
+      <DependentUpon>frmAuth.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmClientBuysDetailed.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmClientBuysDetailed.Designer.cs">
+      <DependentUpon>frmClientBuysDetailed.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmClientsDiscountSettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmClientsDiscountSettings.Designer.cs">
+      <DependentUpon>frmClientsDiscountSettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmClientsSummary.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmClientsSummary.Designer.cs">
+      <DependentUpon>frmClientsSummary.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmCommentWindows.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmCommentWindows.Designer.cs">
+      <DependentUpon>frmCommentWindows.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmConvertOrder.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmConvertOrder.Designer.cs">
+      <DependentUpon>frmConvertOrder.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmCopyDataMenu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmCopyDataMenu.Designer.cs">
+      <DependentUpon>frmCopyDataMenu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmDefectura.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmDefectura.Designer.cs">
+      <DependentUpon>frmDefectura.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmDefecturaNewList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmDefecturaNewList.Designer.cs">
+      <DependentUpon>frmDefecturaNewList.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmDefecturaOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmDefecturaOptions.Designer.cs">
+      <DependentUpon>frmDefecturaOptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmFinance.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmFinance.Designer.cs">
+      <DependentUpon>frmFinance.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmFinanceCollection.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmFinanceCollection.Designer.cs">
+      <DependentUpon>frmFinanceCollection.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmForeignOrderViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmForeignOrderViewer.Designer.cs">
+      <DependentUpon>frmForeignOrderViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmFullProductInfoEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmFullProductInfoEdit.Designer.cs">
+      <DependentUpon>frmFullProductInfoEdit.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmFullProductInfoSelectBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmFullProductInfoSelectBox.Designer.cs">
+      <DependentUpon>frmFullProductInfoSelectBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmLifeImportantSelectBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmLifeImportantSelectBox.Designer.cs">
+      <DependentUpon>frmLifeImportantSelectBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmLocalBills.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmLocalBills.Designer.cs">
+      <DependentUpon>frmLocalBills.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmLocalTransfersHistory.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmLocalTransfersHistory.Designer.cs">
+      <DependentUpon>frmLocalTransfersHistory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmLocalTransfersMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmLocalTransfersMain.Designer.cs">
+      <DependentUpon>frmLocalTransfersMain.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmLocalTransfersPreview.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmLocalTransfersPreview.Designer.cs">
+      <DependentUpon>frmLocalTransfersPreview.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmMainMenu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmMainMenu.Designer.cs">
+      <DependentUpon>frmMainMenu.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmMainStoreInsert.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmMainStoreInsert.Designer.cs">
+      <DependentUpon>frmMainStoreInsert.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmMainStoreInsertNewPosition.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmMainStoreInsertNewPosition.Designer.cs">
+      <DependentUpon>frmMainStoreInsertNewPosition.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmMainStoreInsertOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmMainStoreInsertOptions.Designer.cs">
+      <DependentUpon>frmMainStoreInsertOptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmMainStoreInsertSaveConfirmation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmMainStoreInsertSaveConfirmation.Designer.cs">
+      <DependentUpon>frmMainStoreInsertSaveConfirmation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmMyStoreSelectBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmMyStoreSelectBox.Designer.cs">
+      <DependentUpon>frmMyStoreSelectBox.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmNewBillInfo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmNewBillInfo.Designer.cs">
+      <DependentUpon>frmNewBillInfo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmOptions.Designer.cs">
+      <DependentUpon>frmOptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmPriceChangesHistory.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmPriceChangesHistory.Designer.cs">
+      <DependentUpon>frmPriceChangesHistory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmProductSupplies.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmProductSupplies.Designer.cs">
+      <DependentUpon>frmProductSupplies.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmProductSuppliesSummary.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmProductSuppliesSummary.Designer.cs">
+      <DependentUpon>frmProductSuppliesSummary.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmSales.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmSales.Designer.cs">
+      <DependentUpon>frmSales.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmSalesReturnHistory.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmSalesReturnHistory.Designer.cs">
+      <DependentUpon>frmSalesReturnHistory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmSalesStatistics.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmSalesStatistics.Designer.cs">
+      <DependentUpon>frmSalesStatistics.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmSuppliers.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmSuppliers.Designer.cs">
+      <DependentUpon>frmSuppliers.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmSuppliersSummaries.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmSuppliersSummaries.Designer.cs">
+      <DependentUpon>frmSuppliersSummaries.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmSuppliesReturnConfirmation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmSuppliesReturnConfirmation.Designer.cs">
+      <DependentUpon>frmSuppliesReturnConfirmation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmSuppliesReturnHistory.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmSuppliesReturnHistory.Designer.cs">
+      <DependentUpon>frmSuppliesReturnHistory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="LowLevelControls\ProgressIndicatorEx.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="LowLevelControls\ProgressIndicatorEx.Designer.cs">
+      <DependentUpon>ProgressIndicatorEx.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Forms\frmClientsDiscountSettings.resx">
+      <DependentUpon>frmClientsDiscountSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmOptions.resx">
+      <DependentUpon>frmOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LowLevelControls\ProgressIndicatorEx.resx">
+      <DependentUpon>ProgressIndicatorEx.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmClientBuysDetailed.resx">
+      <DependentUpon>frmClientBuysDetailed.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmClientsSummary.resx">
+      <DependentUpon>frmClientsSummary.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmCommentWindows.resx">
+      <DependentUpon>frmCommentWindows.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmFinanceCollection.resx">
+      <DependentUpon>frmFinanceCollection.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmLifeImportantSelectBox.resx">
+      <DependentUpon>frmLifeImportantSelectBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmLocalTransfersHistory.resx">
+      <DependentUpon>frmLocalTransfersHistory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmLocalTransfersMain.resx">
+      <DependentUpon>frmLocalTransfersMain.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmLocalTransfersPreview.resx">
+      <DependentUpon>frmLocalTransfersPreview.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmPriceChangesHistory.resx">
+      <DependentUpon>frmPriceChangesHistory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmProductSuppliesSummary.resx">
+      <DependentUpon>frmProductSuppliesSummary.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmSalesReturnHistory.resx">
+      <DependentUpon>frmSalesReturnHistory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmSalesStatistics.resx">
+      <DependentUpon>frmSalesStatistics.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmSuppliersSummaries.resx">
+      <DependentUpon>frmSuppliersSummaries.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmSuppliesReturnConfirmation.resx">
+      <DependentUpon>frmSuppliesReturnConfirmation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmSuppliesReturnHistory.resx">
+      <DependentUpon>frmSuppliesReturnHistory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmConvertOrder.resx">
+      <DependentUpon>frmConvertOrder.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmForeignOrderViewer.resx">
+      <DependentUpon>frmForeignOrderViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmFullProductInfoEdit.resx">
+      <DependentUpon>frmFullProductInfoEdit.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmFullProductInfoSelectBox.resx">
+      <DependentUpon>frmFullProductInfoSelectBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmMainStoreInsertNewPosition.resx">
+      <DependentUpon>frmMainStoreInsertNewPosition.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmMainStoreInsertOptions.resx">
+      <DependentUpon>frmMainStoreInsertOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmMainStoreInsertSaveConfirmation.resx">
+      <DependentUpon>frmMainStoreInsertSaveConfirmation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmProductSupplies.resx">
+      <DependentUpon>frmProductSupplies.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmAuth.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmAuth.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmCopyDataMenu.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmCopyDataMenu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmDefectura.resx">
+      <DependentUpon>frmDefectura.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmDefecturaNewList.resx">
+      <DependentUpon>frmDefecturaNewList.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmDefecturaOptions.resx">
+      <DependentUpon>frmDefecturaOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmFinance.resx">
+      <DependentUpon>frmFinance.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmLocalBills.resx">
+      <DependentUpon>frmLocalBills.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmMainMenu.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmMainMenu.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmMainStoreInsert.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmMainStoreInsert.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmMyStoreSelectBox.resx">
+      <DependentUpon>frmMyStoreSelectBox.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmNewBillInfo.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>frmNewBillInfo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmSales.resx">
+      <DependentUpon>frmSales.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ucFullProductInfoBase.resx">
+      <DependentUpon>ucFullProductInfoBase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ucGoodsViewer.resx">
+      <DependentUpon>ucGoodsViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ucLocalBillsTransfersHistory.resx">
+      <DependentUpon>ucLocalBillsTransfersHistory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ucPriceChangesHistory.resx">
+      <DependentUpon>ucPriceChangesHistory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ucProductSupplies.resx">
+      <DependentUpon>ucProductSupplies.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ucDefectTable.resx">
+      <DependentUpon>ucDefectTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ucProductSuppliesHistory.resx">
+      <DependentUpon>ucProductSuppliesHistory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ucProductSuppliesTable.resx">
+      <DependentUpon>ucProductSuppliesTable.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ucNewBillPage.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ucNewBillPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ucSalesHistory.resx">
+      <DependentUpon>ucSalesHistory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ucSalesReturnHistory.resx">
+      <DependentUpon>ucSalesReturnHistory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ucSuppliesHistory.resx">
+      <DependentUpon>ucSuppliesHistory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UserControls\ucSuppliesReturnHistory.resx">
+      <DependentUpon>ucSuppliesReturnHistory.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="SettingsUtils\UserSettings.cs" />
+    <Compile Include="UserControls\ucFullProductInfoBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ucFullProductInfoBase.Designer.cs">
+      <DependentUpon>ucFullProductInfoBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ucGoodsViewer.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ucGoodsViewer.Designer.cs">
+      <DependentUpon>ucGoodsViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ucLocalBillsTransfersHistory.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ucLocalBillsTransfersHistory.Designer.cs">
+      <DependentUpon>ucLocalBillsTransfersHistory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ucPriceChangesHistory.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ucPriceChangesHistory.Designer.cs">
+      <DependentUpon>ucPriceChangesHistory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ucProductSupplies.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ucProductSupplies.Designer.cs">
+      <DependentUpon>ucProductSupplies.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ucDefectTable.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ucDefectTable.Designer.cs">
+      <DependentUpon>ucDefectTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ucProductSuppliesHistory.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ucProductSuppliesHistory.Designer.cs">
+      <DependentUpon>ucProductSuppliesHistory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ucProductSuppliesTable.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ucProductSuppliesTable.Designer.cs">
+      <DependentUpon>ucProductSuppliesTable.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ucNewBillPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ucNewBillPage.Designer.cs">
+      <DependentUpon>ucNewBillPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ucSalesHistory.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ucSalesHistory.Designer.cs">
+      <DependentUpon>ucSalesHistory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ucSalesReturnHistory.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ucSalesReturnHistory.Designer.cs">
+      <DependentUpon>ucSalesReturnHistory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ucSuppliesHistory.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ucSuppliesHistory.Designer.cs">
+      <DependentUpon>ucSuppliesHistory.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UserControls\ucSuppliesReturnHistory.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="UserControls\ucSuppliesReturnHistory.Designer.cs">
+      <DependentUpon>ucSuppliesReturnHistory.cs</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Apteka.Helpers\Apteka.Helpers.csproj">
+      <Project>{09D613E4-8CDF-4239-8D56-21A031523B2D}</Project>
+      <Name>Apteka.Helpers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Apteka.Plus.Common\Apteka.Plus.Common.csproj">
+      <Project>{97B33EDA-E169-4244-9EB7-099A63F8AD5C}</Project>
+      <Name>Apteka.Plus.Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Apteka.Plus.Logic\Apteka.Plus.Logic.csproj">
+      <Project>{37A7F3FC-0C1C-4ED6-BAA1-882651F4B069}</Project>
+      <Name>Apteka.Plus.Logic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ProgressIndicator\ProgressIndicator.csproj">
+      <Project>{F7FE2CE9-344C-4B46-8B04-083D68FE1C16}</Project>
+      <Name>ProgressIndicator</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 2.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.0">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.0 %28x86%29</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\logo-48x48.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\logo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="Properties\DataSources\Apteka.Plus.Logic.BLL.Collections.MyStoresCollection.datasource" />
+    <None Include="Properties\DataSources\Apteka.Plus.Logic.BLL.Entities.ClientSummaryRow.datasource" />
+    <None Include="Properties\DataSources\Apteka.Plus.Logic.BLL.Entities.DefectList.datasource" />
+    <None Include="Properties\DataSources\Apteka.Plus.Logic.BLL.Entities.DefectListCriteria.datasource" />
+    <None Include="Properties\DataSources\Apteka.Plus.Logic.BLL.Entities.FinanceCollectionRow.datasource" />
+    <None Include="Properties\DataSources\Apteka.Plus.Logic.BLL.Entities.FinanceRow.datasource" />
+    <None Include="Properties\DataSources\Apteka.Plus.Logic.BLL.Entities.FinanceRow1.datasource" />
+    <None Include="Properties\DataSources\Apteka.Plus.Logic.BLL.Entities.FullProductInfo.datasource" />
+    <None Include="Properties\DataSources\Apteka.Plus.Logic.BLL.Entities.LocalBillsRow.datasource" />
+    <None Include="Properties\DataSources\Apteka.Plus.Logic.BLL.Entities.LocalBillsRowEx.datasource" />
+    <None Include="Properties\DataSources\Apteka.Plus.Logic.BLL.Entities.LocalBillsTransferInfoRow.datasource" />
+    <None Include="Properties\DataSources\Apteka.Plus.Logic.BLL.Entities.LocalBillsTransferRow.datasource" />
+    <None Include="Properties\DataSources\Apteka.Plus.Logic.BLL.Entities.MainStoreInsertRow.datasource" />
+    <None Include="Properties\DataSources\Apteka.Plus.Logic.BLL.Entities.MainStoreRow.datasource" />
+    <None Include="Properties\DataSources\Apteka.Plus.Logic.BLL.Entities.MyStore.datasource" />
+    <None Include="Properties\DataSources\Apteka.Plus.Logic.BLL.Entities.PriceChangeRow.datasource" />
+    <None Include="Properties\DataSources\Apteka.Plus.Logic.BLL.Entities.ProductIntegrationInfo.datasource" />
+    <None Include="Properties\DataSources\Apteka.Plus.Logic.BLL.Entities.SalesReturnHistoryRow.datasource" />
+    <None Include="Properties\DataSources\Apteka.Plus.Logic.BLL.Entities.SalesReturnHistoryRow1.datasource" />
+    <None Include="Properties\DataSources\Apteka.Plus.Logic.BLL.Entities.SalesRow.datasource" />
+    <None Include="Properties\DataSources\Apteka.Plus.Logic.BLL.Entities.SmartDefectRow.datasource" />
+    <None Include="Properties\DataSources\Apteka.Plus.Logic.BLL.Entities.SmartDefectRow1.datasource" />
+    <None Include="Properties\DataSources\Apteka.Plus.Logic.BLL.Entities.Supplier.datasource" />
+    <None Include="Properties\DataSources\Apteka.Plus.Logic.BLL.Entities.SupplierSummary.datasource" />
+    <None Include="Properties\DataSources\Apteka.Plus.Logic.BLL.Entities.SupplierSummary1.datasource" />
+    <None Include="Properties\DataSources\Apteka.Plus.Logic.BLL.Entities.SuppliesReturnHistoryRow.datasource" />
+    <None Include="Properties\DataSources\OrderConverter.BLL.LocalOrder.datasource" />
+    <None Include="Properties\DataSources\OrderConverter.BLL.LocalOrder1.datasource" />
+  </ItemGroup>
+  <ItemGroup>
+    <PublishFile Include="ADODB">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>Assembly</FileType>
+    </PublishFile>
+    <PublishFile Include="Microsoft.ReportViewer.ProcessingObjectModel">
+      <Visible>False</Visible>
+      <Group>
+      </Group>
+      <TargetPath>
+      </TargetPath>
+      <PublishState>Include</PublishState>
+      <IncludeHash>True</IncludeHash>
+      <FileType>Assembly</FileType>
+    </PublishFile>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Resources\disk.ico" />
+    <Content Include="Resources\printer.ico" />
+    <Content Include="Resources\User.ico" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

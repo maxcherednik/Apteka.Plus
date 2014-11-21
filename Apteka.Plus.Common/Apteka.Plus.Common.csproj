@@ -1,0 +1,143 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{97B33EDA-E169-4244-9EB7-099A63F8AD5C}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Apteka.Plus.Common</RootNamespace>
+    <AssemblyName>Apteka.Plus.Common</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BLToolkit.2, Version=3.1.0.0, Culture=neutral, PublicKeyToken=b1d3f6ab3aadaca3, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Assemblies\BLToolkit.2.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Assemblies\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.Common, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.ReportViewer.WinForms, Version=9.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.XML" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controls\MyDataGridView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Forms\frmDBConnectionFailure.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmDBConnectionFailure.Designer.cs">
+      <DependentUpon>frmDBConnectionFailure.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmPrintBills.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmPrintBills.Designer.cs">
+      <DependentUpon>frmPrintBills.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmReportViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmReportViewer.Designer.cs">
+      <DependentUpon>frmReportViewer.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Controls\MyDataGridView.resx">
+      <DependentUpon>MyDataGridView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmDBConnectionFailure.resx">
+      <DependentUpon>frmDBConnectionFailure.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmPrintBills.resx">
+      <DependentUpon>frmPrintBills.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmReportViewer.resx">
+      <DependentUpon>frmReportViewer.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\CashMemo.rdlc" />
+    <EmbeddedResource Include="Reports\CustomersFlow.rdlc" />
+    <EmbeddedResource Include="Reports\DefectListBySupplier.rdlc" />
+    <EmbeddedResource Include="Reports\Finances\FinanceCollectionDetailed.rdlc" />
+    <EmbeddedResource Include="Reports\Finances\FinanceDaily.rdlc" />
+    <EmbeddedResource Include="Reports\Finances\FinanceMonthly.rdlc" />
+    <EmbeddedResource Include="Reports\ForeignOrder.rdlc" />
+    <EmbeddedResource Include="Reports\Labels\LocalBillLabelsWarehouse.rdlc" />
+    <EmbeddedResource Include="Reports\Labels\LocalBillLabels.rdlc" />
+    <EmbeddedResource Include="Reports\Labels\LocalBillLabelsMed.rdlc" />
+    <EmbeddedResource Include="Reports\Labels\LocalBillLabelsSmall.rdlc" />
+    <EmbeddedResource Include="Reports\LocalOrders\LocalBillByNumberShort.rdlc" />
+    <EmbeddedResource Include="Reports\LocalOrders\LocalBillRowsByNumber.rdlc" />
+    <EmbeddedResource Include="Reports\SuppliersSummaries.rdlc" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Apteka.Helpers\Apteka.Helpers.csproj">
+      <Project>{09D613E4-8CDF-4239-8D56-21A031523B2D}</Project>
+      <Name>Apteka.Helpers</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Apteka.Plus.Logic\Apteka.Plus.Logic.csproj">
+      <Project>{37A7F3FC-0C1C-4ED6-BAA1-882651F4B069}</Project>
+      <Name>Apteka.Plus.Logic</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Properties\DataSources\Apteka.Plus.Logic.BLL.Entities.LocalBillsRowEx.datasource" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

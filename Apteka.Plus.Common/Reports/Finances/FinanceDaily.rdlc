@@ -1,0 +1,429 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <DataSources>
+    <DataSource Name="FinanceRow">
+      <rd:DataSourceID>6e0f028a-7675-4830-9a37-d69fdd8f377f</rd:DataSourceID>
+      <ConnectionProperties>
+        <DataProvider>
+        </DataProvider>
+        <ConnectString>
+        </ConnectString>
+      </ConnectionProperties>
+    </DataSource>
+    <DataSource Name="DummyDataSource">
+      <rd:DataSourceID>abed1487-275f-4e7e-b4f3-8667217c588c</rd:DataSourceID>
+      <ConnectionProperties>
+        <DataProvider>SQL</DataProvider>
+        <ConnectString />
+      </ConnectionProperties>
+    </DataSource>
+  </DataSources>
+  <InteractiveHeight>11in</InteractiveHeight>
+  <rd:DrawGrid>true</rd:DrawGrid>
+  <InteractiveWidth>8.5in</InteractiveWidth>
+  <rd:GridSpacing>0.25cm</rd:GridSpacing>
+  <rd:SnapToGrid>true</rd:SnapToGrid>
+  <RightMargin>1cm</RightMargin>
+  <LeftMargin>1cm</LeftMargin>
+  <BottomMargin>1cm</BottomMargin>
+  <rd:ReportID>e40ca252-f985-40d0-94f0-f4984dad8fc0</rd:ReportID>
+  <PageWidth>29.7cm</PageWidth>
+  <DataSets>
+    <DataSet Name="FinanceRow">
+      <Fields>
+        <Field Name="Date">
+          <DataField>Date</DataField>
+          <rd:TypeName>System.DateTime</rd:TypeName>
+        </Field>
+        <Field Name="LocalTransferSum">
+          <DataField>LocalTransferSum</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="NetProfit">
+          <DataField>NetProfit</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="NetProfit17PercentFilter">
+          <DataField>NetProfit17PercentFilter</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="NetProfit517PercentFilter">
+          <DataField>NetProfit517PercentFilter</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="NetProfit5PercentFilter">
+          <DataField>NetProfit5PercentFilter</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="PriceChangesSum">
+          <DataField>PriceChangesSum</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Receipt">
+          <DataField>Receipt</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Revenue">
+          <DataField>Revenue</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="StockInTradeSum">
+          <DataField>StockInTradeSum</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Costs">
+          <DataField>Costs</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="CustomerCount">
+          <DataField>CustomerCount</DataField>
+          <rd:TypeName>System.Int32</rd:TypeName>
+        </Field>
+        <Field Name="Revenue17PercentFilter">
+          <DataField>Revenue17PercentFilter</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Revenue517PercentFilter">
+          <DataField>Revenue517PercentFilter</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+        <Field Name="Revenue5PercentFilter">
+          <DataField>Revenue5PercentFilter</DataField>
+          <rd:TypeName>System.Double</rd:TypeName>
+        </Field>
+      </Fields>
+      <Query>
+        <DataSourceName>DummyDataSource</DataSourceName>
+        <CommandText />
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
+      <rd:DataSetInfo>
+        <rd:DataSetName>Apteka.Plus.Logic.BLL.Entities</rd:DataSetName>
+        <rd:TableName>FinanceRow</rd:TableName>
+        <rd:ObjectDataSourceType>Apteka.Plus.Logic.BLL.Entities.FinanceRow, Apteka.Plus.Logic, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null</rd:ObjectDataSourceType>
+      </rd:DataSetInfo>
+    </DataSet>
+  </DataSets>
+  <Code />
+  <Width>27cm</Width>
+  <Body>
+    <ColumnSpacing>1cm</ColumnSpacing>
+    <ReportItems>
+      <Chart Name="chart2">
+        <Legend>
+          <Visible>true</Visible>
+          <Style>
+            <BorderStyle>
+              <Default>Solid</Default>
+            </BorderStyle>
+          </Style>
+          <Position>RightCenter</Position>
+        </Legend>
+        <CategoryAxis>
+          <Axis>
+            <Title />
+            <Style />
+            <MajorGridLines>
+              <Style>
+                <BorderStyle>
+                  <Default>Solid</Default>
+                </BorderStyle>
+              </Style>
+            </MajorGridLines>
+            <MinorGridLines>
+              <Style>
+                <BorderStyle>
+                  <Default>Solid</Default>
+                </BorderStyle>
+              </Style>
+            </MinorGridLines>
+            <MajorTickMarks>Outside</MajorTickMarks>
+            <Min>0</Min>
+            <Visible>true</Visible>
+          </Axis>
+        </CategoryAxis>
+        <ZIndex>2</ZIndex>
+        <DataSetName>FinanceRow</DataSetName>
+        <PlotArea>
+          <Style>
+            <BackgroundColor>LightGrey</BackgroundColor>
+            <BorderStyle>
+              <Default>Solid</Default>
+            </BorderStyle>
+          </Style>
+        </PlotArea>
+        <ThreeDProperties>
+          <ProjectionMode>Orthographic</ProjectionMode>
+          <Rotation>30</Rotation>
+          <Inclination>40</Inclination>
+          <Shading>Real</Shading>
+          <WallThickness>21</WallThickness>
+          <DrawingStyle>Cylinder</DrawingStyle>
+          <Clustered>true</Clustered>
+        </ThreeDProperties>
+        <PointWidth>0</PointWidth>
+        <SeriesGroupings>
+          <SeriesGrouping>
+            <StaticSeries>
+              <StaticMember>
+                <Label>Кол-во покупателей</Label>
+              </StaticMember>
+            </StaticSeries>
+          </SeriesGrouping>
+        </SeriesGroupings>
+        <Top>19.25cm</Top>
+        <Subtype>Smooth</Subtype>
+        <ValueAxis>
+          <Axis>
+            <Title />
+            <MajorGridLines>
+              <ShowGridLines>true</ShowGridLines>
+              <Style>
+                <BorderStyle>
+                  <Default>Solid</Default>
+                </BorderStyle>
+              </Style>
+            </MajorGridLines>
+            <MinorGridLines>
+              <Style>
+                <BorderStyle>
+                  <Default>Solid</Default>
+                </BorderStyle>
+              </Style>
+            </MinorGridLines>
+            <MajorTickMarks>Inside</MajorTickMarks>
+            <Min>0</Min>
+            <Interlaced>true</Interlaced>
+            <Margin>true</Margin>
+            <Visible>true</Visible>
+            <Scalar>true</Scalar>
+          </Axis>
+        </ValueAxis>
+        <Type>Line</Type>
+        <CategoryGroupings>
+          <CategoryGrouping>
+            <DynamicCategories>
+              <Grouping Name="chart2_CategoryGroup1">
+                <GroupExpressions>
+                  <GroupExpression>=Day(Fields!Date.Value)</GroupExpression>
+                </GroupExpressions>
+              </Grouping>
+              <Sorting>
+                <SortBy>
+                  <SortExpression>=Day(Fields!Date.Value)</SortExpression>
+                  <Direction>Ascending</Direction>
+                </SortBy>
+              </Sorting>
+              <Label />
+            </DynamicCategories>
+          </CategoryGrouping>
+        </CategoryGroupings>
+        <Palette>Default</Palette>
+        <ChartData>
+          <ChartSeries>
+            <DataPoints>
+              <DataPoint>
+                <DataValues>
+                  <DataValue>
+                    <Value>=Fields!CustomerCount.Value</Value>
+                  </DataValue>
+                </DataValues>
+                <DataLabel />
+                <Marker>
+                  <Size>6pt</Size>
+                </Marker>
+              </DataPoint>
+            </DataPoints>
+          </ChartSeries>
+        </ChartData>
+        <Style>
+          <BackgroundColor>White</BackgroundColor>
+        </Style>
+        <Title />
+        <Height>10.5cm</Height>
+      </Chart>
+      <Chart Name="chart1">
+        <Legend>
+          <Visible>true</Visible>
+          <Style>
+            <BorderStyle>
+              <Default>Solid</Default>
+            </BorderStyle>
+          </Style>
+          <Position>RightCenter</Position>
+        </Legend>
+        <CategoryAxis>
+          <Axis>
+            <Title />
+            <Style />
+            <MajorGridLines>
+              <Style>
+                <BorderStyle>
+                  <Default>Solid</Default>
+                </BorderStyle>
+              </Style>
+            </MajorGridLines>
+            <MinorGridLines>
+              <Style>
+                <BorderStyle>
+                  <Default>Solid</Default>
+                </BorderStyle>
+              </Style>
+            </MinorGridLines>
+            <MajorTickMarks>Outside</MajorTickMarks>
+            <Min>0</Min>
+            <Visible>true</Visible>
+          </Axis>
+        </CategoryAxis>
+        <ZIndex>1</ZIndex>
+        <DataSetName>FinanceRow</DataSetName>
+        <PlotArea>
+          <Style>
+            <BackgroundColor>LightGrey</BackgroundColor>
+            <BorderStyle>
+              <Default>Solid</Default>
+            </BorderStyle>
+          </Style>
+        </PlotArea>
+        <ThreeDProperties>
+          <ProjectionMode>Orthographic</ProjectionMode>
+          <Rotation>30</Rotation>
+          <Inclination>40</Inclination>
+          <Shading>Real</Shading>
+          <WallThickness>21</WallThickness>
+          <DrawingStyle>Cylinder</DrawingStyle>
+          <Clustered>true</Clustered>
+        </ThreeDProperties>
+        <PointWidth>0</PointWidth>
+        <SeriesGroupings>
+          <SeriesGrouping>
+            <StaticSeries>
+              <StaticMember>
+                <Label>Доход</Label>
+              </StaticMember>
+              <StaticMember>
+                <Label>Выручка</Label>
+              </StaticMember>
+            </StaticSeries>
+          </SeriesGrouping>
+        </SeriesGroupings>
+        <Top>0.75cm</Top>
+        <Subtype>Smooth</Subtype>
+        <ValueAxis>
+          <Axis>
+            <Title>
+              <Style />
+            </Title>
+            <Style />
+            <MajorGridLines>
+              <ShowGridLines>true</ShowGridLines>
+              <Style>
+                <BorderStyle>
+                  <Default>Solid</Default>
+                </BorderStyle>
+              </Style>
+            </MajorGridLines>
+            <MinorGridLines>
+              <ShowGridLines>true</ShowGridLines>
+              <Style>
+                <BorderStyle>
+                  <Default>Solid</Default>
+                </BorderStyle>
+              </Style>
+            </MinorGridLines>
+            <MajorTickMarks>Inside</MajorTickMarks>
+            <Min>0</Min>
+            <Interlaced>true</Interlaced>
+            <Margin>true</Margin>
+            <Visible>true</Visible>
+            <Scalar>true</Scalar>
+          </Axis>
+        </ValueAxis>
+        <Type>Line</Type>
+        <CategoryGroupings>
+          <CategoryGrouping>
+            <DynamicCategories>
+              <Grouping Name="День">
+                <GroupExpressions>
+                  <GroupExpression>=Day(Fields!Date.Value)</GroupExpression>
+                </GroupExpressions>
+              </Grouping>
+              <Label />
+            </DynamicCategories>
+          </CategoryGrouping>
+        </CategoryGroupings>
+        <Palette>Default</Palette>
+        <ChartData>
+          <ChartSeries>
+            <DataPoints>
+              <DataPoint>
+                <DataValues>
+                  <DataValue>
+                    <Value>=Fields!NetProfit.Value</Value>
+                  </DataValue>
+                </DataValues>
+                <DataLabel />
+                <Style>
+                  <BorderStyle>
+                    <Default>Solid</Default>
+                  </BorderStyle>
+                </Style>
+                <Marker>
+                  <Size>3pt</Size>
+                </Marker>
+              </DataPoint>
+            </DataPoints>
+          </ChartSeries>
+          <ChartSeries>
+            <DataPoints>
+              <DataPoint>
+                <DataValues>
+                  <DataValue>
+                    <Value>=Fields!Revenue.Value</Value>
+                  </DataValue>
+                </DataValues>
+                <DataLabel>
+                  <Style />
+                  <Value>=Fields!Revenue.Value</Value>
+                  <Position>TopRight</Position>
+                  <Rotation>90</Rotation>
+                </DataLabel>
+                <Style>
+                  <BorderStyle>
+                    <Default>Solid</Default>
+                  </BorderStyle>
+                </Style>
+                <Marker>
+                  <Size>6pt</Size>
+                </Marker>
+              </DataPoint>
+            </DataPoints>
+          </ChartSeries>
+        </ChartData>
+        <Title />
+        <Height>18.25cm</Height>
+      </Chart>
+      <Textbox Name="textbox1">
+        <rd:DefaultName>textbox1</rd:DefaultName>
+        <Width>25.39683cm</Width>
+        <Style>
+          <Color>SteelBlue</Color>
+          <FontFamily>Tahoma</FontFamily>
+          <FontSize>14pt</FontSize>
+          <FontWeight>700</FontWeight>
+          <PaddingLeft>2pt</PaddingLeft>
+          <PaddingRight>2pt</PaddingRight>
+          <PaddingTop>2pt</PaddingTop>
+          <PaddingBottom>2pt</PaddingBottom>
+        </Style>
+        <CanGrow>true</CanGrow>
+        <Height>0.75cm</Height>
+        <Value>Report1</Value>
+      </Textbox>
+    </ReportItems>
+    <Height>32.75cm</Height>
+  </Body>
+  <Language>ru-RU</Language>
+  <TopMargin>1cm</TopMargin>
+  <PageHeight>21cm</PageHeight>
+</Report>

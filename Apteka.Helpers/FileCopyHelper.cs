@@ -43,10 +43,6 @@ namespace Apteka.Helpers
                     progress(0);
                 }
             }
-            catch (Exception exc)
-            {
-                throw exc;
-            }
             finally
             {
                 serverFileStream.Close();
@@ -89,10 +85,6 @@ namespace Apteka.Helpers
                 {
                     progress(0);
                 }
-            }
-            catch (Exception exc)
-            {
-                throw exc;
             }
             finally
             {

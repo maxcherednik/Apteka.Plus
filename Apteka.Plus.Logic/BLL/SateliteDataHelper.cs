@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using Apteka.Helpers;
+﻿using Apteka.Helpers;
 using Apteka.Plus.Logic.BLL.Collections;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
 using BLToolkit.Data;
+using System;
+using System.Collections.Generic;
+using System.IO;
 
 namespace Apteka.Plus.Logic.BLL
 {
@@ -229,7 +229,7 @@ namespace Apteka.Plus.Logic.BLL
                 dbSatelite.RollbackTransaction();
                 dbSklad.RollbackTransaction();
 
-                throw e;
+                throw;
             }
 
             log.InfoFormat("Удаляем директорию {0}", diDestination.Name);
@@ -296,7 +296,7 @@ namespace Apteka.Plus.Logic.BLL
                     log.Info("Транзакция в базу отменяется...");
                     db.RollbackTransaction();
                     log.Info("Транзакция в базу отменена");
-                    throw e;
+                    throw;
                 }
 
                 log.Info("Сериализация данных...");
@@ -524,7 +524,7 @@ namespace Apteka.Plus.Logic.BLL
                     log.Info("Транзакция в базу отменяется...");
                     db.RollbackTransaction();
                     log.Info("Транзакция в базу отменена");
-                    throw e;
+                    throw;
                 }
 
             }

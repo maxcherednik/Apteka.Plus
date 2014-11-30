@@ -146,8 +146,6 @@
         private System.Windows.Forms.ToolStripButton tsbEdit;
         private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.Button btnCancel;
-        private System.Windows.Forms.DataGridViewTextBoxColumn productDataGridViewTextBoxColumn;
-        private System.Windows.Forms.DataGridViewTextBoxColumn packageDataGridViewTextBoxColumn;
         private System.Windows.Forms.ToolStripButton tsbDelete;
         private Apteka.Plus.UserControls.ucFullProductInfoBase ucFullProductInfoBase1;
     }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
-using Apteka.Helpers;
+﻿using Apteka.Helpers;
 using Apteka.Plus.Forms;
 using Apteka.Plus.Logic.BLL;
 using Apteka.Plus.Logic.BLL.Entities;
@@ -10,6 +6,10 @@ using Apteka.Plus.Logic.BLL.Enums;
 using Apteka.Plus.Logic.DAL.Accessors;
 using BLToolkit.Data;
 using BLToolkit.Mapping;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace Apteka.Plus.UserControls
 {
@@ -212,12 +212,12 @@ namespace Apteka.Plus.UserControls
 
                                 dbSatelite.CommitTransaction();
                             }
-                            catch (Exception exc)
+                            catch (Exception)
                             {
 
                                 dbSatelite.RollbackTransaction();
 
-                                throw exc;
+                                throw;
                             }
                         }
 

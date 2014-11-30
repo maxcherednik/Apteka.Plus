@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
 using Apteka.Helpers;
 using Apteka.Plus.Common.Controls;
 using Apteka.Plus.Forms;
@@ -11,6 +7,10 @@ using Apteka.Plus.Logic.DAL.Accessors;
 using Apteka.Plus.Properties;
 using BLToolkit.Data;
 using OrderConverter.BLL;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace Apteka.Plus.UserControls
 {
@@ -217,12 +217,12 @@ namespace Apteka.Plus.UserControls
                 OnProcessNotification("Сохраниение в базу данных", 0, dgvBill.RowCount);
 
             }
-            catch (Exception exc)
+            catch (Exception)
             {
                 dbSklad.RollbackTransaction();
                 OnProcessNotification("Ошибка сохранения! Данные не сохранены!", 0, dgvBill.RowCount);
 
-                throw exc;
+                throw;
             }
 
             foreach (MyStore varMyStore in _liMyStores)
@@ -273,13 +273,13 @@ namespace Apteka.Plus.UserControls
                     db.CommitTransaction();
                     dbSklad.CommitTransaction();
                 }
-                catch (Exception exc)
+                catch (Exception)
                 {
                     OnProcessNotification("Ошибка сохранения! Данные не сохранены!", 0, dgvBill.RowCount);
 
                     dbSklad.RollbackTransaction();
                     db.RollbackTransaction();
-                    throw exc;
+                    throw;
                 }
             }
             mainStoreInsertRowBindingSource.Clear();
@@ -311,7 +311,8 @@ namespace Apteka.Plus.UserControls
 
             public FullProductInfo FullProductInfo
             {
-                get; private set;
+                get;
+                private set;
             }
         }
         #endregion

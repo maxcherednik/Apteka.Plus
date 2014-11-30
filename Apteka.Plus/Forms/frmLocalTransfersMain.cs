@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using Apteka.Plus.Common.Controls;
+﻿using Apteka.Plus.Common.Controls;
 using Apteka.Plus.Logic.BLL;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
 using Apteka.Plus.Properties;
 using BLToolkit.Data;
+using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
 
 namespace Apteka.Plus.Forms
 {
@@ -92,11 +92,11 @@ namespace Apteka.Plus.Forms
                     MessageBox.Show("Накладная успешно сохранена.", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 }
-                catch (Exception exc)
+                catch (Exception)
                 {
                     dbDestination.RollbackTransaction();
                     dbSource.RollbackTransaction();
-                    throw exc;
+                    throw;
                 }
 
                 this.Close();

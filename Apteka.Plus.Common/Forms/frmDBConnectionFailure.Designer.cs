@@ -33,7 +33,11 @@
             this.btnExit = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.tbConnectionString = new System.Windows.Forms.TextBox();
+            this.tbDbHost = new System.Windows.Forms.TextBox();
+            this.tbDbUserName = new System.Windows.Forms.TextBox();
+            this.label3 = new System.Windows.Forms.Label();
+            this.tbDbPassword = new System.Windows.Forms.TextBox();
+            this.label4 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnRetry
@@ -72,17 +76,48 @@
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(16, 160);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(109, 13);
+            this.label2.Size = new System.Drawing.Size(107, 13);
             this.label2.TabIndex = 4;
-            this.label2.Text = "Строка соединения:";
+            this.label2.Text = "Адрес компьютера:";
             // 
-            // tbConnectionString
+            // tbDbHost
             // 
-            this.tbConnectionString.Location = new System.Drawing.Point(131, 160);
-            this.tbConnectionString.Multiline = true;
-            this.tbConnectionString.Name = "tbConnectionString";
-            this.tbConnectionString.Size = new System.Drawing.Size(290, 80);
-            this.tbConnectionString.TabIndex = 5;
+            this.tbDbHost.Location = new System.Drawing.Point(131, 157);
+            this.tbDbHost.Name = "tbDbHost";
+            this.tbDbHost.Size = new System.Drawing.Size(290, 20);
+            this.tbDbHost.TabIndex = 5;
+            // 
+            // tbDbUserName
+            // 
+            this.tbDbUserName.Location = new System.Drawing.Point(131, 183);
+            this.tbDbUserName.Name = "tbDbUserName";
+            this.tbDbUserName.Size = new System.Drawing.Size(290, 20);
+            this.tbDbUserName.TabIndex = 7;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(84, 186);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(41, 13);
+            this.label3.TabIndex = 6;
+            this.label3.Text = "Логин:";
+            // 
+            // tbDbPassword
+            // 
+            this.tbDbPassword.Location = new System.Drawing.Point(131, 209);
+            this.tbDbPassword.Name = "tbDbPassword";
+            this.tbDbPassword.Size = new System.Drawing.Size(290, 20);
+            this.tbDbPassword.TabIndex = 9;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(77, 212);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(48, 13);
+            this.label4.TabIndex = 8;
+            this.label4.Text = "Пароль:";
             // 
             // frmDBConnectionFailure
             // 
@@ -92,7 +127,11 @@
             this.AutoSize = true;
             this.CancelButton = this.btnExit;
             this.ClientSize = new System.Drawing.Size(463, 302);
-            this.Controls.Add(this.tbConnectionString);
+            this.Controls.Add(this.tbDbPassword);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.tbDbUserName);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.tbDbHost);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.btnExit);
@@ -115,6 +154,10 @@
         private System.Windows.Forms.Button btnExit;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox tbConnectionString;
+        private System.Windows.Forms.TextBox tbDbHost;
+        private System.Windows.Forms.TextBox tbDbUserName;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.TextBox tbDbPassword;
+        private System.Windows.Forms.Label label4;
     }
 }

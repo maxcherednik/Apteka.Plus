@@ -44,16 +44,6 @@ namespace Apteka.Plus.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=GNUS\\SQLEXPRESS;Persist Security Info=True;User ID=apteka_user;Passwo" +
-            "rd=1;Initial Catalog=p")]
-        public string ConnectionStringSatelite {
-            get {
-                return ((string)(this["ConnectionStringSatelite"]));
-            }
-        }
-        
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("25")]
@@ -171,6 +161,68 @@ namespace Apteka.Plus.Properties {
             }
             set {
                 this["OverridedIPs"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DbHost {
+            get {
+                return ((string)(this["DbHost"]));
+            }
+            set {
+                this["DbHost"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DbUser {
+            get {
+                return ((string)(this["DbUser"]));
+            }
+            set {
+                this["DbUser"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DbPassword {
+            get {
+                return ((string)(this["DbPassword"]));
+            }
+            set {
+                this["DbPassword"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source={0};Initial Catalog=sklad;User ID={1};Password={2};Persist Security I" +
+            "nfo=True;")]
+        public string ConnectionStringTemplate {
+            get {
+                return ((string)(this["ConnectionStringTemplate"]));
+            }
+            set {
+                this["ConnectionStringTemplate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source={0};User ID={1};Password={2};Initial Catalog=p{3};Persist Security In" +
+            "fo=True;")]
+        public string ConnectionStringStoreTemplate {
+            get {
+                return ((string)(this["ConnectionStringStoreTemplate"]));
+            }
+            set {
+                this["ConnectionStringStoreTemplate"] = value;
             }
         }
     }

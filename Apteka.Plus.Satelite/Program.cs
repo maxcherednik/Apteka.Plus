@@ -33,14 +33,20 @@ namespace Apteka.Plus.Satelite
 
         private static void CheckAndInitConnectionStrings()
         {
-            while (!DAL.IsConnectionFine(Settings.Default.ConnectionString))
+            var connectionString = string.Format(Settings.Default.ConnectionStringTemplate, Settings.Default.DbHost, Settings.Default.DbUser, Settings.Default.DbPassword);
+
+            while (!DAL.IsConnectionFine(connectionString))
             {
-                using (var dlg = new frmDBConnectionFailure(Settings.Default.ConnectionString))
+                using (var dlg = new frmDBConnectionFailure(Settings.Default.DbHost, Settings.Default.DbUser, Settings.Default.DbPassword))
                 {
                     if (DialogResult.Retry == dlg.ShowDialog())
                     {
-                        Settings.Default.ConnectionString = dlg.ConnectionString;
+                        Settings.Default.DbHost = dlg.DbHost;
+                        Settings.Default.DbUser = dlg.DbUser;
+                        Settings.Default.DbPassword = dlg.DbPassword;
                         Settings.Default.Save();
+
+                        connectionString = string.Format(Settings.Default.ConnectionStringTemplate, Settings.Default.DbHost, Settings.Default.DbUser, Settings.Default.DbPassword);
                     }
                     else
                     {
@@ -48,7 +54,7 @@ namespace Apteka.Plus.Satelite
                     }
                 }
             }
-            DAL.InitConnectionString(Settings.Default.ConnectionString);
+            DAL.InitConnectionString(connectionString);
         }
 
         static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)

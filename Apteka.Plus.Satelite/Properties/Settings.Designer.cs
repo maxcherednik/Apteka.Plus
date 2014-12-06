@@ -97,18 +97,6 @@ namespace Apteka.Plus.Satelite.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=.\\SQLEXPRESS;Initial Catalog=satelite;User ID=apteka_user;Password=1")]
-        public string ConnectionString {
-            get {
-                return ((string)(this["ConnectionString"]));
-            }
-            set {
-                this["ConnectionString"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("-1")]
         public string SateliteID {
             get {
@@ -116,6 +104,54 @@ namespace Apteka.Plus.Satelite.Properties {
             }
             set {
                 this["SateliteID"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source={0};Initial Catalog=satelite;User ID={1};Password={2}")]
+        public string ConnectionStringTemplate {
+            get {
+                return ((string)(this["ConnectionStringTemplate"]));
+            }
+            set {
+                this["ConnectionStringTemplate"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DbHost {
+            get {
+                return ((string)(this["DbHost"]));
+            }
+            set {
+                this["DbHost"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DbUser {
+            get {
+                return ((string)(this["DbUser"]));
+            }
+            set {
+                this["DbUser"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string DbPassword {
+            get {
+                return ((string)(this["DbPassword"]));
+            }
+            set {
+                this["DbPassword"] = value;
             }
         }
     }

@@ -43,6 +43,8 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.tbFontSize = new System.Windows.Forms.TextBox();
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
+            this.label6 = new System.Windows.Forms.Label();
+            this.tbConnectionStringForSecondStore = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -130,7 +132,7 @@
             this.cbCashRegisterEnabled.Checked = global::Apteka.Plus.Satelite.Properties.Settings.Default.CashRegisterEnabled;
             this.cbCashRegisterEnabled.CheckState = System.Windows.Forms.CheckState.Checked;
             this.cbCashRegisterEnabled.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Apteka.Plus.Satelite.Properties.Settings.Default, "CashRegisterEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-            this.cbCashRegisterEnabled.Location = new System.Drawing.Point(15, 169);
+            this.cbCashRegisterEnabled.Location = new System.Drawing.Point(12, 277);
             this.cbCashRegisterEnabled.Name = "cbCashRegisterEnabled";
             this.cbCashRegisterEnabled.Size = new System.Drawing.Size(108, 17);
             this.cbCashRegisterEnabled.TabIndex = 5;
@@ -178,13 +180,33 @@
             // 
             this.errorProvider1.ContainerControl = this;
             // 
+            // label6
+            // 
+            this.label6.Location = new System.Drawing.Point(12, 164);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(101, 51);
+            this.label6.TabIndex = 12;
+            this.label6.Text = "Строка соединения для второго пункта:";
+            // 
+            // tbConnectionStringForSecondStore
+            // 
+            this.tbConnectionStringForSecondStore.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::Apteka.Plus.Satelite.Properties.Settings.Default, "ConnectionStringForSecondStore", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.tbConnectionStringForSecondStore.Location = new System.Drawing.Point(145, 164);
+            this.tbConnectionStringForSecondStore.Multiline = true;
+            this.tbConnectionStringForSecondStore.Name = "tbConnectionStringForSecondStore";
+            this.tbConnectionStringForSecondStore.Size = new System.Drawing.Size(206, 102);
+            this.tbConnectionStringForSecondStore.TabIndex = 13;
+            this.tbConnectionStringForSecondStore.Text = global::Apteka.Plus.Satelite.Properties.Settings.Default.ConnectionStringForSecondStore;
+            // 
             // frmOptions
             // 
             this.AcceptButton = this.btnOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(445, 215);
+            this.ClientSize = new System.Drawing.Size(445, 331);
+            this.Controls.Add(this.tbConnectionStringForSecondStore);
+            this.Controls.Add(this.label6);
             this.Controls.Add(this.tbStoreId);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.cbCashRegisterEnabled);
@@ -226,5 +248,7 @@
         private System.Windows.Forms.TextBox tbStoreId;
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.ErrorProvider errorProvider1;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.TextBox tbConnectionStringForSecondStore;
     }
 }

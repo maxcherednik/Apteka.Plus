@@ -23,6 +23,9 @@
     <Setting Name="SateliteID" Type="System.String" Scope="User">
       <Value Profile="(Default)">-1</Value>
     </Setting>
+    <Setting Name="ConnectionStringForSecondStore" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Data Source=.\SQLEXPRESS;Initial Catalog=satelite;User ID=apteka_user;Password=1</Value>
+</Setting>
     <Setting Name="ConnectionStringTemplate" Type="System.String" Scope="User">
       <Value Profile="(Default)">Data Source={0};Initial Catalog=satelite;User ID={1};Password={2}</Value>
     </Setting>

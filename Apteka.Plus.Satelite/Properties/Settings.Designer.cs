@@ -118,5 +118,17 @@ namespace Apteka.Plus.Satelite.Properties {
                 this["SateliteID"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Data Source=.\\SQLEXPRESS;Initial Catalog=satelite;User ID=apteka_user;Password=1")]
+        public string ConnectionStringForSecondStore {
+            get {
+                return ((string)(this["ConnectionStringForSecondStore"]));
+            }
+            set {
+                this["ConnectionStringForSecondStore"] = value;
+            }
+        }
     }
 }

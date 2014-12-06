@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
-using Apteka.Helpers;
+﻿using Apteka.Helpers;
 using Apteka.Plus.Logic.BLL;
 using Apteka.Plus.Logic.BLL.Collections;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
 using Apteka.Plus.Satelite.Properties;
 using BLToolkit.Data;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace Apteka.Plus.Satelite.Forms
 {
@@ -25,6 +25,8 @@ namespace Apteka.Plus.Satelite.Forms
             InitializeComponent();
             _storeID = int.Parse(Settings.Default.SateliteID);
             _currentStore = MyStoresCollection.AllStores.Find(store => _storeID == store.ID);
+            var connectionString = Settings.Default.ConnectionStringForSecondStore;
+            DbManager.AddConnectionString("Second", connectionString);
         }
 
 
@@ -176,7 +178,7 @@ namespace Apteka.Plus.Satelite.Forms
                 LoadLocalBillsByLetter(tbSearch.Text[0].ToString());
                 localBillsRowExBindingSource.MoveFirst();
             }
-            catch
+            catch(Exception ex)
             {
                 MessageBox.Show("Ошибка подключения к серверу баз данных. Возможно отсутствует интернет.", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 

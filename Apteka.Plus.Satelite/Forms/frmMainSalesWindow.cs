@@ -46,10 +46,10 @@ namespace Apteka.Plus.Satelite.Forms
             {
                 _cashRegister = new FPrint5200();
             }
-            catch (Exception)
+            catch (Exception e)
             {
 
-                MessageBox.Show("Не могу инициализировать мудуль управления кассовым аппаратом. Убедитесь, что все необходимые драйвера установлены", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show("Не могу инициализировать мудуль управления кассовым аппаратом. Убедитесь, что все необходимые драйвера установлены. Ошибка: " + e.Message, "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 this.Close();
             }
 

@@ -7,7 +7,7 @@ namespace Apteka.Plus.CashRegister.FP5200
     {
         private readonly static Logger _logger = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private FprnM1C.IFprnM45 ECR = new FprnM1C.FprnM45Class();
+        private FprnM1C.IFprnM45 ECR = new FprnM1C.FprnM45();
 
         #region ICashRegister Members
 

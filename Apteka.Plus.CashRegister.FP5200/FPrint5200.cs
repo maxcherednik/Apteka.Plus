@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
-using Apteka.Helpers;
+﻿using Apteka.Helpers;
+using System.Collections.Generic;
 
 namespace Apteka.Plus.CashRegister.FP5200
 {
-    public class FPrint5200:ICashRegister
+    public class FPrint5200 : ICashRegister
     {
         private readonly static Logger _logger = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private FprnM1C.IFprnM45 ECR = new FprnM1C.FprnM45Class();
-        
+        private FprnM1C.IFprnM45 ECR = new FprnM1C.FprnM45();
+
         #region ICashRegister Members
 
         public void PerformXReport()
@@ -67,7 +67,7 @@ namespace Apteka.Plus.CashRegister.FP5200
             {
                 // освобождаем порт
                 ECR.DeviceEnabled = false;
-                
+
             }
 
             if (ECR.ResultCode != 0)
@@ -75,7 +75,7 @@ namespace Apteka.Plus.CashRegister.FP5200
                 _logger.Error("Error during device release");
                 return;
             }
-                
+
 
         }
 
@@ -160,10 +160,10 @@ namespace Apteka.Plus.CashRegister.FP5200
 
                 _logger.Info("Getting device status");
                 // получаем состояние ККМ
-                int status=ECR.GetStatus();
+                int status = ECR.GetStatus();
                 if (status != 0)
                 {
-                    _logger.ErrorFormat("Smth wrong with device. Status {0}",status);
+                    _logger.ErrorFormat("Smth wrong with device. Status {0}", status);
                     return;
                 }
 
@@ -178,7 +178,7 @@ namespace Apteka.Plus.CashRegister.FP5200
                         return;
                     }
                 }
-               
+
 
                 // входим в режим регистрации
                 // устанавливаем пароль кассира

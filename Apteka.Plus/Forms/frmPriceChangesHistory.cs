@@ -1,15 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows.Forms;
-using Apteka.Plus.Logic.BLL.Collections;
+﻿using Apteka.Plus.Logic.BLL.Collections;
 using Apteka.Plus.Logic.BLL.Entities;
+using System;
+using System.Windows.Forms;
 
 namespace Apteka.Plus.Forms
 {
     public partial class frmPriceChangesHistory : Form
     {
         private MyStore _mystoreSelected;
-        private List<PriceChangeRow> _liPriceChangeRows;
 
         public frmPriceChangesHistory()
         {

@@ -1,18 +1,19 @@
-﻿using System;
-using System.Data.SqlClient;
-using Apteka.Plus.Logic.BLL.Collections;
+﻿using Apteka.Plus.Logic.BLL.Collections;
 using Apteka.Plus.Logic.BLL.Entities;
 using BLToolkit.Data;
+using System;
+using System.Data.SqlClient;
 
 namespace Apteka.Plus.Logic.DAL
 {
     public class DAL
     {
-        public static void InitConnectionStrings(string ConnectionStringSatelite)
+        public static void InitStoresConnectionStrings(string connectionStringStoreTemplate, string dbHost, string dbUser, string dbPassword)
         {
             foreach (MyStore myStore in MyStoresCollection.AllStores)
             {
-                DbManager.AddConnectionString(myStore.Name, ConnectionStringSatelite + myStore.ID);
+                var storeConnectionString = String.Format(connectionStringStoreTemplate, dbHost, dbUser, dbPassword, myStore.ID);
+                DbManager.AddConnectionString(myStore.Name, storeConnectionString);
             }
         }
 

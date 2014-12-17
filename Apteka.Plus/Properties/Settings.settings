@@ -8,9 +8,6 @@
     <Setting Name="SateliteTcpPort" Type="System.Int32" Scope="Application">
       <Value Profile="(Default)">7878</Value>
     </Setting>
-    <Setting Name="ConnectionStringSatelite" Type="System.String" Scope="Application">
-      <Value Profile="(Default)">Data Source=GNUS\SQLEXPRESS;Persist Security Info=True;User ID=apteka_user;Password=1;Initial Catalog=p</Value>
-    </Setting>
     <Setting Name="DaysOfStockRotation" Type="System.String" Scope="User">
       <Value Profile="(Default)">25</Value>
     </Setting>
@@ -40,6 +37,21 @@
     </Setting>
     <Setting Name="OverridedIPs" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DbHost" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DbUser" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="DbPassword" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ConnectionStringTemplate" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Data Source={0};Initial Catalog=sklad;User ID={1};Password={2};Persist Security Info=True;</Value>
+    </Setting>
+    <Setting Name="ConnectionStringStoreTemplate" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Data Source={0};User ID={1};Password={2};Initial Catalog=p{3};Persist Security Info=True;</Value>
     </Setting>
   </Settings>
 </SettingsFile>

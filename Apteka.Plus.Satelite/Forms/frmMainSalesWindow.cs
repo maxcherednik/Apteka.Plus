@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Windows.Forms;
-using Apteka.Helpers;
+﻿using Apteka.Helpers;
 using Apteka.Plus.CashRegister;
 using Apteka.Plus.CashRegister.FP5200;
 using Apteka.Plus.Forms;
@@ -14,6 +10,10 @@ using Apteka.Plus.Satelite.Properties;
 using BLToolkit.Data;
 using Microsoft.Reporting.WinForms;
 using RSDN;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Windows.Forms;
 
 namespace Apteka.Plus.Satelite.Forms
 {
@@ -22,7 +22,7 @@ namespace Apteka.Plus.Satelite.Forms
         #region Private Fields
         private readonly static Logger _log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private ICashRegister _cashRegister = new FPrint5200();
+        private ICashRegister _cashRegister;
         readonly Employee _currentEmployee;
         readonly MyStore _currentStore;
 
@@ -41,6 +41,17 @@ namespace Apteka.Plus.Satelite.Forms
         public frmMainSalesWindow(Employee empl)
         {
             InitializeComponent();
+
+            try
+            {
+                _cashRegister = new FPrint5200();
+            }
+            catch (Exception e)
+            {
+
+                MessageBox.Show("Не могу инициализировать мудуль управления кассовым аппаратом. Убедитесь, что все необходимые драйвера установлены. Ошибка: " + e.Message, "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                this.Close();
+            }
 
             _currentEmployee = empl;
             tsEmployeeName.Text = empl.FullName;

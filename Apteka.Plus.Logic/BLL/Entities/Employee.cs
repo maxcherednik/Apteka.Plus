@@ -28,11 +28,13 @@ namespace Apteka.Plus.Logic.BLL.Entities
 
         #region IUserInfo Members
 
+        [MapIgnore()]
         string IUserInfo.ID
         {
             get { return ID.ToString(); }
         }
 
+        [MapIgnore()]
         string IUserInfo.Name
         {
             get { return Login; }

@@ -1,13 +1,13 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.31101.0
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apteka.Plus", "Apteka.Plus\Apteka.Plus.csproj", "{DB79F57D-2DAD-45D9-A397-9F6DE3FEE3E7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apteka.Plus.Logic", "Apteka.Plus.Logic\Apteka.Plus.Logic.csproj", "{37A7F3FC-0C1C-4ED6-BAA1-882651F4B069}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apteka.Plus.Satelite", "Apteka.Plus.Satelite\Apteka.Plus.Satelite.csproj", "{152FD972-74AF-49C9-A103-FFC384019A3E}"
-EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Apteka Plus Satelite Setup", "Apteka Plus Satelite Setup\Apteka Plus Satelite Setup.vdproj", "{458DC4B1-B8D2-4632-ADC9-78C9D8511317}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apteka.Helpers", "Apteka.Helpers\Apteka.Helpers.csproj", "{09D613E4-8CDF-4239-8D56-21A031523B2D}"
 EndProject
@@ -24,6 +24,13 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apteka.Plus.Satelite.Logic", "Apteka.Plus.Satelite.Logic\Apteka.Plus.Satelite.Logic.csproj", "{98AE6620-0BAF-4C20-A1DB-1EC1378F5D63}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Apteka.Plus.Satelite.Service", "Apteka.Plus.Satelite.Service\Apteka.Plus.Satelite.Service.csproj", "{E66F6185-83A2-4AF2-A4EA-C0ED09E4F756}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{B592B5B7-1B99-4511-852A-D85C2EFB07EA}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,13 +64,6 @@ Global
 		{152FD972-74AF-49C9-A103-FFC384019A3E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{152FD972-74AF-49C9-A103-FFC384019A3E}.Release|x86.ActiveCfg = Release|x86
 		{152FD972-74AF-49C9-A103-FFC384019A3E}.Release|x86.Build.0 = Release|x86
-		{458DC4B1-B8D2-4632-ADC9-78C9D8511317}.Debug|Any CPU.ActiveCfg = Debug
-		{458DC4B1-B8D2-4632-ADC9-78C9D8511317}.Debug|Any CPU.Build.0 = Debug
-		{458DC4B1-B8D2-4632-ADC9-78C9D8511317}.Debug|x86.ActiveCfg = Debug
-		{458DC4B1-B8D2-4632-ADC9-78C9D8511317}.Debug|x86.Build.0 = Debug
-		{458DC4B1-B8D2-4632-ADC9-78C9D8511317}.Release|Any CPU.ActiveCfg = Release
-		{458DC4B1-B8D2-4632-ADC9-78C9D8511317}.Release|x86.ActiveCfg = Release
-		{458DC4B1-B8D2-4632-ADC9-78C9D8511317}.Release|x86.Build.0 = Release
 		{09D613E4-8CDF-4239-8D56-21A031523B2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{09D613E4-8CDF-4239-8D56-21A031523B2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09D613E4-8CDF-4239-8D56-21A031523B2D}.Debug|x86.ActiveCfg = Debug|x86

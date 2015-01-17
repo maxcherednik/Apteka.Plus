@@ -35,11 +35,11 @@
     <UpdatePeriodically>false</UpdatePeriodically>
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
-    <InstallUrl>\\gnus\p1\new\main\</InstallUrl>
+    <InstallUrl>\\dbd-pk\Apteka.Plus.Distributive\Apteka.Plus\</InstallUrl>
     <ProductName>Apteka.Plus</ProductName>
     <PublisherName>Chia Farm</PublisherName>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>155</ApplicationRevision>
+    <ApplicationRevision>156</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>

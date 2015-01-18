@@ -21,6 +21,8 @@ namespace Apteka.Plus.Logic.BLL.Entities
 
         public int Divider { get; set; }
 
+        public bool IsDiscountExcluded { get; set; }
+
         [MapIgnore]
         public Boolean IsLifeImportant { get; set; }
 
@@ -36,7 +38,8 @@ namespace Apteka.Plus.Logic.BLL.Entities
                     && Divider==other.Divider
                     && ProductName==other.ProductName
                     && PackageName==other.PackageName
-                    && CountryProducer==other.CountryProducer;
+                    && CountryProducer==other.CountryProducer
+                    && IsDiscountExcluded == other.IsDiscountExcluded;
         }
 
         public override int GetHashCode()

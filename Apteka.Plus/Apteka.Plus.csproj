@@ -25,7 +25,7 @@
     <TargetFrameworkProfile />
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <PublishUrl>C:\Users\Maxim\Documents\main\</PublishUrl>
+    <PublishUrl>C:\Apteka.Plus.Distributive\Apteka.Plus\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Unc</InstallFrom>
     <UpdateEnabled>true</UpdateEnabled>
@@ -39,7 +39,7 @@
     <ProductName>Apteka.Plus</ProductName>
     <PublisherName>Chia Farm</PublisherName>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>156</ApplicationRevision>
+    <ApplicationRevision>158</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>

@@ -35,12 +35,14 @@
             this.label1 = new System.Windows.Forms.Label();
             this.tbSearch = new System.Windows.Forms.TextBox();
             this.dgvFullProductInfoList = new Apteka.Plus.Common.Controls.MyDataGridView();
+            this.fullProductInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.productNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.packageNameDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.eAN13DataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.countryProducerDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.dividerDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.fullProductInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
+            this.IsDiscountExcluded = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -101,7 +103,8 @@
             this.packageNameDataGridViewTextBoxColumn,
             this.eAN13DataGridViewTextBoxColumn,
             this.countryProducerDataGridViewTextBoxColumn,
-            this.dividerDataGridViewTextBoxColumn});
+            this.dividerDataGridViewTextBoxColumn,
+            this.IsDiscountExcluded});
             this.dgvFullProductInfoList.DataSource = this.fullProductInfoBindingSource;
             this.dgvFullProductInfoList.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvFullProductInfoList.Location = new System.Drawing.Point(0, 0);
@@ -114,6 +117,10 @@
             this.dgvFullProductInfoList.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvFullProductInfoList_CellFormatting);
             this.dgvFullProductInfoList.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dgvFullProductInfoList_KeyDown);
             this.dgvFullProductInfoList.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.dgvFullProductInfoList_KeyPress);
+            // 
+            // fullProductInfoBindingSource
+            // 
+            this.fullProductInfoBindingSource.DataSource = typeof(Apteka.Plus.Logic.BLL.Entities.FullProductInfo);
             // 
             // productNameDataGridViewTextBoxColumn
             // 
@@ -152,9 +159,14 @@
             this.dividerDataGridViewTextBoxColumn.Name = "dividerDataGridViewTextBoxColumn";
             this.dividerDataGridViewTextBoxColumn.ReadOnly = true;
             // 
-            // fullProductInfoBindingSource
+            // IsDiscountExcluded
             // 
-            this.fullProductInfoBindingSource.DataSource = typeof(Apteka.Plus.Logic.BLL.Entities.FullProductInfo);
+            this.IsDiscountExcluded.DataPropertyName = "IsDiscountExcluded";
+            this.IsDiscountExcluded.HeaderText = "Скидка";
+            this.IsDiscountExcluded.Name = "IsDiscountExcluded";
+            this.IsDiscountExcluded.ReadOnly = true;
+            this.IsDiscountExcluded.Resizable = System.Windows.Forms.DataGridViewTriState.True;
+            this.IsDiscountExcluded.SortMode = System.Windows.Forms.DataGridViewColumnSortMode.NotSortable;
             // 
             // ucFullProductInfoBase
             // 
@@ -167,6 +179,7 @@
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel1.PerformLayout();
             this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvFullProductInfoList)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.fullProductInfoBindingSource)).EndInit();
@@ -186,5 +199,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn eAN13DataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn countryProducerDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn dividerDataGridViewTextBoxColumn;
+        private System.Windows.Forms.DataGridViewTextBoxColumn IsDiscountExcluded;
     }
 }

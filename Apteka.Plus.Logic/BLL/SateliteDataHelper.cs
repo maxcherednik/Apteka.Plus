@@ -40,6 +40,7 @@ namespace Apteka.Plus.Logic.BLL
                 PriceChangesAccessor pca = PriceChangesAccessor.CreateInstance<PriceChangesAccessor>(dbSatelite);
                 SuppliesReturnHistoryAccessor srha = SuppliesReturnHistoryAccessor.CreateInstance<SuppliesReturnHistoryAccessor>(dbSatelite);
                 ClientAccessor clientAccessor = ClientAccessor.CreateInstance<ClientAccessor>();
+                FullProductInfoAccessor fpia = FullProductInfoAccessor.CreateInstance<FullProductInfoAccessor>();
 
                 log.Info("Читаем oLocalBillsRows");
                 List<LocalBillsRowEx> liLocalBillsRows = lba.GetUnsyncedRows();
@@ -64,6 +65,10 @@ namespace Apteka.Plus.Logic.BLL
                 log.Info("Читаем Clients");
                 List<Client> liClients = clientAccessor.Query.SelectAll();
                 log.InfoFormat("liClients: {0} позиций", liClients.Count);
+
+                log.Info("Читаем Products");
+                List<FullProductInfo> liFullProductInfo = fpia.GetAllActiveProductInfos();
+                log.InfoFormat("FullProductInfo: {0} позиций", liFullProductInfo.Count);
 
                 #region Получение информации по таблицам
                 log.Info("Получение информации по таблицам");
@@ -95,6 +100,7 @@ namespace Apteka.Plus.Logic.BLL
                 SerializeHelper.SerializeObjectToFile(liTablesInfo, diDate.FullName + "\\TablesInfo.xml");
                 SerializeHelper.SerializeObjectToFile(liMyStores, diDate.FullName + "\\MyStores.xml");
                 SerializeHelper.SerializeObjectToFile(liClients, diDate.FullName + "\\Clients.xml");
+                SerializeHelper.SerializeObjectToFile(liFullProductInfo, diDate.FullName + "\\ProductInfo.xml");
 
             }
 
@@ -335,7 +341,9 @@ namespace Apteka.Plus.Logic.BLL
             List<TableInfo> liTablesInfo = SerializeHelper.DeserializeObjectFromFile<List<TableInfo>>(diDestination.FullName + "\\TablesInfo.xml");
             List<MyStore> liMyStores = SerializeHelper.DeserializeObjectFromFile<List<MyStore>>(diDestination.FullName + "\\MyStores.xml");
             List<Client> liClients = SerializeHelper.DeserializeObjectFromFile<List<Client>>(diDestination.FullName + "\\Clients.xml");
-
+            List<FullProductInfo> liFullProductInfo = SerializeHelper.DeserializeObjectFromFile<List<FullProductInfo>>(diDestination.FullName + "\\ProductInfo.xml");
+            
+                
             using (DbManager db = new DbManager())
             {
                 try
@@ -421,7 +429,27 @@ namespace Apteka.Plus.Logic.BLL
                     tia.UpdateTables(db, liTablesInfo);
                     #endregion
 
+
+                    #region Update FullProductInfo
+                    foreach (var productInfo in liFullProductInfo)
+                    {
+                        FullProductInfo fpi = fpia.SelectByKey(productInfo.ID);
+                        if (fpi == null)
+                        {
+                            fpia.Insert(productInfo);
+                        }
+                        else if (!fpi.Equals(productInfo))
+                        {
+                            fpia.Query.Update(productInfo);
+                        }
+                    }
+
+                    #endregion
+
                     #region Update Dictionaries
+
+
+
                     List<FullProductInfo> liFullProductInfos = new List<FullProductInfo>();
                     List<Supplier> liSuppliers = new List<Supplier>();
                     List<MainStoreRow> liMainStoreRows = new List<MainStoreRow>();

@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.tpSummary = new System.Windows.Forms.TabPage();
             this.btnCancel = new System.Windows.Forms.Button();
@@ -47,15 +47,16 @@
             this.label1 = new System.Windows.Forms.Label();
             this.tpIntegration = new System.Windows.Forms.TabPage();
             this.dgvProductsIntegrationInfo = new Apteka.Plus.Common.Controls.MyDataGridView();
+            this.supplierDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.supplierProductIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.Column1 = new System.Windows.Forms.DataGridViewButtonColumn();
             this.productIntegrationInfoBindingSource = new System.Windows.Forms.BindingSource(this.components);
             this.btnAddIntegrationInfo = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.tbID = new System.Windows.Forms.TextBox();
             this.cboSuppliers = new System.Windows.Forms.ComboBox();
             this.supplierBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.supplierDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.supplierProductIDDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.Column1 = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.chbDiscountExclude = new System.Windows.Forms.CheckBox();
             this.tabControl1.SuspendLayout();
             this.tpSummary.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.fullProductInfoBindingSource)).BeginInit();
@@ -73,12 +74,13 @@
             this.tabControl1.Location = new System.Drawing.Point(0, 0);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
-            this.tabControl1.Size = new System.Drawing.Size(487, 349);
+            this.tabControl1.Size = new System.Drawing.Size(487, 391);
             this.tabControl1.TabIndex = 0;
             this.tabControl1.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.tabControl1_Selecting);
             // 
             // tpSummary
             // 
+            this.tpSummary.Controls.Add(this.chbDiscountExclude);
             this.tpSummary.Controls.Add(this.btnCancel);
             this.tpSummary.Controls.Add(this.btnSave);
             this.tpSummary.Controls.Add(this.tbCountry);
@@ -94,32 +96,28 @@
             this.tpSummary.Location = new System.Drawing.Point(4, 22);
             this.tpSummary.Name = "tpSummary";
             this.tpSummary.Padding = new System.Windows.Forms.Padding(3);
-            this.tpSummary.Size = new System.Drawing.Size(479, 323);
+            this.tpSummary.Size = new System.Drawing.Size(479, 365);
             this.tpSummary.TabIndex = 0;
             this.tpSummary.Text = "Общее";
             this.tpSummary.UseVisualStyleBackColor = true;
             // 
             // btnCancel
             // 
-            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(365, 274);
+            this.btnCancel.Location = new System.Drawing.Point(365, 311);
             this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(75, 23);
+            this.btnCancel.Size = new System.Drawing.Size(75, 28);
             this.btnCancel.TabIndex = 11;
             this.btnCancel.Text = "Отмена";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
             // btnSave
             // 
-            this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSave.Location = new System.Drawing.Point(270, 274);
+            this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSave.Location = new System.Drawing.Point(270, 311);
             this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(75, 23);
+            this.btnSave.Size = new System.Drawing.Size(75, 28);
             this.btnSave.TabIndex = 10;
             this.btnSave.Text = "Сохранить";
             this.btnSave.UseVisualStyleBackColor = true;
@@ -127,9 +125,9 @@
             // 
             // tbCountry
             // 
-            this.tbCountry.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbCountry.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tbCountry.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.fullProductInfoBindingSource, "CountryProducer", true));
             this.tbCountry.Location = new System.Drawing.Point(100, 219);
             this.tbCountry.Name = "tbCountry";
@@ -159,9 +157,9 @@
             // 
             // tbPackageName
             // 
-            this.tbPackageName.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbPackageName.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tbPackageName.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.fullProductInfoBindingSource, "PackageName", true));
             this.tbPackageName.Location = new System.Drawing.Point(100, 126);
             this.tbPackageName.Name = "tbPackageName";
@@ -170,9 +168,9 @@
             // 
             // tbProductName
             // 
-            this.tbProductName.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbProductName.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tbProductName.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.fullProductInfoBindingSource, "ProductName", true));
             this.tbProductName.Location = new System.Drawing.Point(100, 75);
             this.tbProductName.Name = "tbProductName";
@@ -199,9 +197,9 @@
             // 
             // tbEAN13
             // 
-            this.tbEAN13.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.tbEAN13.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.tbEAN13.DataBindings.Add(new System.Windows.Forms.Binding("Text", this.fullProductInfoBindingSource, "EAN13", true));
             this.tbEAN13.Location = new System.Drawing.Point(100, 27);
             this.tbEAN13.Name = "tbEAN13";
@@ -245,9 +243,9 @@
             // 
             this.dgvProductsIntegrationInfo.AllowUserToAddRows = false;
             this.dgvProductsIntegrationInfo.AllowUserToDeleteRows = false;
-            this.dgvProductsIntegrationInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-                        | System.Windows.Forms.AnchorStyles.Left)
-                        | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvProductsIntegrationInfo.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvProductsIntegrationInfo.AutoGenerateColumns = false;
             this.dgvProductsIntegrationInfo.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvProductsIntegrationInfo.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
@@ -262,6 +260,34 @@
             this.dgvProductsIntegrationInfo.Size = new System.Drawing.Size(462, 281);
             this.dgvProductsIntegrationInfo.TabIndex = 22;
             this.dgvProductsIntegrationInfo.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvProductsIntegrationInfo_CellContentClick);
+            // 
+            // supplierDataGridViewTextBoxColumn
+            // 
+            this.supplierDataGridViewTextBoxColumn.DataPropertyName = "Supplier";
+            this.supplierDataGridViewTextBoxColumn.HeaderText = "Поставщик";
+            this.supplierDataGridViewTextBoxColumn.Name = "supplierDataGridViewTextBoxColumn";
+            this.supplierDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // supplierProductIDDataGridViewTextBoxColumn
+            // 
+            this.supplierProductIDDataGridViewTextBoxColumn.DataPropertyName = "SupplierProductID";
+            this.supplierProductIDDataGridViewTextBoxColumn.HeaderText = "Идентификтор товара поставщика";
+            this.supplierProductIDDataGridViewTextBoxColumn.Name = "supplierProductIDDataGridViewTextBoxColumn";
+            this.supplierProductIDDataGridViewTextBoxColumn.ReadOnly = true;
+            // 
+            // Column1
+            // 
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.ButtonFace;
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.ButtonFace;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.WindowText;
+            this.Column1.DefaultCellStyle = dataGridViewCellStyle1;
+            this.Column1.HeaderText = "Действие";
+            this.Column1.Name = "Column1";
+            this.Column1.ReadOnly = true;
+            this.Column1.Text = "Удалить";
+            this.Column1.UseColumnTextForButtonValue = true;
             // 
             // productIntegrationInfoBindingSource
             // 
@@ -309,40 +335,23 @@
             // 
             this.supplierBindingSource.DataSource = typeof(Apteka.Plus.Logic.BLL.Entities.Supplier);
             // 
-            // supplierDataGridViewTextBoxColumn
+            // chbDiscountExclude
             // 
-            this.supplierDataGridViewTextBoxColumn.DataPropertyName = "Supplier";
-            this.supplierDataGridViewTextBoxColumn.HeaderText = "Поставщик";
-            this.supplierDataGridViewTextBoxColumn.Name = "supplierDataGridViewTextBoxColumn";
-            this.supplierDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // supplierProductIDDataGridViewTextBoxColumn
-            // 
-            this.supplierProductIDDataGridViewTextBoxColumn.DataPropertyName = "SupplierProductID";
-            this.supplierProductIDDataGridViewTextBoxColumn.HeaderText = "Идентификтор товара поставщика";
-            this.supplierProductIDDataGridViewTextBoxColumn.Name = "supplierProductIDDataGridViewTextBoxColumn";
-            this.supplierProductIDDataGridViewTextBoxColumn.ReadOnly = true;
-            // 
-            // Column1
-            // 
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.ButtonFace;
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.ButtonFace;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.WindowText;
-            this.Column1.DefaultCellStyle = dataGridViewCellStyle2;
-            this.Column1.HeaderText = "Действие";
-            this.Column1.Name = "Column1";
-            this.Column1.ReadOnly = true;
-            this.Column1.Text = "Удалить";
-            this.Column1.UseColumnTextForButtonValue = true;
+            this.chbDiscountExclude.AutoSize = true;
+            this.chbDiscountExclude.DataBindings.Add(new System.Windows.Forms.Binding("Checked", this.fullProductInfoBindingSource, "IsDiscountExcluded", true));
+            this.chbDiscountExclude.Location = new System.Drawing.Point(98, 265);
+            this.chbDiscountExclude.Name = "chbDiscountExclude";
+            this.chbDiscountExclude.Size = new System.Drawing.Size(116, 17);
+            this.chbDiscountExclude.TabIndex = 12;
+            this.chbDiscountExclude.Text = "запретить скидку";
+            this.chbDiscountExclude.UseVisualStyleBackColor = true;
             // 
             // frmFullProductInfoEdit
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(487, 349);
+            this.ClientSize = new System.Drawing.Size(487, 391);
             this.Controls.Add(this.tabControl1);
             this.Name = "frmFullProductInfoEdit";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -388,5 +397,6 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn supplierDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn supplierProductIDDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewButtonColumn Column1;
+        private System.Windows.Forms.CheckBox chbDiscountExclude;
     }
 }

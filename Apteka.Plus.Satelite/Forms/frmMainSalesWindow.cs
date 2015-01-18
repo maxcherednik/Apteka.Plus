@@ -645,7 +645,8 @@ namespace Apteka.Plus.Satelite.Forms
 
                     double extra = ((p.Price - p.LocalBillsRow.MainStoreRow.SupplierPrice) /
                                                    p.LocalBillsRow.MainStoreRow.SupplierPrice) * 100.0;
-                    if (extra > _discountExtraLimit)
+
+                    if (!p.LocalBillsRow.MainStoreRow.FullProductInfo.IsDiscountExcluded  && extra > _discountExtraLimit)
                     {
                         p.PriceWithDiscount = p.Price - p.Price * p.Discount / 100.0;
                     }

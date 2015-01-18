@@ -154,6 +154,23 @@ namespace Apteka.Plus.UserControls
                     }
                     break;
 
+                case "IsDiscountExcluded":
+                    {
+                        if (row.IsDiscountExcluded)
+                        {
+                            e.Value = "Не разрешена";
+                        }
+                        else
+                        {
+                            e.Value = "";
+                        }
+                        e.FormattingApplied = true;
+
+                    }
+                    break;
+
+
+
                 default:
                     break;
             }

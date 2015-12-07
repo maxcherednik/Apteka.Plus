@@ -39,7 +39,7 @@
     <ProductName>Apteka.Plus</ProductName>
     <PublisherName>Chia Farm</PublisherName>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>158</ApplicationRevision>
+    <ApplicationRevision>159</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>

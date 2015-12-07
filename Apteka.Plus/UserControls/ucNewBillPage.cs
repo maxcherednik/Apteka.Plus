@@ -717,39 +717,29 @@ namespace Apteka.Plus.UserControls
 
             #region Price Processing
 
-            //MessageBox.Show(newMainStoreInsertRow.EOrderRow.NDS.ToString());
-            if (newMainStoreInsertRow.EOrderRow.NDS == 10)
+            if (newMainStoreInsertRow.EOrderRow.NDS == 10 && (_lifeImportant || newMainStoreInsertRow.EOrderRow.IsLifeImportant))
             {
 
-                if (_lifeImportant || newMainStoreInsertRow.EOrderRow.IsLifeImportant)
+                double chosenPrice = newMainStoreInsertRow.EOrderRow.VendorPriceWithoutNDS;
+                double extra = 0;
+                if (newMainStoreInsertRow.EOrderRow.VendorPriceWithNDS <= 50)
                 {
-                    double chosenPrice = newMainStoreInsertRow.EOrderRow.VendorPriceWithNDS;
-                    double extra = 0;
-                    if (newMainStoreInsertRow.EOrderRow.VendorPriceWithNDS <= 50)
-                    {
-                        extra = 0.25;
-                    }
-                    else if (newMainStoreInsertRow.EOrderRow.VendorPriceWithNDS > 50 &&
-                             newMainStoreInsertRow.EOrderRow.VendorPriceWithNDS <= 500)
-                    {
-                        extra = 0.2;
-                    }
-                    else
-                    {
-                        extra = 0.15;
-                    }
-                    newMainStoreInsertRow.LocalPrice = newMainStoreInsertRow.SupplierPrice + chosenPrice * extra;
-                    newMainStoreInsertRow.Extra = ((newMainStoreInsertRow.LocalPrice -
-                                                    newMainStoreInsertRow.SupplierPrice) /
-                                                   newMainStoreInsertRow.SupplierPrice) * 100.0;
+                    extra = 0.25;
+                }
+                else if (newMainStoreInsertRow.EOrderRow.VendorPriceWithNDS > 50 &&
+                         newMainStoreInsertRow.EOrderRow.VendorPriceWithNDS <= 500)
+                {
+                    extra = 0.2;
                 }
                 else
                 {
-                    double standardExtra = double.Parse(Settings.Default.StandartExtra);
-                    newMainStoreInsertRow.LocalPrice = newMainStoreInsertRow.SupplierPrice + newMainStoreInsertRow.SupplierPrice * standardExtra / 100.0;
-                    newMainStoreInsertRow.Extra = standardExtra;
+                    extra = 0.15;
                 }
 
+                newMainStoreInsertRow.LocalPrice = RoundDown(newMainStoreInsertRow.SupplierPrice + chosenPrice * extra, 0.05);
+                newMainStoreInsertRow.Extra = ((newMainStoreInsertRow.LocalPrice -
+                                                newMainStoreInsertRow.SupplierPrice) /
+                                               newMainStoreInsertRow.SupplierPrice) * 100.0;
             }
             else
             {
@@ -792,6 +782,27 @@ namespace Apteka.Plus.UserControls
             #endregion
 
         }
+
+        private static double RoundDown(double value, Double roundto)
+        {
+            // 105.5 down to nearest 1 = 105
+            // 105.5 down to nearest 10 = 100
+            // 105.5 down to nearest 7 = 105
+            // 105.5 down to nearest 100 = 100
+            // 105.5 down to nearest 0.2 = 105.4
+            // 105.5 down to nearest 0.3 = 105.3
+
+            //if no roundto then just pass original number back
+            if (roundto == 0)
+            {
+                return value;
+            }
+            else
+            {
+                return Math.Floor(value / roundto) * roundto;
+            }
+        }
+
 
         internal void AddNewRows(List<MainStoreInsertRow> liNewMainStoreInsertRows)
         {

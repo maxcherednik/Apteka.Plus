@@ -744,7 +744,24 @@ namespace Apteka.Plus.UserControls
             else
             {
                 double standardExtra = double.Parse(Settings.Default.StandartExtra);
-                newMainStoreInsertRow.LocalPrice = newMainStoreInsertRow.SupplierPrice + newMainStoreInsertRow.SupplierPrice * standardExtra / 100.0;
+                if (newMainStoreInsertRow.SupplierPrice < 100)
+                {
+                    standardExtra = 28.0;
+                }
+                else if (newMainStoreInsertRow.SupplierPrice >= 100 && newMainStoreInsertRow.SupplierPrice < 200)
+                {
+                    standardExtra = 25.0;
+                }
+                else if (newMainStoreInsertRow.SupplierPrice >= 200 && newMainStoreInsertRow.SupplierPrice < 500)
+                {
+                    standardExtra = 20.0;
+                }
+                else if (newMainStoreInsertRow.SupplierPrice >= 500)
+                {
+                    standardExtra = 15.0;
+                }
+
+                newMainStoreInsertRow.LocalPrice = RoundUp(newMainStoreInsertRow.SupplierPrice + newMainStoreInsertRow.SupplierPrice * standardExtra / 100.0, 0.5);
                 newMainStoreInsertRow.Extra = standardExtra;
 
             }
@@ -800,6 +817,26 @@ namespace Apteka.Plus.UserControls
             else
             {
                 return Math.Floor(value / roundto) * roundto;
+            }
+        }
+
+        private static double RoundUp(double value, Double roundto)
+        {
+            // 105.5 up to nearest 1 = 106
+            // 105.5 up to nearest 10 = 110
+            // 105.5 up to nearest 7 = 112
+            // 105.5 up to nearest 100 = 200
+            // 105.5 up to nearest 0.2 = 105.6
+            // 105.5 up to nearest 0.3 = 105.6
+
+            //if no roundto then just pass original number back
+            if (roundto == 0)
+            {
+                return value;
+            }
+            else
+            {
+                return Math.Ceiling(value / roundto) * roundto;
             }
         }
 

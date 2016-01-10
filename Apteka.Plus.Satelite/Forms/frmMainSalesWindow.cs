@@ -20,16 +20,16 @@ namespace Apteka.Plus.Satelite.Forms
     public partial class frmMainSalesWindow : Form
     {
         #region Private Fields
-        private readonly static Logger _log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private readonly static Logger Log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private ICashRegister _cashRegister;
-        readonly Employee _currentEmployee;
-        readonly MyStore _currentStore;
+        private readonly Employee _currentEmployee;
+        private readonly MyStore _currentStore;
 
-        List<LocalBillsRowEx> _liLocalBillRowsList;
-        List<SalesRow> _liSalesRows = new List<SalesRow>();
+        private List<LocalBillsRowEx> _liLocalBillRowsList;
+        private List<SalesRow> _liSalesRows = new List<SalesRow>();
 
-        bool _isPriceUpdatedListEnabled = false;
+        private bool _isPriceUpdatedListEnabled;
 
         private bool _isDiscountActive;
         private float _discount;
@@ -122,7 +122,7 @@ namespace Apteka.Plus.Satelite.Forms
 
         private void dgvLocalBills_KeyDown(object sender, KeyEventArgs e)
         {
-            _log.DebugFormat("Key down:{0}", e.KeyCode.ToString());
+            Log.DebugFormat("Key down:{0}", e.KeyCode.ToString());
             DataGridView dgv = sender as DataGridView;
 
             switch (e.KeyCode)
@@ -236,8 +236,6 @@ namespace Apteka.Plus.Satelite.Forms
                 tbDiscountSum.Visible = false;
                 dgvLocalBillsToSale.Columns["PriceWithDiscount"].Visible = false;
                 dgvLocalBillsToSale.Columns["Sum"].Visible = true;
-                UpdateSum();
-
             }
             else
             {
@@ -249,13 +247,14 @@ namespace Apteka.Plus.Satelite.Forms
                 dgvLocalBillsToSale.Columns["PriceWithDiscount"].Visible = true;
                 dgvLocalBillsToSale.Columns["Sum"].Visible = false;
                 _discount = GetDefaultDiscount();
-                UpdateSum();
             }
+
+            UpdateSum();
         }
 
         private void ShowClientIdentifyForm()
         {
-            frmIdentifyClient frmIdentifyClient = new frmIdentifyClient();
+            var frmIdentifyClient = new frmIdentifyClient();
 
             if (frmIdentifyClient.ShowDialog(this) == DialogResult.OK)
             {
@@ -268,15 +267,26 @@ namespace Apteka.Plus.Satelite.Forms
                 lblClientID.Text = frmIdentifyClient.ClientID;
                 dgvLocalBillsToSale.Columns["PriceWithDiscount"].Visible = true;
                 dgvLocalBillsToSale.Columns["Sum"].Visible = false;
-                _isDiscountActive = true;
-                _discount = GetDiscountForClient(frmIdentifyClient.ClientID);
-                if (float.IsNaN(_discount))
+
+                var clientDiscount = GetDiscountForClient(frmIdentifyClient.ClientID);
+                if (float.IsNaN(clientDiscount))
                 {
-                    _discount = GetDefaultDiscount();
+                    clientDiscount = GetDefaultDiscount();
                 }
 
-                UpdateSum();
+                if (_isDiscountActive)
+                {
+                    if (clientDiscount > _discount)
+                    {
+                        _discount = clientDiscount;
+                    }
+                }
+                else
+                {
+                    _isDiscountActive = true;
 
+                    _discount = clientDiscount;
+                }
             }
             else
             {
@@ -290,8 +300,9 @@ namespace Apteka.Plus.Satelite.Forms
                 dgvLocalBillsToSale.Columns["PriceWithDiscount"].Visible = false;
                 dgvLocalBillsToSale.Columns["Sum"].Visible = true;
                 _isDiscountActive = false;
-                UpdateSum();
             }
+
+            UpdateSum();
         }
 
         private float GetDiscountForClient(string clientId)
@@ -301,12 +312,12 @@ namespace Apteka.Plus.Satelite.Forms
 
             if (client != null)
             {
-                _log.InfoFormat("Found client {0} with discount {1}", client.Id, client.Discount);
+                Log.InfoFormat("Found client {0} with discount {1}", client.Id, client.Discount);
                 return client.Discount;
             }
             else
             {
-                _log.InfoFormat("Can't find discount for client {0}", clientId);
+                Log.InfoFormat("Can't find discount for client {0}", clientId);
                 return float.NaN;
             }
         }
@@ -335,7 +346,6 @@ namespace Apteka.Plus.Satelite.Forms
             LoadLocalBillsByLetter("А");
 
             salesRowBindingSource.DataSource = _liSalesRows;
-
         }
 
         private void LoadLocalBillsByLetter(string letter)
@@ -386,7 +396,7 @@ namespace Apteka.Plus.Satelite.Forms
 
         private void dgvLocalBillsToSale_KeyDown(object sender, KeyEventArgs e)
         {
-            _log.DebugFormat("Key down:{0}", e.KeyCode.ToString());
+            Log.DebugFormat("Key down:{0}", e.KeyCode.ToString());
             DataGridView dgv = sender as DataGridView;
 
             switch (e.KeyCode)
@@ -396,11 +406,11 @@ namespace Apteka.Plus.Satelite.Forms
                         SalesRow row = dgv.CurrentRow.DataBoundItem as SalesRow;
 
                         _liSalesRows.Remove(row);
+
                         if (_liSalesRows.Count == 0)
                         {
                             HideCalculator();
                             dgvLocalBills.Select();
-
                         }
 
                         salesRowBindingSource.ResetBindings(false);
@@ -491,10 +501,10 @@ namespace Apteka.Plus.Satelite.Forms
 
                         }
                     }
+
                     db.CommitTransaction();
 
                     PerformClear();
-
                 }
             }
         }
@@ -518,12 +528,10 @@ namespace Apteka.Plus.Satelite.Forms
             lblChange.Visible = false;
             tbChange.Visible = false;
             tbInsertedCash.Text = "0";
-
         }
 
         private void PerformCalculation()
         {
-
             double Sum = Convert.ToDouble(tbSum.Text);
             tbInsertedCash.Text = tbInsertedCash.Text.Replace(',', '.');
             double insertedCash = Convert.ToDouble(tbInsertedCash.Text);
@@ -531,7 +539,6 @@ namespace Apteka.Plus.Satelite.Forms
             double change = insertedCash - Sum;
 
             tbChange.Text = change.ToString("0.00");
-
         }
 
         #endregion
@@ -567,6 +574,7 @@ namespace Apteka.Plus.Satelite.Forms
                     {
                         salesRow.ClientID = lblClientID.Text;
                     }
+
                     int i = lba.ChangeAmount(salesRow.LocalBillsRow.ID, -1 * salesRow.Count);
                     if (i != 0)
                     {
@@ -601,10 +609,9 @@ namespace Apteka.Plus.Satelite.Forms
                 cashOperator.Password = _currentEmployee.ID.ToString();
                 double givenCash = double.Parse(tbInsertedCash.Text);
                 _cashRegister.RegisterGoods(cashOperator, liGoods, givenCash);
-
             }
-            PerformClear();
 
+            PerformClear();
         }
 
         private void PerformClear()
@@ -637,7 +644,7 @@ namespace Apteka.Plus.Satelite.Forms
             double sum = 0;
             double sumWithDiscount = 0;
 
-            _liSalesRows.FindAll(p =>
+            _liSalesRows.ForEach(p =>
             {
                 if (_isDiscountActive)
                 {
@@ -646,7 +653,7 @@ namespace Apteka.Plus.Satelite.Forms
                     double extra = ((p.Price - p.LocalBillsRow.MainStoreRow.SupplierPrice) /
                                                    p.LocalBillsRow.MainStoreRow.SupplierPrice) * 100.0;
 
-                    if (!p.LocalBillsRow.MainStoreRow.FullProductInfo.IsDiscountExcluded  && extra > _discountExtraLimit)
+                    if (!p.LocalBillsRow.MainStoreRow.FullProductInfo.IsDiscountExcluded && extra > _discountExtraLimit)
                     {
                         p.PriceWithDiscount = p.Price - p.Price * p.Discount / 100.0;
                     }
@@ -666,8 +673,6 @@ namespace Apteka.Plus.Satelite.Forms
                     p.PriceWithDiscount = 0;
                     sum = sum + p.Count * p.Price;
                 }
-
-                return false;
             });
 
             if (_isDiscountActive)
@@ -687,25 +692,27 @@ namespace Apteka.Plus.Satelite.Forms
         {
             float discount = 0;
 
-            _log.Info("Will try yo apply default discount value");
+            Log.Info("Will try yo apply default discount value");
 
             PropertyAccessor pa = PropertyAccessor.CreateInstance<PropertyAccessor>();
             Property skidka = pa.GetByName("skidka");
+
             if (skidka != null)
             {
                 if (float.TryParse(skidka.Value, out discount))
                 {
-                    _log.InfoFormat("Default discount value {0}", discount);
+                    Log.InfoFormat("Default discount value {0}", discount);
                 }
                 else
                 {
-                    _log.ErrorFormat("Can't parse property skidka. Value {0}", skidka.Value);
+                    Log.ErrorFormat("Can't parse property skidka. Value {0}", skidka.Value);
                 }
             }
             else
             {
-                _log.Error("Can't find property skidka");
+                Log.Error("Can't find property skidka");
             }
+
             return discount;
         }
 
@@ -713,36 +720,26 @@ namespace Apteka.Plus.Satelite.Forms
         {
             PropertyAccessor pa = PropertyAccessor.CreateInstance<PropertyAccessor>();
             Property den = pa.GetByName("den");
+
+            _daysWarning = 0;
+
             if (den != null)
             {
-                if (!int.TryParse(den.Value, out _daysWarning))
-                {
-                    _daysWarning = 0;
-                }
+                int.TryParse(den.Value, out _daysWarning);
             }
-            else
-            {
-                _daysWarning = 0;
-            }
-
         }
 
         private void InitializeDiscountExtraLimit()
         {
             PropertyAccessor pa = PropertyAccessor.CreateInstance<PropertyAccessor>();
             Property DiscountExtraLimit = pa.GetByName("DiscountExtraLimit");
+
+            _discountExtraLimit = 0;
+
             if (DiscountExtraLimit != null)
             {
-                if (!double.TryParse(DiscountExtraLimit.Value, out _discountExtraLimit))
-                {
-                    _discountExtraLimit = 0;
-                }
+                double.TryParse(DiscountExtraLimit.Value, out _discountExtraLimit);
             }
-            else
-            {
-                _discountExtraLimit = 0;
-            }
-
         }
 
         private void dgvLocalBills_CellParsing(object sender, DataGridViewCellParsingEventArgs e)
@@ -772,12 +769,47 @@ namespace Apteka.Plus.Satelite.Forms
                         salesRowBindingSource.MoveLast();
                         dgvLocalBillsToSale.CurrentCell.Selected = false;
 
+                        ActivateTimeBasedDiscount();
                         UpdateSum();
                         tbSearch.Text = "";
 
                     }
                     break;
 
+            }
+        }
+
+        private void ActivateTimeBasedDiscount()
+        {
+            if (Settings.Default.TimeBasedDiscountEnabled)
+            {
+                var start = new TimeSpan(10, 0, 0);
+                var end = new TimeSpan(14, 0, 0);
+                var now = DateTime.Now.TimeOfDay;
+                var timeBasedDiscount = 4.0f;
+
+                if (now > start && now < end)
+                {
+                    if (_isDiscountActive)
+                    {
+                        if (timeBasedDiscount > _discount)
+                        {
+                            _discount = timeBasedDiscount;
+                        }
+                    }
+                    else
+                    {
+                        _isDiscountActive = true;
+                        lblDiscountValue.Visible = true;
+                        tbDiscountValue.Visible = true;
+                        lblDiscountSum.Visible = true;
+                        tbDiscountSum.Visible = true;
+                        dgvLocalBillsToSale.Columns["PriceWithDiscount"].Visible = true;
+                        dgvLocalBillsToSale.Columns["Sum"].Visible = false;
+
+                        _discount = timeBasedDiscount;
+                    }
+                }
             }
         }
 
@@ -842,7 +874,7 @@ namespace Apteka.Plus.Satelite.Forms
 
         private void tbInsertedCash_KeyDown(object sender, KeyEventArgs e)
         {
-            _log.DebugFormat("Key down:{0}", e.KeyCode.ToString());
+            Log.DebugFormat("Key down:{0}", e.KeyCode.ToString());
             DataGridView dgv = sender as DataGridView;
 
             switch (e.KeyCode)
@@ -912,8 +944,9 @@ namespace Apteka.Plus.Satelite.Forms
 
             ts.DropDownItems.Remove(e.ClickedItem);
             if (ts.DropDownItems.Count == 0)
+            {
                 tsbDelayedBills.Enabled = false;
-
+            }
         }
 
         private void printToolStripButton_Click(object sender, EventArgs e)
@@ -943,7 +976,6 @@ namespace Apteka.Plus.Satelite.Forms
 
                 frmReportViewer.ShowDialog();
             }
-
         }
 
         private void tsbNewPrices_Click(object sender, EventArgs e)

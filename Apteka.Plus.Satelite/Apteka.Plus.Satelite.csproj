@@ -37,7 +37,7 @@
     <InstallUrl>\\dbd-pk\Apteka.Plus.Distributive\Apteka.Plus.Satelite\</InstallUrl>
     <WebPage>publish.htm</WebPage>
     <OpenBrowserOnPublish>false</OpenBrowserOnPublish>
-    <ApplicationRevision>76</ApplicationRevision>
+    <ApplicationRevision>77</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -84,7 +84,8 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BLToolkit.2">
+    <Reference Include="BLToolkit.2, Version=3.1.0.0, Culture=neutral, PublicKeyToken=b1d3f6ab3aadaca3, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Assemblies\BLToolkit.2.dll</HintPath>
     </Reference>
     <Reference Include="log4net">

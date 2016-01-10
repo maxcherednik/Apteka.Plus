@@ -45,6 +45,7 @@
             this.errorProvider1 = new System.Windows.Forms.ErrorProvider(this.components);
             this.label6 = new System.Windows.Forms.Label();
             this.tbConnectionStringForSecondStore = new System.Windows.Forms.TextBox();
+            this.cbTimeBasedDiscountEnabled = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.errorProvider1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -198,13 +199,27 @@
             this.tbConnectionStringForSecondStore.TabIndex = 13;
             this.tbConnectionStringForSecondStore.Text = global::Apteka.Plus.Satelite.Properties.Settings.Default.ConnectionStringForSecondStore;
             // 
+            // cbTimeBasedDiscountEnabled
+            // 
+            this.cbTimeBasedDiscountEnabled.AutoSize = true;
+            this.cbTimeBasedDiscountEnabled.Checked = global::Apteka.Plus.Satelite.Properties.Settings.Default.TimeBasedDiscountEnabled;
+            this.cbTimeBasedDiscountEnabled.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.cbTimeBasedDiscountEnabled.DataBindings.Add(new System.Windows.Forms.Binding("Checked", global::Apteka.Plus.Satelite.Properties.Settings.Default, "TimeBasedDiscountEnabled", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.cbTimeBasedDiscountEnabled.Location = new System.Drawing.Point(12, 300);
+            this.cbTimeBasedDiscountEnabled.Name = "cbTimeBasedDiscountEnabled";
+            this.cbTimeBasedDiscountEnabled.Size = new System.Drawing.Size(173, 17);
+            this.cbTimeBasedDiscountEnabled.TabIndex = 14;
+            this.cbTimeBasedDiscountEnabled.Text = "временная скидка включена";
+            this.cbTimeBasedDiscountEnabled.UseVisualStyleBackColor = true;
+            // 
             // frmOptions
             // 
             this.AcceptButton = this.btnOK;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.CancelButton = this.btnCancel;
-            this.ClientSize = new System.Drawing.Size(445, 331);
+            this.ClientSize = new System.Drawing.Size(445, 346);
+            this.Controls.Add(this.cbTimeBasedDiscountEnabled);
             this.Controls.Add(this.tbConnectionStringForSecondStore);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.tbStoreId);
@@ -250,5 +265,6 @@
         private System.Windows.Forms.ErrorProvider errorProvider1;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.TextBox tbConnectionStringForSecondStore;
+        private System.Windows.Forms.CheckBox cbTimeBasedDiscountEnabled;
     }
 }

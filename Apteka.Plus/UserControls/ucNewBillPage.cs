@@ -722,18 +722,18 @@ namespace Apteka.Plus.UserControls
 
                 double chosenPrice = newMainStoreInsertRow.EOrderRow.VendorPriceWithoutNDS;
                 double extra = 0;
-                if (newMainStoreInsertRow.EOrderRow.VendorPriceWithNDS <= 50)
+                if (newMainStoreInsertRow.EOrderRow.VendorPriceWithNDS < 200)
+                {
+                    extra = 0.28;
+                }
+                else if (newMainStoreInsertRow.EOrderRow.VendorPriceWithNDS >= 200 &&
+                         newMainStoreInsertRow.EOrderRow.VendorPriceWithNDS < 500)
                 {
                     extra = 0.25;
                 }
-                else if (newMainStoreInsertRow.EOrderRow.VendorPriceWithNDS > 50 &&
-                         newMainStoreInsertRow.EOrderRow.VendorPriceWithNDS <= 500)
-                {
-                    extra = 0.2;
-                }
                 else
                 {
-                    extra = 0.15;
+                    extra = 0.18;
                 }
 
                 newMainStoreInsertRow.LocalPrice = RoundDown(newMainStoreInsertRow.SupplierPrice + chosenPrice * extra, 0.05);

@@ -722,18 +722,18 @@ namespace Apteka.Plus.UserControls
 
                 double chosenPrice = newMainStoreInsertRow.EOrderRow.VendorPriceWithoutNDS;
                 double extra = 0;
-                if (newMainStoreInsertRow.EOrderRow.VendorPriceWithNDS < 200)
-                {
-                    extra = 0.28;
-                }
-                else if (newMainStoreInsertRow.EOrderRow.VendorPriceWithNDS >= 200 &&
-                         newMainStoreInsertRow.EOrderRow.VendorPriceWithNDS < 500)
+                if (newMainStoreInsertRow.EOrderRow.VendorPriceWithNDS <= 50)
                 {
                     extra = 0.25;
                 }
+                else if (newMainStoreInsertRow.EOrderRow.VendorPriceWithNDS > 50 &&
+                         newMainStoreInsertRow.EOrderRow.VendorPriceWithNDS <= 500)
+                {
+                    extra = 0.2;
+                }
                 else
                 {
-                    extra = 0.18;
+                    extra = 0.15;
                 }
 
                 newMainStoreInsertRow.LocalPrice = RoundDown(newMainStoreInsertRow.SupplierPrice + chosenPrice * extra, 0.05);
@@ -744,21 +744,17 @@ namespace Apteka.Plus.UserControls
             else
             {
                 double standardExtra = double.Parse(Settings.Default.StandartExtra);
-                if (newMainStoreInsertRow.SupplierPrice < 100)
+                if (newMainStoreInsertRow.SupplierPrice < 200)
                 {
                     standardExtra = 28.0;
                 }
-                else if (newMainStoreInsertRow.SupplierPrice >= 100 && newMainStoreInsertRow.SupplierPrice < 200)
+                else if (newMainStoreInsertRow.SupplierPrice >= 200 && newMainStoreInsertRow.SupplierPrice < 500)
                 {
                     standardExtra = 25.0;
                 }
-                else if (newMainStoreInsertRow.SupplierPrice >= 200 && newMainStoreInsertRow.SupplierPrice < 500)
+                else 
                 {
-                    standardExtra = 20.0;
-                }
-                else if (newMainStoreInsertRow.SupplierPrice >= 500)
-                {
-                    standardExtra = 15.0;
+                    standardExtra = 18.0;
                 }
 
                 newMainStoreInsertRow.LocalPrice = RoundUp(newMainStoreInsertRow.SupplierPrice + newMainStoreInsertRow.SupplierPrice * standardExtra / 100.0, 0.5);

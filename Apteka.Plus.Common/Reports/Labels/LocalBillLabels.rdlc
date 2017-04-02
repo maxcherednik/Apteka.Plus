@@ -1,35 +1,251 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2005/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+<Report xmlns="http://schemas.microsoft.com/sqlserver/reporting/2008/01/reportdefinition" xmlns:rd="http://schemas.microsoft.com/SQLServer/reporting/reportdesigner">
+  <Body>
+    <ReportItems>
+      <Tablix Name="list1">
+        <TablixBody>
+          <TablixColumns>
+            <TablixColumn>
+              <Width>4.62cm</Width>
+            </TablixColumn>
+          </TablixColumns>
+          <TablixRows>
+            <TablixRow>
+              <Height>3.1cm</Height>
+              <TablixCells>
+                <TablixCell>
+                  <CellContents>
+                    <Rectangle Name="list1_Contents">
+                      <ReportItems>
+                        <Rectangle Name="rectangle2">
+                          <ReportItems>
+                            <Rectangle Name="rectangle1">
+                              <ReportItems>
+                                <Textbox Name="textbox2">
+                                  <CanGrow>true</CanGrow>
+                                  <KeepTogether>true</KeepTogether>
+                                  <Paragraphs>
+                                    <Paragraph>
+                                      <TextRuns>
+                                        <TextRun>
+                                          <Value>=Fields!Country.Value</Value>
+                                          <Style>
+                                            <FontSize>6pt</FontSize>
+                                          </Style>
+                                        </TextRun>
+                                      </TextRuns>
+                                      <Style>
+                                        <TextAlign>Right</TextAlign>
+                                      </Style>
+                                    </Paragraph>
+                                  </Paragraphs>
+                                  <Top>2.8cm</Top>
+                                  <Height>0.165cm</Height>
+                                  <Width>4.5cm</Width>
+                                  <Style />
+                                </Textbox>
+                                <Textbox Name="textbox7">
+                                  <CanGrow>true</CanGrow>
+                                  <KeepTogether>true</KeepTogether>
+                                  <Paragraphs>
+                                    <Paragraph>
+                                      <TextRuns>
+                                        <TextRun>
+                                          <Value>ООО "ЧИА-Фарм"</Value>
+                                          <Style>
+                                            <FontSize>6pt</FontSize>
+                                          </Style>
+                                        </TextRun>
+                                      </TextRuns>
+                                      <Style>
+                                        <TextAlign>Center</TextAlign>
+                                      </Style>
+                                    </Paragraph>
+                                  </Paragraphs>
+                                  <Height>0.25cm</Height>
+                                  <Width>4.5cm</Width>
+                                  <ZIndex>1</ZIndex>
+                                  <Style />
+                                </Textbox>
+                                <Textbox Name="textbox6">
+                                  <CanGrow>true</CanGrow>
+                                  <KeepTogether>true</KeepTogether>
+                                  <Paragraphs>
+                                    <Paragraph>
+                                      <TextRuns>
+                                        <TextRun>
+                                          <Value>=Fields!ProductName.Value &amp; " " &amp; Fields!PackageName.Value</Value>
+                                          <Style />
+                                        </TextRun>
+                                      </TextRuns>
+                                      <Style />
+                                    </Paragraph>
+                                  </Paragraphs>
+                                  <rd:DefaultName>textbox6</rd:DefaultName>
+                                  <Top>0.34254cm</Top>
+                                  <Height>1.19746cm</Height>
+                                  <Width>4.5cm</Width>
+                                  <ZIndex>2</ZIndex>
+                                  <Style>
+                                    <PaddingLeft>2pt</PaddingLeft>
+                                    <PaddingRight>2pt</PaddingRight>
+                                  </Style>
+                                </Textbox>
+                                <Textbox Name="textbox4">
+                                  <CanGrow>true</CanGrow>
+                                  <KeepTogether>true</KeepTogether>
+                                  <Paragraphs>
+                                    <Paragraph>
+                                      <TextRuns>
+                                        <TextRun>
+                                          <Value>="П: " &amp; FormatDateTime(Fields!DateSupply.Value, DateFormat.ShortDate) &amp; ", с/г: "  &amp; FormatDateTime(Fields!ExpirationDate.Value, DateFormat.ShortDate)</Value>
+                                          <Style>
+                                            <FontSize>7pt</FontSize>
+                                          </Style>
+                                        </TextRun>
+                                      </TextRuns>
+                                      <Style>
+                                        <TextAlign>Left</TextAlign>
+                                      </Style>
+                                    </Paragraph>
+                                  </Paragraphs>
+                                  <Top>2.34528cm</Top>
+                                  <Height>0.27833cm</Height>
+                                  <Width>4.5cm</Width>
+                                  <ZIndex>3</ZIndex>
+                                  <Style>
+                                    <Border>
+                                      <Style>None</Style>
+                                    </Border>
+                                    <VerticalAlign>Middle</VerticalAlign>
+                                  </Style>
+                                </Textbox>
+                                <Textbox Name="textbox1">
+                                  <CanGrow>true</CanGrow>
+                                  <KeepTogether>true</KeepTogether>
+                                  <Paragraphs>
+                                    <Paragraph>
+                                      <TextRuns>
+                                        <TextRun>
+                                          <Value>=FormatNumber(Fields!StartPrice.Value,2)</Value>
+                                          <Style>
+                                            <FontSize>16pt</FontSize>
+                                            <FontWeight>Bold</FontWeight>
+                                          </Style>
+                                        </TextRun>
+                                      </TextRuns>
+                                      <Style>
+                                        <TextAlign>Center</TextAlign>
+                                      </Style>
+                                    </Paragraph>
+                                  </Paragraphs>
+                                  <Top>1.61cm</Top>
+                                  <Height>0.7cm</Height>
+                                  <Width>4.5cm</Width>
+                                  <ZIndex>4</ZIndex>
+                                  <Style />
+                                </Textbox>
+                              </ReportItems>
+                              <DataElementOutput>ContentsOnly</DataElementOutput>
+                              <Top>0.05cm</Top>
+                              <Left>0.05cm</Left>
+                              <Height>3cm</Height>
+                              <Width>4.57cm</Width>
+                              <Style>
+                                <Border>
+                                  <Style>None</Style>
+                                </Border>
+                              </Style>
+                            </Rectangle>
+                          </ReportItems>
+                          <DataElementOutput>ContentsOnly</DataElementOutput>
+                          <Height>3.1cm</Height>
+                          <Width>4.62cm</Width>
+                          <Style>
+                            <Border>
+                              <Style>Dotted</Style>
+                            </Border>
+                            <BottomBorder>
+                              <Color>Black</Color>
+                              <Width>1pt</Width>
+                            </BottomBorder>
+                          </Style>
+                        </Rectangle>
+                      </ReportItems>
+                      <KeepTogether>true</KeepTogether>
+                      <Style />
+                    </Rectangle>
+                  </CellContents>
+                </TablixCell>
+              </TablixCells>
+            </TablixRow>
+          </TablixRows>
+        </TablixBody>
+        <TablixColumnHierarchy>
+          <TablixMembers>
+            <TablixMember />
+          </TablixMembers>
+        </TablixColumnHierarchy>
+        <TablixRowHierarchy>
+          <TablixMembers>
+            <TablixMember>
+              <Group Name="list1_Details_Group">
+                <DataElementName>Item</DataElementName>
+              </Group>
+              <DataElementName>Item_Collection</DataElementName>
+              <DataElementOutput>Output</DataElementOutput>
+              <KeepTogether>true</KeepTogether>
+            </TablixMember>
+          </TablixMembers>
+        </TablixRowHierarchy>
+        <KeepTogether>true</KeepTogether>
+        <DataSetName>Apteka_Plus_Logic_BLL_Entities_LocalBillsRowEx</DataSetName>
+        <Height>3.1cm</Height>
+        <Width>4.62cm</Width>
+        <Style />
+      </Tablix>
+    </ReportItems>
+    <Height>3.83422cm</Height>
+    <Style />
+  </Body>
+  <Width>4.69938cm</Width>
+  <Page>
+    <PageHeight>29.7cm</PageHeight>
+    <PageWidth>21cm</PageWidth>
+    <InteractiveHeight>11in</InteractiveHeight>
+    <InteractiveWidth>8.5in</InteractiveWidth>
+    <LeftMargin>0.5cm</LeftMargin>
+    <RightMargin>0.5cm</RightMargin>
+    <TopMargin>0.5cm</TopMargin>
+    <BottomMargin>0.5cm</BottomMargin>
+    <Columns>4</Columns>
+    <ColumnSpacing>0cm</ColumnSpacing>
+    <Style />
+  </Page>
+  <AutoRefresh>0</AutoRefresh>
   <DataSources>
     <DataSource Name="LocalBillsRowEx">
-      <rd:DataSourceID>e1e57887-25a9-411f-b67e-58f2183da70f</rd:DataSourceID>
       <ConnectionProperties>
-        <DataProvider>
-        </DataProvider>
-        <ConnectString>
-        </ConnectString>
+        <DataProvider />
+        <ConnectString />
       </ConnectionProperties>
+      <rd:DataSourceID>e1e57887-25a9-411f-b67e-58f2183da70f</rd:DataSourceID>
     </DataSource>
     <DataSource Name="DummyDataSource">
-      <rd:DataSourceID>4df77fef-2b60-44e6-9763-6e199db1e9b6</rd:DataSourceID>
       <ConnectionProperties>
         <DataProvider>SQL</DataProvider>
         <ConnectString />
       </ConnectionProperties>
+      <rd:DataSourceID>4df77fef-2b60-44e6-9763-6e199db1e9b6</rd:DataSourceID>
     </DataSource>
   </DataSources>
-  <InteractiveHeight>11in</InteractiveHeight>
-  <rd:DrawGrid>true</rd:DrawGrid>
-  <InteractiveWidth>8.5in</InteractiveWidth>
-  <rd:GridSpacing>0.07cm</rd:GridSpacing>
-  <rd:SnapToGrid>true</rd:SnapToGrid>
-  <RightMargin>0.5cm</RightMargin>
-  <LeftMargin>0.5cm</LeftMargin>
-  <BottomMargin>0.5cm</BottomMargin>
-  <rd:ReportID>c1f373ae-a2dd-4705-9db1-cb4a4968ecb7</rd:ReportID>
-  <PageWidth>21cm</PageWidth>
   <DataSets>
     <DataSet Name="Apteka_Plus_Logic_BLL_Entities_LocalBillsRowEx">
+      <Query>
+        <DataSourceName>DummyDataSource</DataSourceName>
+        <CommandText />
+        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
+      </Query>
       <Fields>
         <Field Name="Amount">
           <DataField>Amount</DataField>
@@ -107,12 +323,11 @@
           <DataField>SupplierPrice</DataField>
           <rd:TypeName>System.Double</rd:TypeName>
         </Field>
+        <Field Name="ExpirationDate">
+          <DataField>ExpirationDate</DataField>
+          <rd:TypeName>System.Nullable`1[System.DateTime]</rd:TypeName>
+        </Field>
       </Fields>
-      <Query>
-        <DataSourceName>DummyDataSource</DataSourceName>
-        <CommandText />
-        <rd:UseGenericDesigner>true</rd:UseGenericDesigner>
-      </Query>
       <rd:DataSetInfo>
         <rd:DataSetName>Apteka.Plus.Logic.BLL.Entities</rd:DataSetName>
         <rd:TableName>LocalBillsRowEx</rd:TableName>
@@ -120,109 +335,8 @@
       </rd:DataSetInfo>
     </DataSet>
   </DataSets>
-  <Code />
-  <Width>4.62cm</Width>
-  <Body>
-    <ColumnSpacing>0cm</ColumnSpacing>
-    <ReportItems>
-      <List Name="list1">
-        <DataSetName>Apteka_Plus_Logic_BLL_Entities_LocalBillsRowEx</DataSetName>
-        <KeepTogether>true</KeepTogether>
-        <ReportItems>
-          <Rectangle Name="rectangle2">
-            <ReportItems>
-              <Rectangle Name="rectangle1">
-                <Left>0.05cm</Left>
-                <ReportItems>
-                  <Textbox Name="textbox1">
-                    <Top>1.61cm</Top>
-                    <Width>4.5cm</Width>
-                    <Style>
-                      <FontSize>16pt</FontSize>
-                      <FontWeight>700</FontWeight>
-                      <TextAlign>Center</TextAlign>
-                    </Style>
-                    <ZIndex>4</ZIndex>
-                    <CanGrow>true</CanGrow>
-                    <Height>0.7cm</Height>
-                    <Value>=FormatNumber(Fields!StartPrice.Value,2)</Value>
-                  </Textbox>
-                  <Textbox Name="textbox4">
-                    <Top>2.52cm</Top>
-                    <Width>4.5cm</Width>
-                    <Style>
-                      <FontSize>8pt</FontSize>
-                      <Format>=FormatDateTime(Fields!DateSupply.Value, DateFormat.ShortDate)</Format>
-                      <TextAlign>Left</TextAlign>
-                      <PaddingLeft>2pt</PaddingLeft>
-                      <PaddingRight>2pt</PaddingRight>
-                    </Style>
-                    <ZIndex>3</ZIndex>
-                    <CanGrow>true</CanGrow>
-                    <Height>0.35cm</Height>
-                    <Value>=Fields!DateSupply.Value</Value>
-                  </Textbox>
-                  <Textbox Name="textbox6">
-                    <rd:DefaultName>textbox6</rd:DefaultName>
-                    <Top>0.34254cm</Top>
-                    <Width>4.5cm</Width>
-                    <Style>
-                      <PaddingLeft>2pt</PaddingLeft>
-                      <PaddingRight>2pt</PaddingRight>
-                    </Style>
-                    <ZIndex>2</ZIndex>
-                    <CanGrow>true</CanGrow>
-                    <Height>1.19746cm</Height>
-                    <Value>=Fields!ProductName.Value &amp; " " &amp; Fields!PackageName.Value</Value>
-                  </Textbox>
-                  <Textbox Name="textbox7">
-                    <Width>4.5cm</Width>
-                    <Style>
-                      <FontSize>6pt</FontSize>
-                      <TextAlign>Center</TextAlign>
-                    </Style>
-                    <ZIndex>1</ZIndex>
-                    <CanGrow>true</CanGrow>
-                    <Height>0.25cm</Height>
-                    <Value>ООО "ЧИА-Фарм"</Value>
-                  </Textbox>
-                  <Textbox Name="textbox2">
-                    <Top>2.8cm</Top>
-                    <Width>4.5cm</Width>
-                    <Style>
-                      <FontSize>6pt</FontSize>
-                      <TextAlign>Right</TextAlign>
-                    </Style>
-                    <CanGrow>true</CanGrow>
-                    <Height>0.165cm</Height>
-                    <Value>=Fields!Country.Value</Value>
-                  </Textbox>
-                </ReportItems>
-                <Top>0.05cm</Top>
-                <Style>
-                  <BorderStyle>
-                    <Default>Solid</Default>
-                  </BorderStyle>
-                  <BorderWidth>
-                    <Default>2pt</Default>
-                  </BorderWidth>
-                </Style>
-                <Height>3cm</Height>
-              </Rectangle>
-            </ReportItems>
-            <Style>
-              <BorderStyle>
-                <Default>Dotted</Default>
-              </BorderStyle>
-            </Style>
-          </Rectangle>
-        </ReportItems>
-      </List>
-    </ReportItems>
-    <Height>3.1cm</Height>
-    <Columns>4</Columns>
-  </Body>
   <Language>ru-RU</Language>
-  <TopMargin>0.5cm</TopMargin>
-  <PageHeight>29.7cm</PageHeight>
+  <ConsumeContainerWhitespace>true</ConsumeContainerWhitespace>
+  <rd:ReportUnitType>Cm</rd:ReportUnitType>
+  <rd:ReportID>c1f373ae-a2dd-4705-9db1-cb4a4968ecb7</rd:ReportID>
 </Report>

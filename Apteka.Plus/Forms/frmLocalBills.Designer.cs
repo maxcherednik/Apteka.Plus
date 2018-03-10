@@ -1,4 +1,4 @@
-namespace Apteka.Plus.Forms
+п»їnamespace Apteka.Plus.Forms
 {
     partial class frmLocalBills
     {
@@ -77,7 +77,7 @@ namespace Apteka.Plus.Forms
             this.btnPrint.Name = "btnPrint";
             this.btnPrint.Size = new System.Drawing.Size(75, 23);
             this.btnPrint.TabIndex = 1;
-            this.btnPrint.Text = "Печать";
+            this.btnPrint.Text = "РџРµС‡Р°С‚СЊ";
             this.btnPrint.UseVisualStyleBackColor = true;
             this.btnPrint.Click += new System.EventHandler(this.btnPrint_Click);
             // 
@@ -88,7 +88,7 @@ namespace Apteka.Plus.Forms
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(80, 13);
             this.label1.TabIndex = 18;
-            this.label1.Text = "Дата закупки:";
+            this.label1.Text = "Р”Р°С‚Р° Р·Р°РєСѓРїРєРё:";
             // 
             // dateTimePicker1
             // 
@@ -128,7 +128,7 @@ namespace Apteka.Plus.Forms
             this.lblSearch.Name = "lblSearch";
             this.lblSearch.Size = new System.Drawing.Size(42, 13);
             this.lblSearch.TabIndex = 14;
-            this.lblSearch.Text = "Поиск:";
+            this.lblSearch.Text = "РџРѕРёСЃРє:";
             // 
             // cbMyStores
             // 
@@ -154,7 +154,7 @@ namespace Apteka.Plus.Forms
             this.lblChooseSatelite.Name = "lblChooseSatelite";
             this.lblChooseSatelite.Size = new System.Drawing.Size(91, 13);
             this.lblChooseSatelite.TabIndex = 12;
-            this.lblChooseSatelite.Text = "Выберите пункт:";
+            this.lblChooseSatelite.Text = "Р’С‹Р±РµСЂРёС‚Рµ РїСѓРЅРєС‚:";
             // 
             // ucProductSupplies1
             // 
@@ -172,7 +172,7 @@ namespace Apteka.Plus.Forms
             this.Controls.Add(this.splitContainer1);
             this.Name = "frmLocalBills";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Ревизия";
+            this.Text = "Р РµРІРёР·РёСЏ";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.frmLocalBills_Load);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmLocalBills_FormClosed);

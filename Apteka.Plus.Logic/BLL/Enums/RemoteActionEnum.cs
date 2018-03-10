@@ -1,4 +1,4 @@
-namespace Apteka.Plus.Logic.BLL.Enums
+﻿namespace Apteka.Plus.Logic.BLL.Enums
 {
     public enum RemoteActionEnum : int
     {

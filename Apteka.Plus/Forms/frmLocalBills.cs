@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Windows.Forms;
 using Apteka.Helpers;
 using Apteka.Plus.Logic.BLL.Collections;

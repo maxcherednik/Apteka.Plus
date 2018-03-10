@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -78,7 +78,7 @@ namespace Apteka.Plus.Forms
 
             MyStore m = new MyStore();
             m.ID = 0;
-            m.Name = "Все";
+            m.Name = "Р’СЃРµ";
             liMyStores.Insert(0, m);
 
             cbMyStoresMS.ValueMember = "Id";
@@ -95,7 +95,7 @@ namespace Apteka.Plus.Forms
 
             if (choosenDriveInfo == null)
             {
-                MessageBox.Show("Не удалось найти носитель информации с меткой 'APTEKA'!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show("РќРµ СѓРґР°Р»РѕСЃСЊ РЅР°Р№С‚Рё РЅРѕСЃРёС‚РµР»СЊ РёРЅС„РѕСЂРјР°С†РёРё СЃ РјРµС‚РєРѕР№ 'APTEKA'!", "Р’РЅРёРјР°РЅРёРµ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
             {
@@ -113,17 +113,17 @@ namespace Apteka.Plus.Forms
                     copyAction(seletedMyStore, choosenDriveInfo);
                 }
 
-                MessageBox.Show("Копирование успешно завершено!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("РљРѕРїРёСЂРѕРІР°РЅРёРµ СѓСЃРїРµС€РЅРѕ Р·Р°РІРµСЂС€РµРЅРѕ!", "Р’РЅРёРјР°РЅРёРµ", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 
 
         private void btnStartDataSync_Click(object sender, EventArgs e)
         {
-            if (btnStartDataSync.Text != "Отмена")
+            if (btnStartDataSync.Text != "РћС‚РјРµРЅР°")
             {
 
-                btnStartDataSync.Text = "Отмена";
+                btnStartDataSync.Text = "РћС‚РјРµРЅР°";
                 bgwSyncData.RunWorkerAsync(cbMyStoresNet.SelectedItem);
             }
             else
@@ -160,8 +160,8 @@ namespace Apteka.Plus.Forms
             this.InvokeInGUIThread(() =>
             {
                 ChangeStyleMarquee();
-                tbProcessInfo.Text = "1. Подготовка данных для копирования в пункт" + Environment.NewLine +
-                    "Компьютер: " + resultIp;
+                tbProcessInfo.Text = "1. РџРѕРґРіРѕС‚РѕРІРєР° РґР°РЅРЅС‹С… РґР»СЏ РєРѕРїРёСЂРѕРІР°РЅРёСЏ РІ РїСѓРЅРєС‚" + Environment.NewLine +
+                    "РљРѕРјРїСЊСЋС‚РµСЂ: " + resultIp;
             });
 
             #region Prepare Data For My Store
@@ -179,7 +179,7 @@ namespace Apteka.Plus.Forms
             #region Upload
             this.InvokeInGUIThread(() =>
             {
-                tbProcessInfo.Text = tbProcessInfo.Text + System.Environment.NewLine + "2. Копирование данных в пункт. Размер архива " + size.ToString("0.0 kb");
+                tbProcessInfo.Text = tbProcessInfo.Text + System.Environment.NewLine + "2. РљРѕРїРёСЂРѕРІР°РЅРёРµ РґР°РЅРЅС‹С… РІ РїСѓРЅРєС‚. Р Р°Р·РјРµСЂ Р°СЂС…РёРІР° " + size.ToString("0.0 kb");
                 ChangeStyleBlocks();
             });
 
@@ -194,7 +194,7 @@ namespace Apteka.Plus.Forms
             this.InvokeInGUIThread(() =>
             {
                 ChangeStyleMarquee();
-                tbProcessInfo.Text = tbProcessInfo.Text + System.Environment.NewLine + "3. Обработка данных в пункте";
+                tbProcessInfo.Text = tbProcessInfo.Text + System.Environment.NewLine + "3. РћР±СЂР°Р±РѕС‚РєР° РґР°РЅРЅС‹С… РІ РїСѓРЅРєС‚Рµ";
             });
 
             #region Insert New Data To Satelite
@@ -235,7 +235,7 @@ namespace Apteka.Plus.Forms
             this.InvokeInGUIThread(() =>
             {
                 ChangeStyleBlocks();
-                tbProcessInfo.Text = tbProcessInfo.Text + System.Environment.NewLine + "4. Копирование данных из пункта. Размер архива " + size.ToString("0.0 kb");
+                tbProcessInfo.Text = tbProcessInfo.Text + System.Environment.NewLine + "4. РљРѕРїРёСЂРѕРІР°РЅРёРµ РґР°РЅРЅС‹С… РёР· РїСѓРЅРєС‚Р°. Р Р°Р·РјРµСЂ Р°СЂС…РёРІР° " + size.ToString("0.0 kb");
             });
 
             #endregion
@@ -249,7 +249,7 @@ namespace Apteka.Plus.Forms
             this.InvokeInGUIThread(() =>
             {
                 ChangeStyleMarquee();
-                tbProcessInfo.Text = tbProcessInfo.Text + System.Environment.NewLine + "5. Обработка данных из пункта";
+                tbProcessInfo.Text = tbProcessInfo.Text + System.Environment.NewLine + "5. РћР±СЂР°Р±РѕС‚РєР° РґР°РЅРЅС‹С… РёР· РїСѓРЅРєС‚Р°";
             });
 
             #region Process New Data From Satelite
@@ -272,22 +272,22 @@ namespace Apteka.Plus.Forms
         {
             progressBar1.Style = ProgressBarStyle.Blocks;
             progressBar1.Value = 0;
-            btnStartDataSync.Text = "Старт";
+            btnStartDataSync.Text = "РЎС‚Р°СЂС‚";
             btnStartDataSync.Enabled = true;
 
             // First, handle the case where an exception was thrown.
             if (e.Error != null)
             {
                 log.Error(e.Error.Message, e.Error);
-                MessageBox.Show(e.Error.Message, "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(e.Error.Message, "Р’РЅРёРјР°РЅРёРµ", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             else if (e.Cancelled)
             {
-                MessageBox.Show("Копирование отменено!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show("РљРѕРїРёСЂРѕРІР°РЅРёРµ РѕС‚РјРµРЅРµРЅРѕ!", "Р’РЅРёРјР°РЅРёРµ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
             {
-                MessageBox.Show("Копирование успешно завершено!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("РљРѕРїРёСЂРѕРІР°РЅРёРµ СѓСЃРїРµС€РЅРѕ Р·Р°РІРµСЂС€РµРЅРѕ!", "Р’РЅРёРјР°РЅРёРµ", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
 

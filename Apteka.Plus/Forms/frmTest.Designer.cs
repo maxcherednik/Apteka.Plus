@@ -1,4 +1,4 @@
-namespace Apteka.Plus.Forms
+﻿namespace Apteka.Plus.Forms
 {
     partial class frmTest
     {

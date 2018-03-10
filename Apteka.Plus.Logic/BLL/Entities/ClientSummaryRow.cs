@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 namespace Apteka.Plus.Logic.BLL.Entities
 {
     public class ClientSummaryRow

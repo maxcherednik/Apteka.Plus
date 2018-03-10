@@ -1,4 +1,4 @@
-using System;
+Ôªøusing System;
 using System.Collections.Generic;
 using System.Text;
 using Apteka.Plus.Logic.BLL.Entities;
@@ -20,9 +20,9 @@ namespace Apteka.Plus.Logic.DAL
             using (DbManager db = new DbManager(_myStore.Name))
             {
                 return db.SetCommand("select id_smena as id, " +
-                                        " ‘»Œ as LastName" +
-                                        " from ÒÏÂÌ‡ " +
-                                        " where ÒÚ‡ÚÛÒ='true'" )
+                                        " –§–ò–û as LastName" +
+                                        " from —Å–º–µ–Ω–∞ " +
+                                        " where —Å—Ç–∞—Ç—É—Å='true'" )
                             .ExecuteList<Apteka.Plus.Satelite.Logic.BLL.Entities.Employee>();
             }
         }

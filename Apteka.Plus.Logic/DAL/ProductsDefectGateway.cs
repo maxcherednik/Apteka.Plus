@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using Apteka.Helpers;
 using Apteka.Plus.Logic.BLL;
 using BLToolkit.Data;
@@ -27,7 +27,7 @@ namespace Apteka.Plus.Logic.DAL
 
         public long Insert(DbManager db ,DefectRow defectRow)
         {
-            log.InfoFormat(@"Вставка записи в таблицу Дефектура  
+            log.InfoFormat(@"Р’СЃС‚Р°РІРєР° Р·Р°РїРёСЃРё РІ С‚Р°Р±Р»РёС†Сѓ Р”РµС„РµРєС‚СѓСЂР°  
                                 ID: {0}
                                 DateAccepted: {1}                                
                                 LocalBillRowId: {2}",
@@ -49,11 +49,11 @@ namespace Apteka.Plus.Logic.DAL
                                           db.CreateParameters(defectRow)
                              ).ExecuteNonQuery();
 
-            log.InfoFormat("Вставлено {0} строк", affectedRows);
+            log.InfoFormat("Р’СЃС‚Р°РІР»РµРЅРѕ {0} СЃС‚СЂРѕРє", affectedRows);
             if (affectedRows != 1)
             {
-                log.ErrorFormat("Ошибка вставки запаси в талицу. Вставлено {0} строк", affectedRows);
-                throw new Exception("Ошибка вставки запаси в талицу");
+                log.ErrorFormat("РћС€РёР±РєР° РІСЃС‚Р°РІРєРё Р·Р°РїР°СЃРё РІ С‚Р°Р»РёС†Сѓ. Р’СЃС‚Р°РІР»РµРЅРѕ {0} СЃС‚СЂРѕРє", affectedRows);
+                throw new Exception("РћС€РёР±РєР° РІСЃС‚Р°РІРєРё Р·Р°РїР°СЃРё РІ С‚Р°Р»РёС†Сѓ");
             }
 
             return affectedRows;

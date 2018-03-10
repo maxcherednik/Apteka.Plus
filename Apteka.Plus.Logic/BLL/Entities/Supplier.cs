@@ -1,4 +1,4 @@
-using BLToolkit.DataAccess;
+﻿using BLToolkit.DataAccess;
 
 namespace Apteka.Plus.Logic.BLL.Entities
 {

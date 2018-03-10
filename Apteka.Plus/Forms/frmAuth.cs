@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Windows.Forms;
 using Apteka.Helpers;
 using Apteka.Plus.Logic.BLL;
@@ -18,13 +18,13 @@ namespace Apteka.Plus.Forms
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            log.Info("Пользователь отменил авторизацию. Выход из приложения");
+            log.Info("РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РѕС‚РјРµРЅРёР» Р°РІС‚РѕСЂРёР·Р°С†РёСЋ. Р’С‹С…РѕРґ РёР· РїСЂРёР»РѕР¶РµРЅРёСЏ");
             Application.Exit();
         }
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            log.InfoFormat("Пользователь подтвердил авторизацию. Логин: {0}",tbLogin.Text);
+            log.InfoFormat("РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РїРѕРґС‚РІРµСЂРґРёР» Р°РІС‚РѕСЂРёР·Р°С†РёСЋ. Р›РѕРіРёРЅ: {0}",tbLogin.Text);
 
             EmployeesAccessor ea = EmployeesAccessor.CreateInstance<EmployeesAccessor>();
             //Employee employee = ea.Auth(tbLogin.Text, tbPassword.Text);            
@@ -35,12 +35,12 @@ namespace Apteka.Plus.Forms
             
             if (employee == null)
             {
-                log.Warn("Авторизация не пройдена");
-                MessageBox.Show("Учетная запись '" + tbLogin.Text + "' не найдена или неверный пароль!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                log.Warn("РђРІС‚РѕСЂРёР·Р°С†РёСЏ РЅРµ РїСЂРѕР№РґРµРЅР°");
+                MessageBox.Show("РЈС‡РµС‚РЅР°СЏ Р·Р°РїРёСЃСЊ '" + tbLogin.Text + "' РЅРµ РЅР°Р№РґРµРЅР° РёР»Рё РЅРµРІРµСЂРЅС‹Р№ РїР°СЂРѕР»СЊ!", "Р’РЅРёРјР°РЅРёРµ", MessageBoxButtons.OK, MessageBoxIcon.Stop);
             }
             else
             {
-                log.Warn("Авторизация пройдена");
+                log.Warn("РђРІС‚РѕСЂРёР·Р°С†РёСЏ РїСЂРѕР№РґРµРЅР°");
                 Session.User = employee;
 
                 frmMainMenu frmMainMenu = new frmMainMenu();
@@ -52,7 +52,7 @@ namespace Apteka.Plus.Forms
 
         private void frmAuth_Load(object sender, EventArgs e)
         {
-            log.Info("Загружена форма авторизации");
+            log.Info("Р—Р°РіСЂСѓР¶РµРЅР° С„РѕСЂРјР° Р°РІС‚РѕСЂРёР·Р°С†РёРё");
         }
     }
 }

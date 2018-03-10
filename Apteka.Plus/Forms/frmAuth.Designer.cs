@@ -1,4 +1,4 @@
-namespace Apteka.Plus.Forms
+Ôªønamespace Apteka.Plus.Forms
 {
     partial class frmAuth
     {
@@ -42,7 +42,7 @@ namespace Apteka.Plus.Forms
             this.btnOK.Name = "btnOK";
             this.btnOK.Size = new System.Drawing.Size(75, 23);
             this.btnOK.TabIndex = 2;
-            this.btnOK.Text = "Œ ";
+            this.btnOK.Text = "–û–ö";
             this.btnOK.UseVisualStyleBackColor = true;
             this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
@@ -53,7 +53,7 @@ namespace Apteka.Plus.Forms
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 3;
-            this.btnCancel.Text = "ŒÚÏÂÌ‡";
+            this.btnCancel.Text = "–û—Ç–º–µ–Ω–∞";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
@@ -71,7 +71,7 @@ namespace Apteka.Plus.Forms
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(41, 13);
             this.label1.TabIndex = 3;
-            this.label1.Text = "ÀÓ„ËÌ:";
+            this.label1.Text = "–õ–æ–≥–∏–Ω:";
             // 
             // tbPassword
             // 
@@ -89,7 +89,7 @@ namespace Apteka.Plus.Forms
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(48, 13);
             this.label2.TabIndex = 5;
-            this.label2.Text = "œ‡ÓÎ¸:";
+            this.label2.Text = "–ü–∞—Ä–æ–ª—å:";
             // 
             // frmAuth
             // 
@@ -108,7 +108,7 @@ namespace Apteka.Plus.Forms
             this.MinimizeBox = false;
             this.Name = "frmAuth";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "¬‚Â‰ËÚÂ ‰‡ÌÌ˚Â";
+            this.Text = "–í–≤–µ–¥–∏—Ç–µ –¥–∞–Ω–Ω—ã–µ";
             this.Load += new System.EventHandler(this.frmAuth_Load);
             this.ResumeLayout(false);
             this.PerformLayout();

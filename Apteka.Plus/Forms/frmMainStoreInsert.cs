@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using System.Windows.Forms;
 using Apteka.Helpers;
@@ -63,7 +63,7 @@ namespace Apteka.Plus.Forms
 
             if (ucNewBillPage1.IsBillOpen)
             {
-                DialogResult res = MessageBox.Show("У вас остались несохраненные данные! Вернуться и закончить?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
+                DialogResult res = MessageBox.Show("РЈ РІР°СЃ РѕСЃС‚Р°Р»РёСЃСЊ РЅРµСЃРѕС…СЂР°РЅРµРЅРЅС‹Рµ РґР°РЅРЅС‹Рµ! Р’РµСЂРЅСѓС‚СЊСЃСЏ Рё Р·Р°РєРѕРЅС‡РёС‚СЊ?", "Р’РЅРёРјР°РЅРёРµ", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                 if (res == DialogResult.Yes)
                 {
                     e.Cancel = true;
@@ -130,7 +130,7 @@ namespace Apteka.Plus.Forms
 
         private void tsbSaveBill_Click(object sender, EventArgs e)
         {
-            log.Info("Пользователь нажал кнопку меню \"Сохранить накладную\"");
+            log.Info("РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅР°Р¶Р°Р» РєРЅРѕРїРєСѓ РјРµРЅСЋ \"РЎРѕС…СЂР°РЅРёС‚СЊ РЅР°РєР»Р°РґРЅСѓСЋ\"");
 
             if (ucNewBillPage1.IsEverythingOK())
             {

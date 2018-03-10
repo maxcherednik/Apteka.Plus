@@ -1,4 +1,4 @@
-namespace Apteka.Plus.Forms
+п»їnamespace Apteka.Plus.Forms
 {
     partial class frmMainMenu
     {
@@ -65,7 +65,7 @@ namespace Apteka.Plus.Forms
             this.btnMainStoreInsert.Name = "btnMainStoreInsert";
             this.btnMainStoreInsert.Size = new System.Drawing.Size(127, 56);
             this.btnMainStoreInsert.TabIndex = 0;
-            this.btnMainStoreInsert.Text = "Новый товар";
+            this.btnMainStoreInsert.Text = "РќРѕРІС‹Р№ С‚РѕРІР°СЂ";
             this.btnMainStoreInsert.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnMainStoreInsert.UseVisualStyleBackColor = true;
             this.btnMainStoreInsert.Click += new System.EventHandler(this.btnMainStoreInsert_Click);
@@ -90,7 +90,7 @@ namespace Apteka.Plus.Forms
             this.btnExit.Name = "btnExit";
             this.btnExit.Size = new System.Drawing.Size(127, 56);
             this.btnExit.TabIndex = 1;
-            this.btnExit.Text = "Выход";
+            this.btnExit.Text = "Р’С‹С…РѕРґ";
             this.btnExit.UseVisualStyleBackColor = true;
             this.btnExit.Click += new System.EventHandler(this.btnExit_Click);
             // 
@@ -103,7 +103,7 @@ namespace Apteka.Plus.Forms
             this.btnCopyData.Name = "btnCopyData";
             this.btnCopyData.Size = new System.Drawing.Size(127, 56);
             this.btnCopyData.TabIndex = 2;
-            this.btnCopyData.Text = "Копирование данных";
+            this.btnCopyData.Text = "РљРѕРїРёСЂРѕРІР°РЅРёРµ РґР°РЅРЅС‹С…";
             this.btnCopyData.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnCopyData.UseVisualStyleBackColor = true;
             this.btnCopyData.Click += new System.EventHandler(this.btnCopyData_Click);
@@ -117,7 +117,7 @@ namespace Apteka.Plus.Forms
             this.btnFinance.Name = "btnFinance";
             this.btnFinance.Size = new System.Drawing.Size(127, 56);
             this.btnFinance.TabIndex = 3;
-            this.btnFinance.Text = "Касса";
+            this.btnFinance.Text = "РљР°СЃСЃР°";
             this.btnFinance.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnFinance.UseVisualStyleBackColor = true;
             this.btnFinance.Visible = false;
@@ -132,7 +132,7 @@ namespace Apteka.Plus.Forms
             this.btnSales.Name = "btnSales";
             this.btnSales.Size = new System.Drawing.Size(127, 56);
             this.btnSales.TabIndex = 4;
-            this.btnSales.Text = "Итоги дня";
+            this.btnSales.Text = "РС‚РѕРіРё РґРЅСЏ";
             this.btnSales.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnSales.UseVisualStyleBackColor = true;
             this.btnSales.Click += new System.EventHandler(this.btnSales_Click);
@@ -146,7 +146,7 @@ namespace Apteka.Plus.Forms
             this.btnOptions.Name = "btnOptions";
             this.btnOptions.Size = new System.Drawing.Size(127, 56);
             this.btnOptions.TabIndex = 5;
-            this.btnOptions.Text = "Настройки";
+            this.btnOptions.Text = "РќР°СЃС‚СЂРѕР№РєРё";
             this.btnOptions.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnOptions.UseVisualStyleBackColor = true;
             this.btnOptions.Visible = false;
@@ -161,7 +161,7 @@ namespace Apteka.Plus.Forms
             this.btnPrintBills.Name = "btnPrintBills";
             this.btnPrintBills.Size = new System.Drawing.Size(127, 56);
             this.btnPrintBills.TabIndex = 6;
-            this.btnPrintBills.Text = "Печать накладных";
+            this.btnPrintBills.Text = "РџРµС‡Р°С‚СЊ РЅР°РєР»Р°РґРЅС‹С…";
             this.btnPrintBills.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnPrintBills.UseVisualStyleBackColor = true;
             this.btnPrintBills.Click += new System.EventHandler(this.btnPrintBills_Click);
@@ -175,7 +175,7 @@ namespace Apteka.Plus.Forms
             this.btnRevision.Name = "btnRevision";
             this.btnRevision.Size = new System.Drawing.Size(127, 56);
             this.btnRevision.TabIndex = 7;
-            this.btnRevision.Text = "Ревизия";
+            this.btnRevision.Text = "Р РµРІРёР·РёСЏ";
             this.btnRevision.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnRevision.UseVisualStyleBackColor = true;
             this.btnRevision.Click += new System.EventHandler(this.btnRevision_Click);
@@ -190,7 +190,7 @@ namespace Apteka.Plus.Forms
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(127, 56);
             this.button2.TabIndex = 9;
-            this.button2.Text = "Дефектура";
+            this.button2.Text = "Р”РµС„РµРєС‚СѓСЂР°";
             this.button2.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
@@ -204,7 +204,7 @@ namespace Apteka.Plus.Forms
             this.btnSuppliersList.Name = "btnSuppliersList";
             this.btnSuppliersList.Size = new System.Drawing.Size(127, 56);
             this.btnSuppliersList.TabIndex = 10;
-            this.btnSuppliersList.Text = "Список поставщиков";
+            this.btnSuppliersList.Text = "РЎРїРёСЃРѕРє РїРѕСЃС‚Р°РІС‰РёРєРѕРІ";
             this.btnSuppliersList.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnSuppliersList.UseVisualStyleBackColor = true;
             this.btnSuppliersList.Visible = false;
@@ -218,7 +218,7 @@ namespace Apteka.Plus.Forms
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(127, 56);
             this.button1.TabIndex = 11;
-            this.button1.Text = "Список препаратов";
+            this.button1.Text = "РЎРїРёСЃРѕРє РїСЂРµРїР°СЂР°С‚РѕРІ";
             this.button1.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click_2);
@@ -232,7 +232,7 @@ namespace Apteka.Plus.Forms
             this.btnProductSupplies.Name = "btnProductSupplies";
             this.btnProductSupplies.Size = new System.Drawing.Size(127, 56);
             this.btnProductSupplies.TabIndex = 12;
-            this.btnProductSupplies.Text = "Приход по накладным";
+            this.btnProductSupplies.Text = "РџСЂРёС…РѕРґ РїРѕ РЅР°РєР»Р°РґРЅС‹Рј";
             this.btnProductSupplies.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnProductSupplies.UseVisualStyleBackColor = true;
             this.btnProductSupplies.Click += new System.EventHandler(this.btnProductSupplies_Click);
@@ -246,7 +246,7 @@ namespace Apteka.Plus.Forms
             this.btnConverter.Name = "btnConverter";
             this.btnConverter.Size = new System.Drawing.Size(127, 56);
             this.btnConverter.TabIndex = 13;
-            this.btnConverter.Text = "Электронная накладная";
+            this.btnConverter.Text = "Р­Р»РµРєС‚СЂРѕРЅРЅР°СЏ РЅР°РєР»Р°РґРЅР°СЏ";
             this.btnConverter.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnConverter.UseVisualStyleBackColor = true;
             this.btnConverter.Click += new System.EventHandler(this.btnConverter_Click);
@@ -261,7 +261,7 @@ namespace Apteka.Plus.Forms
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(133, 56);
             this.button4.TabIndex = 14;
-            this.button4.Text = "Клиенты";
+            this.button4.Text = "РљР»РёРµРЅС‚С‹";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.button4_Click);
             // 
@@ -275,7 +275,7 @@ namespace Apteka.Plus.Forms
             this.btnLocalTransfers.Name = "btnLocalTransfers";
             this.btnLocalTransfers.Size = new System.Drawing.Size(127, 56);
             this.btnLocalTransfers.TabIndex = 15;
-            this.btnLocalTransfers.Text = "Передачи";
+            this.btnLocalTransfers.Text = "РџРµСЂРµРґР°С‡Рё";
             this.btnLocalTransfers.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnLocalTransfers.UseVisualStyleBackColor = true;
             this.btnLocalTransfers.Click += new System.EventHandler(this.btnLocalTransfers_Click);
@@ -289,7 +289,7 @@ namespace Apteka.Plus.Forms
             this.btnSalesStatistics.Name = "btnSalesStatistics";
             this.btnSalesStatistics.Size = new System.Drawing.Size(133, 56);
             this.btnSalesStatistics.TabIndex = 16;
-            this.btnSalesStatistics.Text = "Продаваемость";
+            this.btnSalesStatistics.Text = "РџСЂРѕРґР°РІР°РµРјРѕСЃС‚СЊ";
             this.btnSalesStatistics.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnSalesStatistics.UseVisualStyleBackColor = true;
             this.btnSalesStatistics.Click += new System.EventHandler(this.btnSalesStatistics_Click);
@@ -313,7 +313,7 @@ namespace Apteka.Plus.Forms
             this.btnSuppliersSummaries.Name = "btnSuppliersSummaries";
             this.btnSuppliersSummaries.Size = new System.Drawing.Size(127, 56);
             this.btnSuppliersSummaries.TabIndex = 17;
-            this.btnSuppliersSummaries.Text = "Приход по фирмам";
+            this.btnSuppliersSummaries.Text = "РџСЂРёС…РѕРґ РїРѕ С„РёСЂРјР°Рј";
             this.btnSuppliersSummaries.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnSuppliersSummaries.UseVisualStyleBackColor = true;
             this.btnSuppliersSummaries.Click += new System.EventHandler(this.btnSuppliersSummaries_Click);
@@ -327,7 +327,7 @@ namespace Apteka.Plus.Forms
             this.btnReturnSalesHistory.Name = "btnReturnSalesHistory";
             this.btnReturnSalesHistory.Size = new System.Drawing.Size(127, 56);
             this.btnReturnSalesHistory.TabIndex = 18;
-            this.btnReturnSalesHistory.Text = "История возвратов продаж";
+            this.btnReturnSalesHistory.Text = "РСЃС‚РѕСЂРёСЏ РІРѕР·РІСЂР°С‚РѕРІ РїСЂРѕРґР°Р¶";
             this.btnReturnSalesHistory.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnReturnSalesHistory.UseVisualStyleBackColor = true;
             this.btnReturnSalesHistory.Click += new System.EventHandler(this.btnReturnSalesHistory_Click);
@@ -341,7 +341,7 @@ namespace Apteka.Plus.Forms
             this.btnSuppliesReturnHistory.Name = "btnSuppliesReturnHistory";
             this.btnSuppliesReturnHistory.Size = new System.Drawing.Size(127, 56);
             this.btnSuppliesReturnHistory.TabIndex = 19;
-            this.btnSuppliesReturnHistory.Text = "История возвратов поступлений";
+            this.btnSuppliesReturnHistory.Text = "РСЃС‚РѕСЂРёСЏ РІРѕР·РІСЂР°С‚РѕРІ РїРѕСЃС‚СѓРїР»РµРЅРёР№";
             this.btnSuppliesReturnHistory.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
             this.btnSuppliesReturnHistory.UseVisualStyleBackColor = true;
             this.btnSuppliesReturnHistory.Click += new System.EventHandler(this.btnSuppliesReturnHistory_Click);
@@ -356,7 +356,7 @@ namespace Apteka.Plus.Forms
             this.btnFinanceCollection.Name = "btnFinanceCollection";
             this.btnFinanceCollection.Size = new System.Drawing.Size(133, 56);
             this.btnFinanceCollection.TabIndex = 20;
-            this.btnFinanceCollection.Text = "  Отчет по сотрудникам";
+            this.btnFinanceCollection.Text = "  РћС‚С‡РµС‚ РїРѕ СЃРѕС‚СЂСѓРґРЅРёРєР°Рј";
             this.btnFinanceCollection.UseVisualStyleBackColor = true;
             this.btnFinanceCollection.Click += new System.EventHandler(this.btnFinanceCollection_Click);
             // 

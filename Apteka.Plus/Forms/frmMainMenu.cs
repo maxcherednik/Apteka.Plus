@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Windows.Forms;
 using Apteka.Helpers;
 using Apteka.Plus.Logic.BLL;
@@ -28,7 +28,7 @@ namespace Apteka.Plus.Forms
 
         private void btnExit_Click(object sender, EventArgs e)
         {
-            log.Info("Пользователь вышел");
+            log.Info("РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РІС‹С€РµР»");
             Application.Exit();
         }
 
@@ -141,7 +141,7 @@ namespace Apteka.Plus.Forms
 
         private void frmMainMenu_FormClosed(object sender, FormClosedEventArgs e)
         {
-            log.Info("Пользователь вышел");
+            log.Info("РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РІС‹С€РµР»");
             Application.Exit();
         }
 
@@ -176,12 +176,12 @@ namespace Apteka.Plus.Forms
             {
                 if (counter > 0)
                 {
-                    btnLocalTransfers.Text = string.Format("Передачи ({0})", counter);
+                    btnLocalTransfers.Text = string.Format("РџРµСЂРµРґР°С‡Рё ({0})", counter);
                     btnLocalTransfers.Enabled = true;
                 }
                 else
                 {
-                    btnLocalTransfers.Text = "Передачи";
+                    btnLocalTransfers.Text = "РџРµСЂРµРґР°С‡Рё";
                     btnLocalTransfers.Enabled = false;
 
                 }

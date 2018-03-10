@@ -1,11 +1,11 @@
-using Apteka.Plus.Logic.BLL.Entities;
+п»їusing Apteka.Plus.Logic.BLL.Entities;
 
 namespace Apteka.Plus.Logic.BLL
 {
     public static class Session
     {
         /// <summary>
-        /// Аутентифицированный пользователь системы
+        /// РђСѓС‚РµРЅС‚РёС„РёС†РёСЂРѕРІР°РЅРЅС‹Р№ РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ СЃРёСЃС‚РµРјС‹
         /// </summary>
         public static Employee User;
     }

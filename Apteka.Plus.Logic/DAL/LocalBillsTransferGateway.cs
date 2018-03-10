@@ -1,4 +1,4 @@
-
+п»ї
 using System;
 using Apteka.Helpers;
 using Apteka.Plus.Logic.BLL;
@@ -29,7 +29,7 @@ namespace Apteka.Plus.Logic.DAL
         public long GetMaxRowsID(DbManager db)
         {
              return db.SetCommand(@"select max(id_pered) FROM 
-                                передача"
+                                РїРµСЂРµРґР°С‡Р°"
                              ).ExecuteScalar<long>();           
 
         }
@@ -45,7 +45,7 @@ namespace Apteka.Plus.Logic.DAL
 
         public long Insert(DbManager db ,LocalBillsTransferRow localBillsTransferRow)
         {
-            log.InfoFormat(@"Вставка записи в таблицу Передача  
+            log.InfoFormat(@"Р’СЃС‚Р°РІРєР° Р·Р°РїРёСЃРё РІ С‚Р°Р±Р»РёС†Сѓ РџРµСЂРµРґР°С‡Р°  
                                 ID: {0}
                                 LocalBillRowId: {1}
                                 DateAccepted: {2}
@@ -61,7 +61,7 @@ namespace Apteka.Plus.Logic.DAL
                                 );    
 
             int affectedRows =db.SetCommand(@"insert into  
-                                передача
+                                РїРµСЂРµРґР°С‡Р°
                                     (
                                         id_pered,
                                         [date],
@@ -88,11 +88,11 @@ namespace Apteka.Plus.Logic.DAL
                                       db.Parameter("@employeeId", localBillsTransferRow.EmployeeID)                                                                            
                              ).ExecuteNonQuery();
 
-            log.InfoFormat("Вставлено {0} строк", affectedRows);
+            log.InfoFormat("Р’СЃС‚Р°РІР»РµРЅРѕ {0} СЃС‚СЂРѕРє", affectedRows);
             if (affectedRows != 1)
             {
-                log.ErrorFormat("Ошибка вставки записи в талицу. Вставлено {0} строк", affectedRows);
-                throw new Exception("Ошибка вставки записи в талицу");
+                log.ErrorFormat("РћС€РёР±РєР° РІСЃС‚Р°РІРєРё Р·Р°РїРёСЃРё РІ С‚Р°Р»РёС†Сѓ. Р’СЃС‚Р°РІР»РµРЅРѕ {0} СЃС‚СЂРѕРє", affectedRows);
+                throw new Exception("РћС€РёР±РєР° РІСЃС‚Р°РІРєРё Р·Р°РїРёСЃРё РІ С‚Р°Р»РёС†Сѓ");
             }
 
             return affectedRows;

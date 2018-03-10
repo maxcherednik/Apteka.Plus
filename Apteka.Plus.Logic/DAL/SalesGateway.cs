@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using Apteka.Helpers;
 using Apteka.Plus.Logic.BLL;
 using Apteka.Plus.Satelite.Logic.BLL.Entities;
@@ -29,7 +29,7 @@ namespace Apteka.Plus.Logic.DAL
         public long GetMaxRowsID(DbManager db)
         {
             return db.SetCommand(@"select max(id_prod) FROM 
-                                продажа"
+                                РїСЂРѕРґР°Р¶Р°"
                              ).ExecuteScalar<long>();          
 
         }
@@ -54,7 +54,7 @@ namespace Apteka.Plus.Logic.DAL
         
         public long Insert(DbManager db ,SalesRow salesRow)
         {
-            log.InfoFormat(@"Вставка записи в таблицу Продажа  
+            log.InfoFormat(@"Р’СЃС‚Р°РІРєР° Р·Р°РїРёСЃРё РІ С‚Р°Р±Р»РёС†Сѓ РџСЂРѕРґР°Р¶Р°  
                                 ID: {0}
                                 LocalBillsRowID: {1}, 
                                 Price: {2} 
@@ -73,7 +73,7 @@ namespace Apteka.Plus.Logic.DAL
                                 salesRow.EmployeeID 
                                 );    
             int affectedRows= db.SetCommand(@"insert into  
-                                продажа
+                                РїСЂРѕРґР°Р¶Р°
                                     (
                                         id_prod,
                                         pokupatel,       
@@ -100,7 +100,7 @@ namespace Apteka.Plus.Logic.DAL
                                       db.Parameter("@ID",salesRow.ID),
                                       db.Parameter("@customerCount", salesRow.CustomerCount ),
                                       db.Parameter("@localBillsRowId", salesRow.LocalBillsRowID),
-                                      db.Parameter("@dateAccepted", salesRow.DateAccepted.Date), // вставляет только дату
+                                      db.Parameter("@dateAccepted", salesRow.DateAccepted.Date), // РІСЃС‚Р°РІР»СЏРµС‚ С‚РѕР»СЊРєРѕ РґР°С‚Сѓ
                                       db.Parameter("@Count", salesRow.Count),
                                       db.Parameter("@priceDiscount", salesRow.PriceDiscount),
                                       db.Parameter("@price", salesRow.Price),
@@ -108,11 +108,11 @@ namespace Apteka.Plus.Logic.DAL
                                       db.Parameter("@employeeId", salesRow.EmployeeID)
                                       
                              ).ExecuteNonQuery();
-                log.InfoFormat("Вставлено {0} строк", affectedRows);
+                log.InfoFormat("Р’СЃС‚Р°РІР»РµРЅРѕ {0} СЃС‚СЂРѕРє", affectedRows);
                 if (affectedRows != 1)
                 {
-                    log.ErrorFormat("Ошибка вставки запаси в талицу. Вставлено {0} строк", affectedRows);
-                    throw new Exception("Ошибка вставки запаси в талицу");
+                    log.ErrorFormat("РћС€РёР±РєР° РІСЃС‚Р°РІРєРё Р·Р°РїР°СЃРё РІ С‚Р°Р»РёС†Сѓ. Р’СЃС‚Р°РІР»РµРЅРѕ {0} СЃС‚СЂРѕРє", affectedRows);
+                    throw new Exception("РћС€РёР±РєР° РІСЃС‚Р°РІРєРё Р·Р°РїР°СЃРё РІ С‚Р°Р»РёС†Сѓ");
                 }
 
                 return affectedRows;

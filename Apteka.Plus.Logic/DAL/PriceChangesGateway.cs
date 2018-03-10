@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using Apteka.Helpers;
 using Apteka.Plus.Logic.BLL;
 using BLToolkit.Data;
@@ -30,7 +30,7 @@ namespace Apteka.Plus.Logic.DAL
         public long GetMaxRowsID(DbManager db)
         {
                 return db.SetCommand(@"select max(id_izm) FROM 
-                                изменения"
+                                РёР·РјРµРЅРµРЅРёСЏ"
                              ).ExecuteScalar<long>();  
 
         }
@@ -47,7 +47,7 @@ namespace Apteka.Plus.Logic.DAL
 
         public int Insert(DbManager db ,PriceChangeRow priceChangeRow)
         {
-            log.InfoFormat(@"Вставка записи в таблицу Изменения цен  
+            log.InfoFormat(@"Р’СЃС‚Р°РІРєР° Р·Р°РїРёСЃРё РІ С‚Р°Р±Р»РёС†Сѓ РР·РјРµРЅРµРЅРёСЏ С†РµРЅ  
                                 ID: {0}
                                 DateAccepted: {1}
                                 LocalBillsRowID: {2}
@@ -64,7 +64,7 @@ namespace Apteka.Plus.Logic.DAL
 
             
             int affectedRows = db.SetCommand(@"INSERT INTO 
-                                            изменения (
+                                            РёР·РјРµРЅРµРЅРёСЏ (
                                                         id_izm,
                                                         [date],
                                                         id_pos,
@@ -92,11 +92,11 @@ namespace Apteka.Plus.Logic.DAL
             
             
 
-            log.InfoFormat("Вставлено {0} строк", affectedRows);
+            log.InfoFormat("Р’СЃС‚Р°РІР»РµРЅРѕ {0} СЃС‚СЂРѕРє", affectedRows);
             if (affectedRows != 1)
             {
-                log.ErrorFormat("Ошибка вставки запаси в талицу. Вставлено {0} строк", affectedRows);
-                throw new Exception("Ошибка вставки запаси в талицу");
+                log.ErrorFormat("РћС€РёР±РєР° РІСЃС‚Р°РІРєРё Р·Р°РїР°СЃРё РІ С‚Р°Р»РёС†Сѓ. Р’СЃС‚Р°РІР»РµРЅРѕ {0} СЃС‚СЂРѕРє", affectedRows);
+                throw new Exception("РћС€РёР±РєР° РІСЃС‚Р°РІРєРё Р·Р°РїР°СЃРё РІ С‚Р°Р»РёС†Сѓ");
             }
 
             return affectedRows;

@@ -1,4 +1,4 @@
-namespace Apteka.Plus.Forms
+п»їnamespace Apteka.Plus.Forms
 {
     partial class frmCopyDataMenu
     {
@@ -69,7 +69,7 @@ namespace Apteka.Plus.Forms
             this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage2.Size = new System.Drawing.Size(406, 235);
             this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Сеть";
+            this.tabPage2.Text = "РЎРµС‚СЊ";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // tbProcessInfo
@@ -94,7 +94,7 @@ namespace Apteka.Plus.Forms
             this.btnStartDataSync.Name = "btnStartDataSync";
             this.btnStartDataSync.Size = new System.Drawing.Size(104, 21);
             this.btnStartDataSync.TabIndex = 6;
-            this.btnStartDataSync.Text = "Обновить";
+            this.btnStartDataSync.Text = "РћР±РЅРѕРІРёС‚СЊ";
             this.btnStartDataSync.UseVisualStyleBackColor = true;
             this.btnStartDataSync.Click += new System.EventHandler(this.btnStartDataSync_Click);
             // 
@@ -114,7 +114,7 @@ namespace Apteka.Plus.Forms
             this.lblChooseSatelite.Name = "lblChooseSatelite";
             this.lblChooseSatelite.Size = new System.Drawing.Size(91, 13);
             this.lblChooseSatelite.TabIndex = 4;
-            this.lblChooseSatelite.Text = "Выберите пункт:";
+            this.lblChooseSatelite.Text = "Р’С‹Р±РµСЂРёС‚Рµ РїСѓРЅРєС‚:";
             // 
             // tabPage1
             // 
@@ -127,7 +127,7 @@ namespace Apteka.Plus.Forms
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(406, 235);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Мобильный носитель";
+            this.tabPage1.Text = "РњРѕР±РёР»СЊРЅС‹Р№ РЅРѕСЃРёС‚РµР»СЊ";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // cbMyStoresMS
@@ -146,7 +146,7 @@ namespace Apteka.Plus.Forms
             this.lblSatelites.Name = "lblSatelites";
             this.lblSatelites.Size = new System.Drawing.Size(46, 13);
             this.lblSatelites.TabIndex = 2;
-            this.lblSatelites.Text = "Аптека:";
+            this.lblSatelites.Text = "РђРїС‚РµРєР°:";
             // 
             // btnCopyFromSatelitesToBase
             // 
@@ -154,7 +154,7 @@ namespace Apteka.Plus.Forms
             this.btnCopyFromSatelitesToBase.Name = "btnCopyFromSatelitesToBase";
             this.btnCopyFromSatelitesToBase.Size = new System.Drawing.Size(171, 41);
             this.btnCopyFromSatelitesToBase.TabIndex = 1;
-            this.btnCopyFromSatelitesToBase.Text = "Скопировать данные из пунктов";
+            this.btnCopyFromSatelitesToBase.Text = "РЎРєРѕРїРёСЂРѕРІР°С‚СЊ РґР°РЅРЅС‹Рµ РёР· РїСѓРЅРєС‚РѕРІ";
             this.btnCopyFromSatelitesToBase.UseVisualStyleBackColor = true;
             this.btnCopyFromSatelitesToBase.Click += new System.EventHandler(this.btnCopyFromSatelitesToBase_Click);
             // 
@@ -164,7 +164,7 @@ namespace Apteka.Plus.Forms
             this.btnCopyFromBaseToSatelites.Name = "btnCopyFromBaseToSatelites";
             this.btnCopyFromBaseToSatelites.Size = new System.Drawing.Size(171, 40);
             this.btnCopyFromBaseToSatelites.TabIndex = 0;
-            this.btnCopyFromBaseToSatelites.Text = "Скопировать данные для пукнтов";
+            this.btnCopyFromBaseToSatelites.Text = "РЎРєРѕРїРёСЂРѕРІР°С‚СЊ РґР°РЅРЅС‹Рµ РґР»СЏ РїСѓРєРЅС‚РѕРІ";
             this.btnCopyFromBaseToSatelites.UseVisualStyleBackColor = true;
             this.btnCopyFromBaseToSatelites.Click += new System.EventHandler(this.btnCopyFromBaseToSatelites_Click);
             // 
@@ -186,7 +186,7 @@ namespace Apteka.Plus.Forms
             this.MinimizeBox = false;
             this.Name = "frmCopyDataMenu";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Копирование данных";
+            this.Text = "РљРѕРїРёСЂРѕРІР°РЅРёРµ РґР°РЅРЅС‹С…";
             this.Load += new System.EventHandler(this.frmCopyDataMenu_Load);
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.frmCopyDataMenu_FormClosed);
             this.tabControl1.ResumeLayout(false);

@@ -1,4 +1,4 @@
-using System;
+п»їusing System;
 using System.Windows.Forms;
 using Apteka.Plus.Logic.BLL.Collections;
 using Apteka.Plus.Logic.BLL.Entities;
@@ -43,7 +43,7 @@ namespace Apteka.Plus.Forms
             }
             else
             {
-                MessageBox.Show("Вы не ввели номер накладной или не указали поставщика!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show("Р’С‹ РЅРµ РІРІРµР»Рё РЅРѕРјРµСЂ РЅР°РєР»Р°РґРЅРѕР№ РёР»Рё РЅРµ СѓРєР°Р·Р°Р»Рё РїРѕСЃС‚Р°РІС‰РёРєР°!", "Р’РЅРёРјР°РЅРёРµ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 if (tbBillNumber.Text.Trim() == "")
                 {
                     tbBillNumber.Focus();

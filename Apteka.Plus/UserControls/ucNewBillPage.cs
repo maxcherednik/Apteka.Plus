@@ -1,4 +1,4 @@
-using Apteka.Helpers;
+п»їusing Apteka.Helpers;
 using Apteka.Plus.Common.Controls;
 using Apteka.Plus.Forms;
 using Apteka.Plus.Logic.BLL;
@@ -103,7 +103,7 @@ namespace Apteka.Plus.UserControls
         {
             if (_liMainStoreInsertRows.Count == 0)
             {
-                MessageBox.Show("Нечего сохранять. Вы не ввели ни одной позиции!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show("РќРµС‡РµРіРѕ СЃРѕС…СЂР°РЅСЏС‚СЊ. Р’С‹ РЅРµ РІРІРµР»Рё РЅРё РѕРґРЅРѕР№ РїРѕР·РёС†РёРё!", "Р’РЅРёРјР°РЅРёРµ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return false;
             }
 
@@ -112,7 +112,7 @@ namespace Apteka.Plus.UserControls
             {
                 if (varMainStoreInsertRow.FullProductInfo.ID == 0)
                 {
-                    MessageBox.Show("Вы не до конца обработали накладную!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show("Р’С‹ РЅРµ РґРѕ РєРѕРЅС†Р° РѕР±СЂР°Р±РѕС‚Р°Р»Рё РЅР°РєР»Р°РґРЅСѓСЋ!", "Р’РЅРёРјР°РЅРёРµ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     mainStoreInsertRowBindingSource.Position = i;
                     return false;
                 }
@@ -125,7 +125,7 @@ namespace Apteka.Plus.UserControls
 
                 if (amountSum != varMainStoreInsertRow.Amount)
                 {
-                    MessageBox.Show("Вы отпустили не все позиции!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show("Р’С‹ РѕС‚РїСѓСЃС‚РёР»Рё РЅРµ РІСЃРµ РїРѕР·РёС†РёРё!", "Р’РЅРёРјР°РЅРёРµ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     mainStoreInsertRowBindingSource.Position = i;
                     return false;
                 }
@@ -146,8 +146,8 @@ namespace Apteka.Plus.UserControls
             {
                 if (row.IsSomethingWrongWithLocalPrice)
                 {
-                    if (DialogResult.Yes == MessageBox.Show("Цены на некоторые позиции отличаются от предыдущих! Вы уверены, что хотите сохранить накладную так как есть? ",
-                        "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation))
+                    if (DialogResult.Yes == MessageBox.Show("Р¦РµРЅС‹ РЅР° РЅРµРєРѕС‚РѕСЂС‹Рµ РїРѕР·РёС†РёРё РѕС‚Р»РёС‡Р°СЋС‚СЃСЏ РѕС‚ РїСЂРµРґС‹РґСѓС‰РёС…! Р’С‹ СѓРІРµСЂРµРЅС‹, С‡С‚Рѕ С…РѕС‚РёС‚Рµ СЃРѕС…СЂР°РЅРёС‚СЊ РЅР°РєР»Р°РґРЅСѓСЋ С‚Р°Рє РєР°Рє РµСЃС‚СЊ? ",
+                        "Р’РЅРёРјР°РЅРёРµ", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation))
                     {
                         return true;
                     }
@@ -185,7 +185,7 @@ namespace Apteka.Plus.UserControls
                 int i = 0;
                 foreach (MainStoreInsertRow varMainStoreInsertRow in _liMainStoreInsertRows)
                 {
-                    OnProcessNotification("Подготовка данных для сохраниения", i, _liMainStoreInsertRows.Count);
+                    OnProcessNotification("РџРѕРґРіРѕС‚РѕРІРєР° РґР°РЅРЅС‹С… РґР»СЏ СЃРѕС…СЂР°РЅРёРµРЅРёСЏ", i, _liMainStoreInsertRows.Count);
 
                     #region New MainStoreRow Preparing
                     MainStoreRow newMainStoreRow = new MainStoreRow();
@@ -214,13 +214,13 @@ namespace Apteka.Plus.UserControls
 
                 dbSklad.CommitTransaction();
 
-                OnProcessNotification("Сохраниение в базу данных", 0, dgvBill.RowCount);
+                OnProcessNotification("РЎРѕС…СЂР°РЅРёРµРЅРёРµ РІ Р±Р°Р·Сѓ РґР°РЅРЅС‹С…", 0, dgvBill.RowCount);
 
             }
             catch (Exception)
             {
                 dbSklad.RollbackTransaction();
-                OnProcessNotification("Ошибка сохранения! Данные не сохранены!", 0, dgvBill.RowCount);
+                OnProcessNotification("РћС€РёР±РєР° СЃРѕС…СЂР°РЅРµРЅРёСЏ! Р”Р°РЅРЅС‹Рµ РЅРµ СЃРѕС…СЂР°РЅРµРЅС‹!", 0, dgvBill.RowCount);
 
                 throw;
             }
@@ -275,7 +275,7 @@ namespace Apteka.Plus.UserControls
                 }
                 catch (Exception)
                 {
-                    OnProcessNotification("Ошибка сохранения! Данные не сохранены!", 0, dgvBill.RowCount);
+                    OnProcessNotification("РћС€РёР±РєР° СЃРѕС…СЂР°РЅРµРЅРёСЏ! Р”Р°РЅРЅС‹Рµ РЅРµ СЃРѕС…СЂР°РЅРµРЅС‹!", 0, dgvBill.RowCount);
 
                     dbSklad.RollbackTransaction();
                     db.RollbackTransaction();
@@ -284,7 +284,7 @@ namespace Apteka.Plus.UserControls
             }
             mainStoreInsertRowBindingSource.Clear();
 
-            MessageBox.Show("Накладная успешно сохранена!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("РќР°РєР»Р°РґРЅР°СЏ СѓСЃРїРµС€РЅРѕ СЃРѕС…СЂР°РЅРµРЅР°!", "Р’РЅРёРјР°РЅРёРµ", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
         }
 
@@ -340,7 +340,7 @@ namespace Apteka.Plus.UserControls
 
         private void dgvBill_KeyUp(object sender, KeyEventArgs e)
         {
-            log.InfoFormat("Пользователь нажал клавишу {0}", e.KeyCode);
+            log.InfoFormat("РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅР°Р¶Р°Р» РєР»Р°РІРёС€Сѓ {0}", e.KeyCode);
             switch (e.KeyCode)
             {
                 case Keys.Insert:
@@ -495,14 +495,14 @@ namespace Apteka.Plus.UserControls
                             {
                                 if (Amount < 0)
                                 {
-                                    MessageBox.Show("Количество не может быть отрицательном", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                    MessageBox.Show("РљРѕР»РёС‡РµСЃС‚РІРѕ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РѕС‚СЂРёС†Р°С‚РµР»СЊРЅРѕРј", "Р’РЅРёРјР°РЅРёРµ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                     e.Cancel = true;
                                 }
 
                             }
                             else
                             {
-                                MessageBox.Show("Вы ввели некорректное значение! Допускаются только числа.", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                MessageBox.Show("Р’С‹ РІРІРµР»Рё РЅРµРєРѕСЂСЂРµРєС‚РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ! Р”РѕРїСѓСЃРєР°СЋС‚СЃСЏ С‚РѕР»СЊРєРѕ С‡РёСЃР»Р°.", "Р’РЅРёРјР°РЅРёРµ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                 e.Cancel = true;
                             }
 
@@ -522,14 +522,14 @@ namespace Apteka.Plus.UserControls
                             {
                                 if (LocalPrice < 0)
                                 {
-                                    MessageBox.Show("Цена не может быть отрицательной", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                    MessageBox.Show("Р¦РµРЅР° РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РѕС‚СЂРёС†Р°С‚РµР»СЊРЅРѕР№", "Р’РЅРёРјР°РЅРёРµ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                     e.Cancel = true;
                                 }
 
                             }
                             else
                             {
-                                MessageBox.Show("Вы ввели некорректное значение! Допускаются только числа.", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                MessageBox.Show("Р’С‹ РІРІРµР»Рё РЅРµРєРѕСЂСЂРµРєС‚РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ! Р”РѕРїСѓСЃРєР°СЋС‚СЃСЏ С‚РѕР»СЊРєРѕ С‡РёСЃР»Р°.", "Р’РЅРёРјР°РЅРёРµ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                 e.Cancel = true;
                             }
 
@@ -549,14 +549,14 @@ namespace Apteka.Plus.UserControls
                             {
                                 if (SupplierPrice < 0)
                                 {
-                                    MessageBox.Show("Цена не может быть отрицательной", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                    MessageBox.Show("Р¦РµРЅР° РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РѕС‚СЂРёС†Р°С‚РµР»СЊРЅРѕР№", "Р’РЅРёРјР°РЅРёРµ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                     e.Cancel = true;
                                 }
 
                             }
                             else
                             {
-                                MessageBox.Show("Вы ввели некорректное значение! Допускаются только числа.", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                MessageBox.Show("Р’С‹ РІРІРµР»Рё РЅРµРєРѕСЂСЂРµРєС‚РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ! Р”РѕРїСѓСЃРєР°СЋС‚СЃСЏ С‚РѕР»СЊРєРѕ С‡РёСЃР»Р°.", "Р’РЅРёРјР°РЅРёРµ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                 e.Cancel = true;
                             }
 
@@ -576,14 +576,14 @@ namespace Apteka.Plus.UserControls
                             {
                                 if (Extra < 0)
                                 {
-                                    MessageBox.Show("Наценка не может быть отрицательной", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                    MessageBox.Show("РќР°С†РµРЅРєР° РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РѕС‚СЂРёС†Р°С‚РµР»СЊРЅРѕР№", "Р’РЅРёРјР°РЅРёРµ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                     e.Cancel = true;
                                 }
 
                             }
                             else
                             {
-                                MessageBox.Show("Вы ввели некорректное значение! Допускаются только числа.", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                MessageBox.Show("Р’С‹ РІРІРµР»Рё РЅРµРєРѕСЂСЂРµРєС‚РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ! Р”РѕРїСѓСЃРєР°СЋС‚СЃСЏ С‚РѕР»СЊРєРѕ С‡РёСЃР»Р°.", "Р’РЅРёРјР°РЅРёРµ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                 e.Cancel = true;
                             }
 
@@ -769,7 +769,7 @@ namespace Apteka.Plus.UserControls
             {
                 newMainStoreInsertRow.FullProductInfo = fullProductInfo;
 
-                // делитель проверка
+                // РґРµР»РёС‚РµР»СЊ РїСЂРѕРІРµСЂРєР°
 
                 if (newMainStoreInsertRow.FullProductInfo.Divider > 0)
                 {

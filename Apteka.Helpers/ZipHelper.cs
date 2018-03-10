@@ -76,17 +76,10 @@ namespace Apteka.Helpers
 
         public static void ZipFile(string filePath, string zipFileName)
         {
-
-
-            // Depending on the directory this could be very large and would require more attention
-            // in a commercial package.
             string[] filenames = Directory.GetFiles(filePath);
 
-            // 'using' statements gaurantee the stream is closed properly which is a big source
-            // of problems otherwise.  Its exception safe as well which is great.
             using (ZipOutputStream s = new ZipOutputStream(File.Create(zipFileName)))
             {
-
                 s.SetLevel(9); // 0 - store only to 9 - means best compression
 
                 byte[] buffer = new byte[4096];
@@ -96,22 +89,15 @@ namespace Apteka.Helpers
 
                     // Using GetFileName makes the result compatible with XP
                     // as the resulting path is not absolute.
-                    ZipEntry entry = new ZipEntry(Path.GetFileName(file));
+                    var entry = new ZipEntry(Path.GetFileName(file))
+                    {
+                        DateTime = DateTime.Now
+                    };
 
-                    // Setup the entry data as required.
-
-                    // Crc and size are handled by the library for seakable streams
-                    // so no need to do them here.
-
-                    // Could also use the last write time or similar for the file.
-                    entry.DateTime = DateTime.Now;
                     s.PutNextEntry(entry);
 
-                    using (FileStream fs = File.OpenRead(file))
+                    using (var fs = File.OpenRead(file))
                     {
-
-                        // Using a fixed size buffer here makes no noticeable difference for output
-                        // but keeps a lid on memory usage.
                         int sourceBytes;
                         do
                         {
@@ -121,10 +107,6 @@ namespace Apteka.Helpers
                     }
                 }
 
-                // Finish/Close arent needed strictly as the using statement does this automatically
-
-                // Finish is important to ensure trailing information for a Zip file is appended.  Without this
-                // the created file would be invalid.
                 s.Finish();
             }
         }

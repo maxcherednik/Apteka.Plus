@@ -7,9 +7,10 @@
             return new Operator();
         }
 
-        private class Operator:IOperator
+        private class Operator : IOperator
         {
             public string Name { get; set; }
+
             public string Password { get; set; }
         }
     }

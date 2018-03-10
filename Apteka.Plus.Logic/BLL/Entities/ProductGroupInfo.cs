@@ -3,12 +3,12 @@ using BLToolkit.Mapping;
 
 namespace Apteka.Plus.Logic.BLL.Entities
 {
-
     [MapField("ProductGroupID", "ProductGroup.ID")]
     [MapField("FullProductInfoID", "ParentFullProductInfo.ID")]
     public class ProductGroupInfo
     {
         private ProductGroup _ProductGroup = new ProductGroup();
+
         private FullProductInfo _FullProductInfo = new FullProductInfo();
 
         [PrimaryKey, NonUpdatable]
@@ -25,7 +25,5 @@ namespace Apteka.Plus.Logic.BLL.Entities
             get { return _FullProductInfo; }
             set { _FullProductInfo = value; }
         }
-
     }
 }
-

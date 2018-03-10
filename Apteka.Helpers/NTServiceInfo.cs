@@ -8,25 +8,23 @@ namespace SiccoloWebServiceEventProcessor
     /// </summary>
     public class NTServiceInfo
     {
-        private string m_ServiceName = "";
-        private string m_MachineName = "";
+        private string _serviceName = "";
+        private string _machineName = "";
 
-        public NTServiceInfo(string NTServiceName, string MachineName)
+        public NTServiceInfo(string NTServiceName, string machineName)
         {
-            m_ServiceName = NTServiceName;
-            m_MachineName = MachineName;
+            _serviceName = NTServiceName;
+            _machineName = machineName;
         }
 
         public string PathToExecutable()
         {
-
             //HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services.
-            string RegistryKey = "SYSTEM\\CurrentControlSet\\Services\\" + this.m_ServiceName;
+            string RegistryKey = "SYSTEM\\CurrentControlSet\\Services\\" + _serviceName;
             //string RegistryKey = "HKEY_LOCAL_MACHINE\\SYSTEM\\CurrentControlSet\\Services\\" + this.m_ServiceName;
 
-            string ErrorInfo = "";
 
-            string Path = this.ReadRegestryKey(RegistryKey, out ErrorInfo);
+            string Path = ReadRegestryKey(RegistryKey, out string ErrorInfo);
             if (Path.IndexOf("%") > 0)
             {
                 Path = ExpandEnvironmentString(Path);
@@ -42,10 +40,8 @@ namespace SiccoloWebServiceEventProcessor
             string SystemRootKey = "Software\\Microsoft\\Windows NT\\CurrentVersion\\";
             RegistryKey Key;
 
-            if (this.m_MachineName != "")
-                Key = Microsoft.Win32.RegistryKey.OpenRemoteBaseKey(
-                    RegistryHive.LocalMachine, this.m_MachineName
-                        ).OpenSubKey(SystemRootKey);
+            if (_machineName != "")
+                Key = RegistryKey.OpenRemoteBaseKey(RegistryHive.LocalMachine, _machineName).OpenSubKey(SystemRootKey);
             else
                 Key = Registry.LocalMachine.OpenSubKey(SystemRootKey);
 
@@ -69,15 +65,14 @@ namespace SiccoloWebServiceEventProcessor
                 RegistryKey KeyHKLM = Registry.LocalMachine;
                 try
                 {
-                    if (this.m_MachineName != "")
-                        Key = Microsoft.Win32.RegistryKey.OpenRemoteBaseKey(RegistryHive.LocalMachine, this.m_MachineName).OpenSubKey(RegistryKey);
+                    if (_machineName != "")
+                        Key = Microsoft.Win32.RegistryKey.OpenRemoteBaseKey(RegistryHive.LocalMachine, this._machineName).OpenSubKey(RegistryKey);
                     else
                         Key = KeyHKLM.OpenSubKey(RegistryKey);
 
                     Value = Key.GetValue("ImagePath").ToString();
                     Key.Close();
                 }
-
                 catch (Exception ex_open_key)
                 {
                     ErrorInfo = "Error Accessing Registry [" + ex_open_key.ToString() + "]";

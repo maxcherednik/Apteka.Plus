@@ -1,5 +1,4 @@
-﻿
-namespace Apteka.Plus.Logic.BLL.Entities
+﻿namespace Apteka.Plus.Logic.BLL.Entities
 {
     public class TableInfo
     {
@@ -15,6 +14,7 @@ namespace Apteka.Plus.Logic.BLL.Entities
         }
 
         public string Name;
+
         public long MaxID;
 
         public override bool Equals(object obj)
@@ -23,7 +23,7 @@ namespace Apteka.Plus.Logic.BLL.Entities
 
             TableInfo other = (TableInfo)obj;
             return (Name == other.Name);
-            
+
         }
         public override int GetHashCode()
         {

@@ -20,7 +20,7 @@ namespace Apteka.Plus.CashRegister.FP5200
                 ECR.DeviceEnabled = true;
                 if (ECR.ResultCode != 0)
                 {
-                    _logger.Error("Error during taking device unfer control");
+                    _logger.Error("Error during taking device under control");
                     return;
                 }
 
@@ -52,22 +52,27 @@ namespace Apteka.Plus.CashRegister.FP5200
                 // входим в режим отчетов без гашения
                 ECR.Mode = 2;
                 if (ECR.SetMode() != 0)
+                {
                     return;
+                }
+
                 // снимаем отчет
                 ECR.ReportType = 2;
                 if (ECR.Report() != 0)
+                {
                     return;
+                }
 
                 // выходим в режим выбора, чтобы кто-то под введенными паролями не сделал что нибуть нехорошее
                 if (ECR.ResetMode() != 0)
+                {
                     return;
-
+                }
             }
             finally
             {
                 // освобождаем порт
                 ECR.DeviceEnabled = false;
-
             }
 
             if (ECR.ResultCode != 0)
@@ -75,8 +80,6 @@ namespace Apteka.Plus.CashRegister.FP5200
                 _logger.Error("Error during device release");
                 return;
             }
-
-
         }
 
         public void PerformZReport()
@@ -88,7 +91,7 @@ namespace Apteka.Plus.CashRegister.FP5200
                 ECR.DeviceEnabled = true;
                 if (ECR.ResultCode != 0)
                 {
-                    _logger.Error("Error during taking device unfer control");
+                    _logger.Error("Error during taking device under control");
                     return;
                 }
 
@@ -120,22 +123,27 @@ namespace Apteka.Plus.CashRegister.FP5200
                 // входим в режим отчетов с гашением
                 ECR.Mode = 3;
                 if (ECR.SetMode() != 0)
+                {
                     return;
+                }
+
                 // снимаем отчет
                 ECR.ReportType = 1;
                 if (ECR.Report() != 0)
+                {
                     return;
+                }
 
                 // выходим в режим выбора, чтобы кто-то под введенными паролями не сделал что нибуть нехорошее
                 if (ECR.ResetMode() != 0)
+                {
                     return;
-
+                }
             }
             finally
             {
                 // освобождаем порт
                 ECR.DeviceEnabled = false;
-
             }
 
             if (ECR.ResultCode != 0)
@@ -186,7 +194,9 @@ namespace Apteka.Plus.CashRegister.FP5200
                 // входим в режим регистрации
                 ECR.Mode = 1;
                 if (ECR.SetMode() != 0)
+                {
                     return;
+                }
 
                 foreach (var item in liGoods)
                 {
@@ -196,7 +206,9 @@ namespace Apteka.Plus.CashRegister.FP5200
                     ECR.Quantity = item.Amount;
                     ECR.Department = 2;
                     if (ECR.Registration() != 0)
+                    {
                         return;
+                    }
 
                     if (item.Discount != 0)
                     {
@@ -204,7 +216,9 @@ namespace Apteka.Plus.CashRegister.FP5200
                         ECR.Percents = item.Discount;
                         ECR.Destination = 1;
                         if (ECR.PercentsDiscount() != 0)
+                        {
                             return;
+                        }
                     }
                 }
 
@@ -214,14 +228,18 @@ namespace Apteka.Plus.CashRegister.FP5200
                     ECR.Summ = givenCash;
                     ECR.TypeClose = 0;
                     if (ECR.Delivery() != 0)
+                    {
                         return;
+                    }
                 }
                 else
                 {
                     // закрытие чека наличными без ввода полученной от клиента суммы
                     ECR.TypeClose = 0;
                     if (ECR.CloseCheck() != 0)
+                    {
                         return;
+                    }
                 }
 
             }
@@ -229,7 +247,6 @@ namespace Apteka.Plus.CashRegister.FP5200
             {
                 // освобождаем порт
                 ECR.DeviceEnabled = false;
-
             }
 
             if (ECR.ResultCode != 0)

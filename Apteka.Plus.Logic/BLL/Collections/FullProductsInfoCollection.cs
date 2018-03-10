@@ -7,6 +7,7 @@ namespace Apteka.Plus.Logic.BLL.Collections
     public class FullProductsInfoCollection
     {
         private static List<FullProductInfo> _liFullProductInfos;
+
         public static List<FullProductInfo> FullProductInfoList
         {
             get
@@ -19,6 +20,5 @@ namespace Apteka.Plus.Logic.BLL.Collections
                 return new List<FullProductInfo>(_liFullProductInfos);
             }
         }
-
     }
 }

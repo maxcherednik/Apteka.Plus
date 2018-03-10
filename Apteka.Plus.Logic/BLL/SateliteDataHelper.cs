@@ -17,7 +17,6 @@ namespace Apteka.Plus.Logic.BLL
 
         public static string PrepareDataForMyStore(MyStore myStore)
         {
-
             log.Info("Подготовка данных для отправки в пункт");
             log.InfoFormat("Пункт id: {0} name: {1} ip: {2}", myStore.ID, myStore.Name, myStore.IP);
             DirectoryInfo di = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + "DataTransfer");
@@ -28,9 +27,8 @@ namespace Apteka.Plus.Logic.BLL
             if (!diDate.Exists)
                 diDate.Create();
 
-            using (DbManager dbSatelite = new DbManager(myStore.Name))
+            using (var dbSatelite = new DbManager(myStore.Name))
             {
-
                 LocalBillsAccessor lba = LocalBillsAccessor.CreateInstance<LocalBillsAccessor>(dbSatelite);
                 RemoteActionAccessor raa = RemoteActionAccessor.CreateInstance<RemoteActionAccessor>(dbSatelite);
                 EmployeesAccessor ea = EmployeesAccessor.CreateInstance<EmployeesAccessor>(dbSatelite);
@@ -83,12 +81,13 @@ namespace Apteka.Plus.Logic.BLL
                 log.InfoFormat("maxPriceChangesRowID: {0}", maxPriceChangesRowID);
                 log.InfoFormat("maxSuppliesReturnHistoryRowID: {0}", maxSuppliesReturnHistoryRowID);
 
-                List<TableInfo> liTablesInfo = new List<TableInfo>(4);
-
-                liTablesInfo.Add(new TableInfo("Sales", maxSalesRowID));
-                liTablesInfo.Add(new TableInfo("PriceChanges", maxPriceChangesRowID));
-                liTablesInfo.Add(new TableInfo("LocalBillsTransfers", maxLocalBillsTransferID));
-                liTablesInfo.Add(new TableInfo("SuppliesReturnHistory", maxSuppliesReturnHistoryRowID));
+                List<TableInfo> liTablesInfo = new List<TableInfo>(4)
+                {
+                    new TableInfo("Sales", maxSalesRowID),
+                    new TableInfo("PriceChanges", maxPriceChangesRowID),
+                    new TableInfo("LocalBillsTransfers", maxLocalBillsTransferID),
+                    new TableInfo("SuppliesReturnHistory", maxSuppliesReturnHistoryRowID)
+                };
 
                 #endregion
 
@@ -101,7 +100,6 @@ namespace Apteka.Plus.Logic.BLL
                 SerializeHelper.SerializeObjectToFile(liMyStores, diDate.FullName + "\\MyStores.xml");
                 SerializeHelper.SerializeObjectToFile(liClients, diDate.FullName + "\\Clients.xml");
                 SerializeHelper.SerializeObjectToFile(liFullProductInfo, diDate.FullName + "\\ProductInfo.xml");
-
             }
 
             log.Info("Архивация...");
@@ -161,7 +159,6 @@ namespace Apteka.Plus.Logic.BLL
                         lba.ChangeAmount(varSalesRow.LocalBillsRow.ID, -1 * varSalesRow.Count);
                         sa.Insert(varSalesRow);
                     }
-
                 }
                 #endregion
 
@@ -197,13 +194,12 @@ namespace Apteka.Plus.Logic.BLL
                 #region PriceChangesRows
 
                 long PriceChangesRowMaxID = pca.GetMaxRowID();
-                foreach (PriceChangeRow varPriceChangeRow in liPriceChangeRow)
+                foreach (var varPriceChangeRow in liPriceChangeRow)
                 {
                     if (varPriceChangeRow.ID > PriceChangesRowMaxID)
                     {
                         pca.Insert(varPriceChangeRow);
                         lba.UpdatePrice(varPriceChangeRow.LocalBillsRowID, varPriceChangeRow.NewPrice);
-
                     }
                 }
                 #endregion
@@ -226,7 +222,6 @@ namespace Apteka.Plus.Logic.BLL
                 log.Info("Завершаем транзакции...");
                 dbSatelite.CommitTransaction();
                 dbSklad.CommitTransaction();
-
             }
             catch (Exception e)
             {
@@ -250,7 +245,7 @@ namespace Apteka.Plus.Logic.BLL
         {
             log.Info("Подготовка данных для выгрузки на главный компьютер");
 
-            DirectoryInfo di = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + "Download");
+            var di = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + "Download");
             if (!di.Exists)
                 di.Create();
 
@@ -263,9 +258,9 @@ namespace Apteka.Plus.Logic.BLL
             List<SalesRow> liSalesRow = null;
             List<LocalBillsTransferRow> liLocalBillsTransferRow = null;
             List<SuppliesReturnHistoryRow> liSuppliesReturnHistoryRows = null;
-            List<TableInfo> liTableInfos = new List<TableInfo>();
+            var liTableInfos = new List<TableInfo>();
 
-            using (DbManager db = new DbManager())
+            using (var db = new DbManager())
             {
                 try
                 {
@@ -294,7 +289,6 @@ namespace Apteka.Plus.Logic.BLL
 
                     db.CommitTransaction();
                     log.Info("Транзакция в базу закрыта");
-
                 }
                 catch (Exception e)
                 {
@@ -321,7 +315,6 @@ namespace Apteka.Plus.Logic.BLL
                 log.InfoFormat("Удалена директория {0}", diPathToArchive.Name);
 
                 return zipSateliteData;
-
             }
         }
 
@@ -342,8 +335,8 @@ namespace Apteka.Plus.Logic.BLL
             List<MyStore> liMyStores = SerializeHelper.DeserializeObjectFromFile<List<MyStore>>(diDestination.FullName + "\\MyStores.xml");
             List<Client> liClients = SerializeHelper.DeserializeObjectFromFile<List<Client>>(diDestination.FullName + "\\Clients.xml");
             List<FullProductInfo> liFullProductInfo = SerializeHelper.DeserializeObjectFromFile<List<FullProductInfo>>(diDestination.FullName + "\\ProductInfo.xml");
-            
-                
+
+
             using (DbManager db = new DbManager())
             {
                 try
@@ -367,10 +360,7 @@ namespace Apteka.Plus.Logic.BLL
                     List<Client> liSateliteClients = clientAccessor.Query.SelectAll();
                     foreach (Client client in liSateliteClients)
                     {
-                        Client clientFind = liClients.Find(delegate(Client c)
-                        {
-                            return c.Id == client.Id;
-                        });
+                        var clientFind = liClients.Find(c => c.Id == client.Id);
 
                         log.InfoFormat("Client id: {0} discount: {1}", client.Id, client.Discount);
 
@@ -390,10 +380,7 @@ namespace Apteka.Plus.Logic.BLL
                     liSateliteClients = clientAccessor.Query.SelectAll();
                     foreach (Client client in liClients)
                     {
-                        Client clientFind = liSateliteClients.Find(delegate(Client c)
-                        {
-                            return c.Id == client.Id;
-                        });
+                        var clientFind = liSateliteClients.Find(c => c.Id == client.Id);
 
                         log.InfoFormat("Client id: {0} discount: {1}", client.Id, client.Discount);
 
@@ -401,7 +388,6 @@ namespace Apteka.Plus.Logic.BLL
                         {
                             clientAccessor.Query.Insert(client);
                         }
-
                     }
 
                     #endregion
@@ -562,4 +548,3 @@ namespace Apteka.Plus.Logic.BLL
         #endregion
     }
 }
-

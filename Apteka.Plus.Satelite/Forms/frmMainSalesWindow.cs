@@ -103,16 +103,10 @@ namespace Apteka.Plus.Satelite.Forms
                 {
                     LoadLocalBillsByLetter(tbSearch.Text[0].ToString());
                     localBillsRowExBindingSource.MoveFirst();
-
                 }
                 else if (tbSearch.Text.Length > 1)
                 {
-
-                    List<LocalBillsRowEx> liFiltered = _liLocalBillRowsList.FindAll(delegate(LocalBillsRowEx p)
-                    {
-                        return p.ProductName.StartsWith(tbSearch.Text, StringComparison.CurrentCultureIgnoreCase);
-
-                    });
+                    var liFiltered = _liLocalBillRowsList.FindAll(p => p.ProductName.StartsWith(tbSearch.Text, StringComparison.CurrentCultureIgnoreCase));
 
                     localBillsRowExBindingSource.DataSource = liFiltered;
                     localBillsRowExBindingSource.MoveFirst();
@@ -123,11 +117,10 @@ namespace Apteka.Plus.Satelite.Forms
         private void dgvLocalBills_KeyDown(object sender, KeyEventArgs e)
         {
             Log.DebugFormat("Key down:{0}", e.KeyCode.ToString());
-            DataGridView dgv = sender as DataGridView;
+            var dgv = sender as DataGridView;
 
             switch (e.KeyCode)
             {
-
                 case Keys.Back:
                     {
                         if (tbSearch.Text.Length != 0)
@@ -137,9 +130,7 @@ namespace Apteka.Plus.Satelite.Forms
 
                         e.SuppressKeyPress = true;
                     }
-
                     break;
-
                 case Keys.Enter:
                     {
                         if (dgv.CurrentRow != null)
@@ -149,20 +140,16 @@ namespace Apteka.Plus.Satelite.Forms
                         }
                         e.Handled = true;
                         e.SuppressKeyPress = true;
-
                     }
                     break;
-
                 case Keys.Escape:
                     {
-
                         tbSearch.Text = "";
                         localBillsRowExBindingSource.DataSource = _liLocalBillRowsList;
 
                         e.SuppressKeyPress = true;
                     }
                     break;
-
                 case Keys.Tab:
                     {
                         dgvLocalBillsToSale.Select();
@@ -176,7 +163,6 @@ namespace Apteka.Plus.Satelite.Forms
                         PerformSale();
                     }
                     break;
-
                 case Keys.F6:
                     {
                         PerformTransfer();
@@ -191,10 +177,8 @@ namespace Apteka.Plus.Satelite.Forms
                 case Keys.F8:
                     {
                         ShowCalculator();
-
                     }
                     break;
-
                 case Keys.F10:
                     {
                         ShowClientIdentifyForm();
@@ -214,12 +198,10 @@ namespace Apteka.Plus.Satelite.Forms
                         else
                         {
                             row.IsPriceUpdated = true;
-
                         }
 
                         lba.UpdatePriceChangedMark(row.ID, row.IsPriceUpdated);
                         localBillsRowExBindingSource.MoveNext();
-
                     }
                     break;
             }
@@ -396,8 +378,7 @@ namespace Apteka.Plus.Satelite.Forms
 
         private void dgvLocalBillsToSale_KeyDown(object sender, KeyEventArgs e)
         {
-            Log.DebugFormat("Key down:{0}", e.KeyCode.ToString());
-            DataGridView dgv = sender as DataGridView;
+            var dgv = sender as DataGridView;
 
             switch (e.KeyCode)
             {
@@ -420,9 +401,7 @@ namespace Apteka.Plus.Satelite.Forms
                         UpdateSum();
                         PerformCalculation();
                     }
-
                     break;
-
                 case Keys.Tab:
                     {
                         dgvLocalBills.Select();
@@ -547,9 +526,9 @@ namespace Apteka.Plus.Satelite.Forms
         {
             if (_liSalesRows.Count == 0) return;
 
-            IList<IGood> liGoods = new List<IGood>();
+            var liGoods = new List<IGood>();
 
-            using (DbManager db = new DbManager())
+            using (var db = new DbManager())
             {
                 db.BeginTransaction();
                 LocalBillsAccessor lba = LocalBillsAccessor.CreateInstance<LocalBillsAccessor>(db);
@@ -665,7 +644,6 @@ namespace Apteka.Plus.Satelite.Forms
 
                     sum = sum + p.Count * p.Price;
                     sumWithDiscount = sumWithDiscount + p.Count * p.PriceWithDiscount;
-
                 }
                 else
                 {
@@ -685,7 +663,6 @@ namespace Apteka.Plus.Satelite.Forms
             {
                 tbSum.Text = sum.ToString("0.00");
             }
-
         }
 
         private float GetDefaultDiscount()
@@ -775,7 +752,6 @@ namespace Apteka.Plus.Satelite.Forms
 
                     }
                     break;
-
             }
         }
 
@@ -815,39 +791,36 @@ namespace Apteka.Plus.Satelite.Forms
 
         private void dgvLocalBills_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
-            LocalBillsRowEx row1 = dgv.Rows[e.RowIndex].DataBoundItem as LocalBillsRowEx;
+            var dgv = sender as DataGridView;
+            var row1 = dgv.Rows[e.RowIndex].DataBoundItem as LocalBillsRowEx;
             if (row1.IsPriceUpdated)
             {
-
                 e.CellStyle.BackColor = Color.Salmon;
-                Font f = new Font(e.CellStyle.Font, FontStyle.Bold);
-                e.CellStyle.Font = f;
+                e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);
             }
 
             switch (dgv[e.ColumnIndex, e.RowIndex].OwningColumn.Name)
             {
                 case "Count":
                     {
-                        LocalBillsRowEx row = dgv.Rows[e.RowIndex].DataBoundItem as LocalBillsRowEx;
+                        var row = dgv.Rows[e.RowIndex].DataBoundItem as LocalBillsRowEx;
 
-                        List<SalesRow> liFilteredSalesRows = _liSalesRows.FindAll(delegate(SalesRow p) { return p.LocalBillsRow.ID == row.ID; });
+                        var liFilteredSalesRows = _liSalesRows.FindAll(p => p.LocalBillsRow.ID == row.ID);
 
                         int i = row.Amount;
-                        foreach (SalesRow salesRow in liFilteredSalesRows)
+                        foreach (var salesRow in liFilteredSalesRows)
                         {
                             i = i - salesRow.Count;
                         }
 
                         e.Value = i;
-
                     }
                     break;
                 case "DateSupply":
                     {
-                        LocalBillsRowEx row = dgv.Rows[e.RowIndex].DataBoundItem as LocalBillsRowEx;
+                        var row = dgv.Rows[e.RowIndex].DataBoundItem as LocalBillsRowEx;
 
-                        TimeSpan ts = DateTime.Now - row.MainStoreRow.DateSupply;
+                        var ts = DateTime.Now - row.MainStoreRow.DateSupply;
 
                         if (ts.Days > _daysWarning)
                         {
@@ -857,8 +830,8 @@ namespace Apteka.Plus.Satelite.Forms
                         {
                             e.Value = "";
                         }
-                        e.FormattingApplied = true;
 
+                        e.FormattingApplied = true;
                     }
                     break;
 
@@ -874,12 +847,10 @@ namespace Apteka.Plus.Satelite.Forms
 
         private void tbInsertedCash_KeyDown(object sender, KeyEventArgs e)
         {
-            Log.DebugFormat("Key down:{0}", e.KeyCode.ToString());
-            DataGridView dgv = sender as DataGridView;
+            var dgv = sender as DataGridView;
 
             switch (e.KeyCode)
             {
-
                 case Keys.Enter:
                     {
                         tbChange.Visible = true;
@@ -913,7 +884,6 @@ namespace Apteka.Plus.Satelite.Forms
                 {
                     tsbDelayedBills.DropDownItems.Add(item.ToString());
                 }
-
             }
             else
             {
@@ -938,7 +908,7 @@ namespace Apteka.Plus.Satelite.Forms
 
         private void tsbDelayedBills_DropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            ToolStripDropDownButton ts = sender as ToolStripDropDownButton;
+            var ts = sender as ToolStripDropDownButton;
             LocalBillsAccessor lba = LocalBillsAccessor.CreateInstance<LocalBillsAccessor>();
             lba.MarkAsUndelayedBill(Convert.ToInt64(e.ClickedItem.Text));
 
@@ -959,8 +929,8 @@ namespace Apteka.Plus.Satelite.Forms
 
                 int iCashMemoNumber = Convert.ToInt16(Properties.Settings.Default.CashMemoNumber);
 
-                ReportParameter CompanyName = new ReportParameter("CompanyInfo", Properties.Settings.Default.CompanyName);
-                ReportParameter AdditionalInfo = new ReportParameter("AdditionalInfo", Properties.Settings.Default.AdditionalInfo);
+                ReportParameter CompanyName = new ReportParameter("CompanyInfo", Settings.Default.CompanyName);
+                ReportParameter AdditionalInfo = new ReportParameter("AdditionalInfo", Settings.Default.AdditionalInfo);
                 ReportParameter employee = new ReportParameter("EmployeeName", _currentEmployee.FullName);
                 ReportParameter SumPropis = new ReportParameter("SumPropis", sumPropis);
                 ReportParameter CashMemoNumber = new ReportParameter("CashMemoNumber", iCashMemoNumber.ToString());
@@ -1010,14 +980,12 @@ namespace Apteka.Plus.Satelite.Forms
 
         private void tsbPrintLocalBills_Click(object sender, EventArgs e)
         {
-            frmPrintBills frmPrintBills = new frmPrintBills(_currentStore);
-            frmPrintBills.Show();
+            new frmPrintBills(_currentStore).Show();
         }
 
         private void tsbShowObserver_Click(object sender, EventArgs e)
         {
-            frmForeignStoresObserver frmForeignStoresObserver = new frmForeignStoresObserver();
-            frmForeignStoresObserver.Show();
+             new frmForeignStoresObserver().Show();
         }
 
         private void tsmiXReport_Click(object sender, EventArgs e)

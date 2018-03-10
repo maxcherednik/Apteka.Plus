@@ -7,7 +7,9 @@ namespace Apteka.Plus.Logic.BLL.Entities
     {
         [PrimaryKey, NonUpdatable]
         public long ID { get; set; }
+
         public long FullProductInfoID { get; set; }
+
         public long DefectListID { get; set; }
     }
 }

@@ -14,31 +14,19 @@ namespace Apteka.Plus.Logic.BLL.Entities
         public string MiddleName;
 
         [MapIgnore()]
-        public string FullName
-        {
-            get { return LastName + " " + FirstName + " " + MiddleName; }
-        }
+        public string FullName => LastName + " " + FirstName + " " + MiddleName;
         public string Login;
         public string Password;
 
-        public override string ToString()
-        {
-            return FullName;
-        }
+        public override string ToString() => FullName;
 
         #region IUserInfo Members
 
         [MapIgnore()]
-        string IUserInfo.ID
-        {
-            get { return ID.ToString(); }
-        }
+        string IUserInfo.ID => ID.ToString();
 
         [MapIgnore()]
-        string IUserInfo.Name
-        {
-            get { return Login; }
-        }
+        string IUserInfo.Name => Login;
 
         #endregion
     }

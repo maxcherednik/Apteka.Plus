@@ -7,8 +7,8 @@ namespace Apteka.Helpers
     {
         public static void SerializeObjectToFile<T>(T entity, string fileName)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(T));
-            using (TextWriter writer = new StreamWriter(fileName))
+            var serializer = new XmlSerializer(typeof(T));
+            using (var writer = new StreamWriter(fileName))
             {
                 serializer.Serialize(writer, entity);
             }
@@ -16,8 +16,8 @@ namespace Apteka.Helpers
 
         public static T DeserializeObjectFromFile<T>(string fileName)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(T));
-            using (TextReader reader = new StreamReader(fileName))
+            var serializer = new XmlSerializer(typeof(T));
+            using (var reader = new StreamReader(fileName))
             {
                 return (T)serializer.Deserialize(reader);
             }

@@ -384,7 +384,6 @@
             this.dgvDefecturaList.CellMouseDoubleClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvDefecturaList_CellMouseDoubleClick);
             this.dgvDefecturaList.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dgvDefecturaList_KeyDown);
             this.dgvDefecturaList.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.dgvDefecturaList_KeyPress);
-            this.dgvDefecturaList.KeyUp += new System.Windows.Forms.KeyEventHandler(this.dgvDefecturaList_KeyUp);
             // 
             // smartDefectRowBindingSource
             // 

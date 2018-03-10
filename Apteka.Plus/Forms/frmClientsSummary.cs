@@ -202,19 +202,16 @@ namespace Apteka.Plus.Forms
 
             switch (cell.OwningColumn.Name)
             {
-
                 case "DiscountSize":
                     {
                         if (cell.IsInEditMode)
                         {
-                            float newValue;
-                            if (!float.TryParse(cell.EditedFormattedValue.ToString(), out newValue) && !string.IsNullOrEmpty(cell.EditedFormattedValue.ToString()))
+                            if (!float.TryParse(cell.EditedFormattedValue.ToString(), out float newValue) && !string.IsNullOrEmpty(cell.EditedFormattedValue.ToString()))
                             {
                                 MessageBox.Show("Вы ввели некорректное значение! Допускаются только числа и пустые значения.", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                 e.Cancel = true;
                             }
                         }
-
                     }
                     break;
 

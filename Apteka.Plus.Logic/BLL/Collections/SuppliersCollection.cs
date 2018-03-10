@@ -7,6 +7,7 @@ namespace Apteka.Plus.Logic.BLL.Collections
     public class SuppliersCollection
     {
         private static List<Supplier> _liSuppliers;
+
         public static List<Supplier> AllSuppliers
         {
             get

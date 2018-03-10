@@ -17,9 +17,6 @@ namespace Apteka.Plus.Logic.BLL.Entities
         [Nullable, MapIgnore]
         public int Port { get; set; }
 
-        public override string ToString()
-        {
-            return Name;
-        }
+        public override string ToString() => Name;
     }
 }

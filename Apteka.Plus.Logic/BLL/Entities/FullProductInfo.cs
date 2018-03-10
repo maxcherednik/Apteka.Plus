@@ -4,12 +4,11 @@ using BLToolkit.Mapping;
 
 namespace Apteka.Plus.Logic.BLL.Entities
 {
-    [TableName("FullProductInfos")] 
+    [TableName("FullProductInfos")]
     public class FullProductInfo
     {
-                       
-        [PrimaryKey,NonUpdatable]
-        public long ID{get;set;}
+        [PrimaryKey, NonUpdatable]
+        public long ID { get; set; }
 
         public string EAN13 { get; set; }
 
@@ -33,18 +32,15 @@ namespace Apteka.Plus.Logic.BLL.Entities
 
             // Return true if  x and y fields match.
             FullProductInfo other = (FullProductInfo)obj;
-            return ID == other.ID 
-                    && EAN13==other.EAN13 
-                    && Divider==other.Divider
-                    && ProductName==other.ProductName
-                    && PackageName==other.PackageName
-                    && CountryProducer==other.CountryProducer
+            return ID == other.ID
+                    && EAN13 == other.EAN13
+                    && Divider == other.Divider
+                    && ProductName == other.ProductName
+                    && PackageName == other.PackageName
+                    && CountryProducer == other.CountryProducer
                     && IsDiscountExcluded == other.IsDiscountExcluded;
         }
 
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+        public override int GetHashCode() => base.GetHashCode();
     }
 }

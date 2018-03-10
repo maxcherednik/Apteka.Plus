@@ -7,14 +7,11 @@ namespace Apteka.Plus.Logic.BLL.Entities
     {
         [PrimaryKey, NonUpdatable]
         public long ID { get; set; }
+
         public string Name { get; set; }
 
         public bool IsSmartList { get; set; }
 
-        public override string ToString()
-        {
-            return Name;
-        }
-
+        public override string ToString() => Name;
     }
 }

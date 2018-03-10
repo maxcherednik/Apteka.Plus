@@ -6,12 +6,10 @@ namespace Apteka.Plus.Logic.BLL.Entities
     {
         [PrimaryKey, NonUpdatable]
         public int ID { get; set; }
+
         public string Name { get; set; }
 
-        public override string ToString()
-        {
-            return Name;
-        }
+        public override string ToString() => Name;
 
         public override bool Equals(object obj)
         {
@@ -29,4 +27,3 @@ namespace Apteka.Plus.Logic.BLL.Entities
         }
     }
 }
-

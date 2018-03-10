@@ -10,22 +10,21 @@ namespace Apteka.Plus.Logic.BLL.Entities
     [MapField("MyStoreID", "MyStore.ID")]
     public class LocalBillsTransferRow
     {
-
-        #region Private fields
         private Employee _Employee = new Employee();
-        private LocalBillsRowEx _LocalBillsRow = new LocalBillsRowEx();
-        private MyStore _MyStore = new MyStore();       
 
-        #endregion
-        
-        
-        
-        [PrimaryKey,NonUpdatable]
-        public long ID{get;set;}
+        private LocalBillsRowEx _LocalBillsRow = new LocalBillsRowEx();
+
+        private MyStore _MyStore = new MyStore();
+
+        [PrimaryKey, NonUpdatable]
+        public long ID { get; set; }
+
         public DateTime DateAccepted { get; set; }
+
         public int Count { get; set; }
+
         public double Price { get; set; }
-        
+
         public bool IsSynced { get; set; }
 
         public Employee Employee
@@ -46,14 +45,8 @@ namespace Apteka.Plus.Logic.BLL.Entities
             set { _MyStore = value; }
         }
 
-        public string ProductName
-        {
-            get { return _LocalBillsRow.ProductName; }
-        }
+        public string ProductName => _LocalBillsRow.ProductName;
 
-        public string PackageName
-        {
-            get { return _LocalBillsRow.PackageName; }
-        }
+        public string PackageName => _LocalBillsRow.PackageName;
     }
 }

@@ -9,60 +9,40 @@ namespace Apteka.Plus.Logic.BLL.Entities
     [MapField("MyStoreID", "MyStore.ID")]
     public class LocalBillsRowEx
     {
-        #region Private
-
         private MyStore _myStore = new MyStore();
+
         private MainStoreRow _mainStoreRow = new MainStoreRow();
-        #endregion
 
         [PrimaryKey, NonUpdatable]
         public int ID { get; set; }
 
         public DateTime DateAccepted { get; set; }
+
         public long LocalBillNumber { get; set; }
+
         public double StartPrice { get; set; }
+
         public double CurrentPrice { get; set; }
+
         public int StartAmount { get; set; }
+
         public int Amount { get; set; }
 
-        public string Country
-        {
-            get { return _mainStoreRow.FullProductInfo.CountryProducer; }
-        }
+        public string Country => _mainStoreRow.FullProductInfo.CountryProducer;
 
-        public string SupplierBillNumber
-        {
-            get { return _mainStoreRow.SupplierBillNumber; }
-        }
+        public string SupplierBillNumber => _mainStoreRow.SupplierBillNumber;
 
-        public string ProductName
-        {
-            get { return _mainStoreRow.FullProductInfo.ProductName; }
-        }
+        public string ProductName => _mainStoreRow.FullProductInfo.ProductName;
 
-        public string PackageName
-        {
-            get { return _mainStoreRow.FullProductInfo.PackageName; }
-        }
+        public string PackageName => _mainStoreRow.FullProductInfo.PackageName;
 
-        public double SupplierPrice
-        {
-            get { return _mainStoreRow.SupplierPrice; }
-        }
+        public double SupplierPrice => _mainStoreRow.SupplierPrice;
 
-        public string SupplierName
-        {
-            get { return _mainStoreRow.Supplier.Name; }
-        }
-        public DateTime DateSupply
-        {
-            get { return _mainStoreRow.DateSupply; }
-        }
+        public string SupplierName => _mainStoreRow.Supplier.Name;
 
-        public DateTime? ExpirationDate
-        {
-            get { return _mainStoreRow.ExpirationDate; }
-        }
+        public DateTime DateSupply => _mainStoreRow.DateSupply;
+
+        public DateTime? ExpirationDate => _mainStoreRow.ExpirationDate;
 
         public MyStore MyStore
         {
@@ -95,6 +75,5 @@ namespace Apteka.Plus.Logic.BLL.Entities
         public bool IsDelayed { get; set; }
 
         public bool IsPriceUpdated { get; set; }
-
     }
 }

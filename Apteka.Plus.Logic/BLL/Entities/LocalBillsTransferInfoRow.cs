@@ -7,8 +7,9 @@ namespace Apteka.Plus.Logic.BLL.Entities
     public class LocalBillsTransferInfoRow
     {
         public DateTime DateAccepted { get; set; }
-        public MyStore SourceStore  { get; set; }
-        public MyStore DestinationStore { get; set; }
 
+        public MyStore SourceStore { get; set; }
+
+        public MyStore DestinationStore { get; set; }
     }
 }

@@ -153,7 +153,6 @@
             this.dgvLocalBills.Size = new System.Drawing.Size(1021, 239);
             this.dgvLocalBills.TabIndex = 7;
             this.dgvLocalBills.CellParsing += new System.Windows.Forms.DataGridViewCellParsingEventHandler(this.dgvLocalBills_CellParsing);
-            this.dgvLocalBills.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dgvLocalBills_CellFormatting);
             this.dgvLocalBills.KeyDown += new System.Windows.Forms.KeyEventHandler(this.dgvLocalBills_KeyDown);
             this.dgvLocalBills.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.dgvLocalBills_KeyPress);
             // 

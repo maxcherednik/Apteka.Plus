@@ -12,9 +12,6 @@ namespace Apteka.Plus
     {
         private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
         [STAThread]
         static void Main()
         {
@@ -52,14 +49,13 @@ namespace Apteka.Plus
                     }
                 }
             }
+
             DAL.InitConnectionString(connectionString);
             DAL.InitStoresConnectionStrings(Settings.Default.ConnectionStringStoreTemplate, Settings.Default.DbHost, Settings.Default.DbUser, Settings.Default.DbPassword);
         }
 
-
         static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
         {
-
             log.Error("Произошла ошибка!", e.Exception);
 
             MessageBox.Show("Произошла ошибка: " + e.Exception.Message, "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -72,7 +68,6 @@ namespace Apteka.Plus
             log.Error("Произошла ошибка!", exc);
 
             MessageBox.Show("Произошла ошибка: " + exc.Message, "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
         }
     }
 }

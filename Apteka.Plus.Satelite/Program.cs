@@ -13,9 +13,6 @@ namespace Apteka.Plus.Satelite
     {
         private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
         [STAThread]
         static void Main()
         {
@@ -54,10 +51,11 @@ namespace Apteka.Plus.Satelite
                     }
                 }
             }
+
             DAL.InitConnectionString(connectionString);
         }
 
-        static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
+        static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
         {
             log.Error("Произошла ошибка!", e.Exception);
             MessageBox.Show("Произошла ошибка: " + e.Exception.Message, "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Error);

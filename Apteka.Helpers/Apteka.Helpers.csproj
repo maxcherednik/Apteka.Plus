@@ -94,7 +94,6 @@
   <ItemGroup>
     <Compile Include="DataLoader.cs" />
     <Compile Include="DriveHelper.cs" />
-    <Compile Include="FileCopyHelper.cs" />
     <Compile Include="GUIThreadInvoker.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="NTServiceInfo.cs" />

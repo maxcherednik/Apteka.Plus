@@ -6,14 +6,19 @@ namespace Apteka.Plus.Logic.BLL.Entities
 {
     public class MainStoreInsertRow
     {
-        public LocalOrder EOrderRow; 
+        double _supplierPrice;
+
+        double _prevLocalPrice;
+
+        public LocalOrder EOrderRow;
 
         public FullProductInfo FullProductInfo = new FullProductInfo();
+
         public ProductIntegrationInfo ProductIntegrationInfo;
+
         public int Amount { get; set; }
+
         public MainStoreRow MainStoreRow { get; set; }
-        double _supplierPrice;
-        double _prevLocalPrice;
 
         public double PrevLocalPrice
         {
@@ -21,17 +26,10 @@ namespace Apteka.Plus.Logic.BLL.Entities
             set { _prevLocalPrice = value; }
         }
 
-        public bool IsSomethingWrongWithLocalPrice
-        {
-            get { return _prevLocalPrice != 0 && _prevLocalPrice !=_localPrice; }
-            
-        }
-        
-        public bool IsLocalPriceGrows
-        {
-            get { return _prevLocalPrice <= double.Parse(_localPrice.ToString("0.00")); }
+        public bool IsSomethingWrongWithLocalPrice => _prevLocalPrice != 0 && _prevLocalPrice != _localPrice;
 
-        }
+        public bool IsLocalPriceGrows => _prevLocalPrice <= double.Parse(_localPrice.ToString("0.00"));
+
         public double VendorPriceWithoutNDS { get; set; }
 
         public double SupplierPrice
@@ -46,7 +44,7 @@ namespace Apteka.Plus.Logic.BLL.Entities
         {
             get { return double.Parse(_extra.ToString("0.00")); }
             set { _extra = value; }
-        } 
+        }
 
         double _localPrice;
 
@@ -55,28 +53,17 @@ namespace Apteka.Plus.Logic.BLL.Entities
             get { return double.Parse(_localPrice.ToString("0.00")); }
             set { _localPrice = value; }
         }
-        
-        
+
         public DateTime? ExpirationDate { get; set; }
+
         public string Series { get; set; }
 
-        public string EAN13 { get; set; } 
+        public string EAN13 { get; set; }
 
-        public Dictionary<int, int> MyStoresAmount=new Dictionary<int,int>();
+        public Dictionary<int, int> MyStoresAmount = new Dictionary<int, int>();
 
-        public string ProductName
-        {
-            get { return FullProductInfo.ProductName; }
+        public string ProductName => FullProductInfo.ProductName;
 
-        }
-
-        public string PackageName
-        {
-            get { return FullProductInfo.PackageName; }
-
-        }
-
-        
-
+        public string PackageName => FullProductInfo.PackageName;
     }
 }

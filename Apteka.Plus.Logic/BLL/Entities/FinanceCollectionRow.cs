@@ -8,14 +8,17 @@ namespace Apteka.Plus.Logic.BLL.Entities
     [MapField("EmployeeID", "Employee.ID")]
     public class FinanceCollectionRow
     {
-        private Employee _employee= new Employee();
+        private Employee _employee = new Employee();
 
-        [PrimaryKey,NonUpdatable]
+        [PrimaryKey, NonUpdatable]
         public int ID { get; set; }
 
         public DateTime Date { get; set; }
+
         public double AmountCollected { get; set; }
+
         public double AmountComputer { get; set; }
+
         public string Comment { get; set; }
 
         public Employee Employee
@@ -24,11 +27,6 @@ namespace Apteka.Plus.Logic.BLL.Entities
             set { _employee = value; }
         }
 
-        public string EmployeeName
-        {
-            get { return _employee.FullName; }
-            
-        }
-
+        public string EmployeeName => _employee.FullName;
     }
 }

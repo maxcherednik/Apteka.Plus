@@ -22,8 +22,11 @@ namespace Apteka.Helpers
             _syncContext = SynchronizationContext.Current;
             _dataSource = dataSource;
             _timeoutInMilliseconds = timeoutInMilliseconds;
-            _bgwDataLoader = new BackgroundWorker();
-            _bgwDataLoader.WorkerSupportsCancellation = true;
+            _bgwDataLoader = new BackgroundWorker
+            {
+                WorkerSupportsCancellation = true
+            };
+
             _bgwDataLoader.DoWork += new DoWorkEventHandler(_bgwDataLoader_DoWork);
             _bgwDataLoader.RunWorkerCompleted += new RunWorkerCompletedEventHandler(_bgwDataLoader_RunWorkerCompleted);
         }
@@ -110,18 +113,16 @@ namespace Apteka.Helpers
 
         protected virtual void OnRequestCompleted(TResult liResults)
         {
-            if (RequestCompleted != null)
-            {
-                RequestCompleted(this, new RequestCompletedEventArgs(liResults));
-            }
+            RequestCompleted?.Invoke(this, new RequestCompletedEventArgs(liResults));
         }
 
         public class RequestCompletedEventArgs : EventArgs
         {
-            public RequestCompletedEventArgs(TResult Results)
+            public RequestCompletedEventArgs(TResult results)
             {
-                this.Results = Results;
+                Results = results;
             }
+
             public TResult Results { get; private set; }
         }
         #endregion
@@ -131,17 +132,14 @@ namespace Apteka.Helpers
 
         protected virtual void OnErrorGenerated(Exception exc)
         {
-            if (ErrorGenerated != null)
-            {
-                ErrorGenerated(this, new ErrorGeneratedEventArgs(exc));
-            }
+            ErrorGenerated?.Invoke(this, new ErrorGeneratedEventArgs(exc));
         }
 
         public class ErrorGeneratedEventArgs : EventArgs
         {
             public ErrorGeneratedEventArgs(Exception exc)
             {
-                this.Exception = exc;
+                Exception = exc;
             }
             public Exception Exception { get; private set; }
         }
@@ -158,7 +156,7 @@ namespace Apteka.Helpers
                 _syncContext.Post(obj =>
                 {
                     itsGonnaTakeAWhile(this, new ItsGonnaTakeAWhileEventArgs());
-                },null);
+                }, null);
             }
         }
 
@@ -166,6 +164,5 @@ namespace Apteka.Helpers
         #endregion
 
         #endregion
-
     }
 }

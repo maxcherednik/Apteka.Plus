@@ -4,9 +4,9 @@ namespace Apteka.Plus.Logic.BLL.Entities
 {
     public class Client
     {
-       [PrimaryKey]
+        [PrimaryKey]
         public string Id { get; set; }
 
-        public float Discount {get;set;}
+        public float Discount { get; set; }
     }
 }

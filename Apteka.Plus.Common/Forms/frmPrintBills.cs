@@ -1,9 +1,9 @@
-﻿using Apteka.Helpers;
-using Apteka.Plus.Logic.BLL;
+﻿using Apteka.Plus.Logic.BLL;
 using Apteka.Plus.Logic.BLL.Collections;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
 using BLToolkit.Data;
+using log4net;
 using Microsoft.Reporting.WinForms;
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ namespace Apteka.Plus.Forms
 {
     public partial class frmPrintBills : Form
     {
-        private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private const string BaseDirectory = "Apteka.Plus.Common.Reports.";
 

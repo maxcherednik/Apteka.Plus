@@ -1,11 +1,11 @@
-﻿using Apteka.Helpers;
-using Apteka.Plus.Common.Controls;
+﻿using Apteka.Plus.Common.Controls;
 using Apteka.Plus.Forms;
 using Apteka.Plus.Logic.BLL;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
 using Apteka.Plus.Properties;
 using BLToolkit.Data;
+using log4net;
 using OrderConverter.BLL;
 using System;
 using System.Collections.Generic;
@@ -16,7 +16,7 @@ namespace Apteka.Plus.UserControls
 {
     public partial class UcNewBillPage : UserControl
     {
-        private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private IList<MyStore> _liMyStores;
         private MyStore _selectedStoreForEOrder;
@@ -76,11 +76,14 @@ namespace Apteka.Plus.UserControls
 
             foreach (MyStore varMyStore in liMyStores)
             {
-                var column = new DataGridViewTextBoxColumn();
-                column.HeaderText = varMyStore.Name;
-                column.Tag = varMyStore;
-                column.Name = varMyStore.ID.ToString();
-                column.SortMode = DataGridViewColumnSortMode.NotSortable;
+                var column = new DataGridViewTextBoxColumn
+                {
+                    HeaderText = varMyStore.Name,
+                    Tag = varMyStore,
+                    Name = varMyStore.ID.ToString(),
+                    SortMode = DataGridViewColumnSortMode.NotSortable
+                };
+
                 column.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                 column.ValueType = typeof(int);
                 dgvBill.Columns.Insert(i, column);
@@ -188,19 +191,21 @@ namespace Apteka.Plus.UserControls
                     OnProcessNotification("Подготовка данных для сохраниения", i, _liMainStoreInsertRows.Count);
 
                     #region New MainStoreRow Preparing
-                    MainStoreRow newMainStoreRow = new MainStoreRow();
-                    newMainStoreRow.Amount = varMainStoreInsertRow.Amount;
-                    newMainStoreRow.StartAmount = varMainStoreInsertRow.Amount;
-                    newMainStoreRow.SupplierPrice = varMainStoreInsertRow.SupplierPrice;
-                    newMainStoreRow.Extra = varMainStoreInsertRow.Extra;
-                    newMainStoreRow.LocalPrice = varMainStoreInsertRow.LocalPrice;
-                    newMainStoreRow.FullProductInfo = varMainStoreInsertRow.FullProductInfo;
-                    newMainStoreRow.Series = varMainStoreInsertRow.Series;
-                    newMainStoreRow.ExpirationDate = varMainStoreInsertRow.ExpirationDate;
-                    newMainStoreRow.EAN13 = varMainStoreInsertRow.EAN13;
-                    newMainStoreRow.DateSupply = _billDate;
-                    newMainStoreRow.Supplier = _supplier;
-                    newMainStoreRow.SupplierBillNumber = _billNumber;
+                    var newMainStoreRow = new MainStoreRow
+                    {
+                        Amount = varMainStoreInsertRow.Amount,
+                        StartAmount = varMainStoreInsertRow.Amount,
+                        SupplierPrice = varMainStoreInsertRow.SupplierPrice,
+                        Extra = varMainStoreInsertRow.Extra,
+                        LocalPrice = varMainStoreInsertRow.LocalPrice,
+                        FullProductInfo = varMainStoreInsertRow.FullProductInfo,
+                        Series = varMainStoreInsertRow.Series,
+                        ExpirationDate = varMainStoreInsertRow.ExpirationDate,
+                        EAN13 = varMainStoreInsertRow.EAN13,
+                        DateSupply = _billDate,
+                        Supplier = _supplier,
+                        SupplierBillNumber = _billNumber
+                    };
 
                     #endregion
 
@@ -242,27 +247,26 @@ namespace Apteka.Plus.UserControls
                     bool SaveFlag = false;
                     foreach (MainStoreInsertRow varMainStoreInsertRow in _liMainStoreInsertRows)
                     {
-
-                        int myStoresAmount = 0;
-
-                        if (varMainStoreInsertRow.MyStoresAmount.TryGetValue(varMyStore.ID, out myStoresAmount))
+                        if (varMainStoreInsertRow.MyStoresAmount.TryGetValue(varMyStore.ID, out int myStoresAmount))
                         {
-                            LocalBillsRowEx newLocalBillsRowEx = new LocalBillsRowEx();
-                            newLocalBillsRowEx.StartAmount = myStoresAmount;
-                            newLocalBillsRowEx.Amount = myStoresAmount;
-                            newLocalBillsRowEx.CurrentPrice = varMainStoreInsertRow.LocalPrice;
-                            newLocalBillsRowEx.StartPrice = varMainStoreInsertRow.LocalPrice;
-                            newLocalBillsRowEx.MainStoreRow = varMainStoreInsertRow.MainStoreRow;
-                            newLocalBillsRowEx.LocalBillNumber = LocalBillNumber;
-                            newLocalBillsRowEx.DateAccepted = DateTime.Today.Date;
-                            newLocalBillsRowEx.IsDelayed = delayLocalBills;
+                            var newLocalBillsRowEx = new LocalBillsRowEx
+                            {
+                                StartAmount = myStoresAmount,
+                                Amount = myStoresAmount,
+                                CurrentPrice = varMainStoreInsertRow.LocalPrice,
+                                StartPrice = varMainStoreInsertRow.LocalPrice,
+                                MainStoreRow = varMainStoreInsertRow.MainStoreRow,
+                                LocalBillNumber = LocalBillNumber,
+                                DateAccepted = DateTime.Today.Date,
+                                IsDelayed = delayLocalBills
+                            };
 
                             lba.Insert(newLocalBillsRowEx);
                             msra.ChangeAmount(newLocalBillsRowEx.MainStoreRow.ID, -1 * newLocalBillsRowEx.Amount);
                             SaveFlag = true;
                         }
-
                     }
+
                     if (SaveFlag == true)
                     {
                         LocalBillNumber++;
@@ -334,8 +338,7 @@ namespace Apteka.Plus.UserControls
         }
         protected virtual void OnProcessNotification(string currentAction, int currentValue, int maxValue)
         {
-            if (ProcessNotification != null)
-                ProcessNotification(this, new ProcessNotificationEventArgs(currentAction, currentValue, maxValue));
+            ProcessNotification?.Invoke(this, new ProcessNotificationEventArgs(currentAction, currentValue, maxValue));
         }
 
         private void dgvBill_KeyUp(object sender, KeyEventArgs e)
@@ -380,11 +383,9 @@ namespace Apteka.Plus.UserControls
 
             foreach (MyStore varMyStore in _liMyStores)
             {
-
                 if (varMyStore.ID.ToString() == dgv[e.ColumnIndex, e.RowIndex].OwningColumn.Name)
                 {
-                    int myStoresAmount = 0;
-                    if (row.MyStoresAmount.TryGetValue(varMyStore.ID, out myStoresAmount))
+                    if (row.MyStoresAmount.TryGetValue(varMyStore.ID, out int myStoresAmount))
                     {
                         e.Value = myStoresAmount;
                     }
@@ -441,21 +442,23 @@ namespace Apteka.Plus.UserControls
 
                                 if (mainStoreInsertCurrentRow.ProductIntegrationInfo != null)
                                 {
-
-                                    ProductIntegrationInfoAccessor piia = ProductIntegrationInfoAccessor.CreateInstance<ProductIntegrationInfoAccessor>();
+                                    var piia = ProductIntegrationInfoAccessor.CreateInstance<ProductIntegrationInfoAccessor>();
                                     piia.DeleteByKey(mainStoreInsertCurrentRow.ProductIntegrationInfo.ID);
 
-                                    ProductIntegrationInfo pii = new ProductIntegrationInfo();
-                                    pii.SupplierProductID = mainStoreInsertCurrentRow.ProductIntegrationInfo.SupplierProductID;
-                                    pii.Supplier = _supplier;
-                                    pii.ParentFullProductInfo = selectedFullProductInfo;
+                                    var pii = new ProductIntegrationInfo
+                                    {
+                                        SupplierProductID = mainStoreInsertCurrentRow.ProductIntegrationInfo.SupplierProductID,
+                                        Supplier = _supplier,
+                                        ParentFullProductInfo = selectedFullProductInfo
+                                    };
+
                                     pii.ID = piia.Insert(pii);
                                     mainStoreInsertCurrentRow.ProductIntegrationInfo = pii;
 
                                     ProcessEOrderRow(_selectedStoreForEOrder, mainStoreInsertCurrentRow);
                                 }
-                                mainStoreInsertRowBindingSource.ResetCurrentItem();
 
+                                mainStoreInsertRowBindingSource.ResetCurrentItem();
                             }
 
                         }
@@ -466,11 +469,9 @@ namespace Apteka.Plus.UserControls
                     case "SupplierPrice":
                     case "Extra":
                         {
-                            //dgv.CurrentCell = dgv.CurrentRow.Cells["LocalPrice"];
                             dgv.BeginEdit(true);
                         }
                         break;
-
                 }
             }
         }
@@ -488,10 +489,9 @@ namespace Apteka.Plus.UserControls
                     {
                         if (cell.IsInEditMode)
                         {
-                            int Amount;
                             string sAmount = cell.EditedFormattedValue.ToString().Replace(",", ".");
 
-                            if (int.TryParse(sAmount, out Amount))
+                            if (int.TryParse(sAmount, out int Amount))
                             {
                                 if (Amount < 0)
                                 {
@@ -505,9 +505,7 @@ namespace Apteka.Plus.UserControls
                                 MessageBox.Show("Вы ввели некорректное значение! Допускаются только числа.", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                 e.Cancel = true;
                             }
-
                         }
-
                     }
                     break;
 
@@ -515,10 +513,9 @@ namespace Apteka.Plus.UserControls
                     {
                         if (cell.IsInEditMode)
                         {
-                            double LocalPrice;
                             string newPrice = cell.EditedFormattedValue.ToString().Replace(",", ".");
 
-                            if (double.TryParse(newPrice, out LocalPrice))
+                            if (double.TryParse(newPrice, out double LocalPrice))
                             {
                                 if (LocalPrice < 0)
                                 {
@@ -542,10 +539,9 @@ namespace Apteka.Plus.UserControls
                     {
                         if (cell.IsInEditMode)
                         {
-                            double SupplierPrice;
                             string newPrice = cell.EditedFormattedValue.ToString().Replace(",", ".");
 
-                            if (double.TryParse(newPrice, out SupplierPrice))
+                            if (double.TryParse(newPrice, out double SupplierPrice))
                             {
                                 if (SupplierPrice < 0)
                                 {
@@ -569,10 +565,9 @@ namespace Apteka.Plus.UserControls
                     {
                         if (cell.IsInEditMode)
                         {
-                            double Extra;
                             string newExtra = cell.EditedFormattedValue.ToString().Replace(",", ".");
 
-                            if (double.TryParse(newExtra, out Extra))
+                            if (double.TryParse(newExtra, out double Extra))
                             {
                                 if (Extra < 0)
                                 {
@@ -668,8 +663,10 @@ namespace Apteka.Plus.UserControls
             List<MainStoreInsertRow> liNewMainStoreInsertRows = new List<MainStoreInsertRow>(liLocalOrderRows.Count);
             foreach (LocalOrder varLocalOrderRow in liLocalOrderRows)
             {
-                MainStoreInsertRow newMainStoreInsertRow = new MainStoreInsertRow();
-                newMainStoreInsertRow.EOrderRow = varLocalOrderRow;
+                var newMainStoreInsertRow = new MainStoreInsertRow
+                {
+                    EOrderRow = varLocalOrderRow
+                };
 
                 ProcessEOrderRow(_selectedStoreForEOrder, newMainStoreInsertRow);
 

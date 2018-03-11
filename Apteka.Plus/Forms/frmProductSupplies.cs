@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Windows.Forms;
-using Apteka.Helpers;
 using Apteka.Plus.Properties;
 using Apteka.Plus.UserControls;
+using log4net;
 
 namespace Apteka.Plus.Forms
 {
     public partial class frmProductSupplies : Form
     {
-
-        private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public frmProductSupplies()
         {

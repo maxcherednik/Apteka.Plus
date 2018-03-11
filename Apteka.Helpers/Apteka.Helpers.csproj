@@ -95,7 +95,7 @@
     <Compile Include="DataLoader.cs" />
     <Compile Include="DriveHelper.cs" />
     <Compile Include="GUIThreadInvoker.cs" />
-    <Compile Include="Logger.cs" />
+    <Compile Include="IUserInfo.cs" />
     <Compile Include="NTServiceInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RusNumber.cs" />

@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Windows.Forms;
-using Apteka.Helpers;
 using Apteka.Plus.Logic.BLL;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
+using log4net;
 
 namespace Apteka.Plus.Forms
 {
     public partial class frmAuth : Form
     {
-        private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public frmAuth()
         {
@@ -27,12 +27,13 @@ namespace Apteka.Plus.Forms
             log.InfoFormat("Пользователь подтвердил авторизацию. Логин: {0}",tbLogin.Text);
 
             EmployeesAccessor ea = EmployeesAccessor.CreateInstance<EmployeesAccessor>();
-            //Employee employee = ea.Auth(tbLogin.Text, tbPassword.Text);            
 
-            Employee employee = new Employee();
-            employee.ID = 1;
-            employee.Login =tbLogin.Text;
-            
+            Employee employee = new Employee
+            {
+                ID = 1,
+                Login = tbLogin.Text
+            };
+
             if (employee == null)
             {
                 log.Warn("Авторизация не пройдена");

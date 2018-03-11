@@ -5,6 +5,7 @@ using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
 using Apteka.Plus.Satelite.Properties;
 using BLToolkit.Data;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -14,7 +15,7 @@ namespace Apteka.Plus.Satelite.Forms
 {
     public partial class frmForeignStoresObserver : Form
     {
-        private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private List<LocalBillsRowEx> _liLocalBillRowsList;
         private MyStore _currentStore;
@@ -29,11 +30,9 @@ namespace Apteka.Plus.Satelite.Forms
             DbManager.AddConnectionString("Second", connectionString);
         }
 
-
         private void ApplyStyle()
         {
-            Font f = new Font(this.Font.FontFamily, Convert.ToSingle(Settings.Default.FontSizeBase));
-            this.Font = f;
+            Font = new Font(Font.FontFamily, Convert.ToSingle(Settings.Default.FontSizeBase));
             splitContainer2.SplitterDistance = (tbSearch.Top + tbSearch.Height + tbSearch.Top);
         }
 
@@ -98,7 +97,6 @@ namespace Apteka.Plus.Satelite.Forms
             {
                 tbSearch.Text = "";
                 e.SuppressKeyPress = true;
-
             }
         }
 
@@ -181,9 +179,7 @@ namespace Apteka.Plus.Satelite.Forms
             catch (Exception ex)
             {
                 MessageBox.Show("Ошибка подключения к серверу баз данных. Возможно отсутствует интернет. " + Environment.NewLine + " " + ex.Message, "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-
             }
         }
-
     }
 }

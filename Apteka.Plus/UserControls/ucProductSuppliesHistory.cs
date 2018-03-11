@@ -8,12 +8,13 @@ using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.BLL.Enums;
 using Apteka.Plus.Logic.DAL.Accessors;
 using BLToolkit.Data;
+using log4net;
 
 namespace Apteka.Plus.UserControls
 {
     public partial class ucProductSuppliesHistory : UserControl
     {
-        private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private MyStore _myStore;
         private int _rowCount;
@@ -30,8 +31,7 @@ namespace Apteka.Plus.UserControls
 
             using (DbManager dbSatelite = new DbManager(myStore.Name))
             {
-                LocalBillsAccessor lba =
-                    LocalBillsAccessor.CreateInstance<LocalBillsAccessor>(dbSatelite);
+                var lba = LocalBillsAccessor.CreateInstance<LocalBillsAccessor>(dbSatelite);
 
                 _liLocalBillsRows = lba.GetRows(startDate, endDate);
 
@@ -42,9 +42,7 @@ namespace Apteka.Plus.UserControls
                     OnRowCountChanged(_liLocalBillsRows.Count);
                     localBillsRowExBindingSource.DataSource = _liLocalBillsRows;
                 });
-
             }
-
         }
 
         public int RowCount
@@ -69,9 +67,7 @@ namespace Apteka.Plus.UserControls
 
         protected virtual void OnRowCountChanged(int rowCount)
         {
-            var eventHandler = RowCountChanged;
-            if (eventHandler != null)
-                eventHandler(this, new RowCountChangedEventArgs(rowCount));
+            RowCountChanged?.Invoke(this, new RowCountChangedEventArgs(rowCount));
         }
 
         private void dgvProductSuppliesHistory_KeyDown(object sender, KeyEventArgs e)
@@ -113,16 +109,17 @@ namespace Apteka.Plus.UserControls
                             frmSuppliesReturnConfirmation frmSuppliesReturnConfirmation = new frmSuppliesReturnConfirmation();
                             if (frmSuppliesReturnConfirmation.ShowDialog(this) == DialogResult.OK)
                             {
-                                using (DbManager dbSatelite = new DbManager(_myStore.Name))
+                                using (var dbSatelite = new DbManager(_myStore.Name))
                                 {
+                                    var raa = RemoteActionAccessor.CreateInstance<RemoteActionAccessor>(dbSatelite);
+                                    var remoteAction = new RemoteAction
+                                    {
+                                        LocalBillsRowID = row.ID,
+                                        Comment = frmSuppliesReturnConfirmation.Comment,
+                                        Employee = Session.User,
+                                        TypeOfAction = RemoteActionEnum.SuppliesReturn
+                                    };
 
-                                    RemoteActionAccessor raa =
-                                        RemoteActionAccessor.CreateInstance<RemoteActionAccessor>(dbSatelite);
-                                    RemoteAction remoteAction = new RemoteAction();
-                                    remoteAction.LocalBillsRowID = row.ID;
-                                    remoteAction.Comment = frmSuppliesReturnConfirmation.Comment;
-                                    remoteAction.Employee = Session.User;
-                                    remoteAction.TypeOfAction = RemoteActionEnum.SuppliesReturn;
                                     if (frmSuppliesReturnConfirmation.IsDeleteAll)
                                     {
                                         remoteAction.AmountToReturn = 0;
@@ -136,13 +133,10 @@ namespace Apteka.Plus.UserControls
                                 }
 
                                 MessageBox.Show("Задание на удаление было успешно добавлено. Фактическое удаление произодет после обмена информации.", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
                             }
-
                         }
                         break;
                     }
-
             }
         }
 

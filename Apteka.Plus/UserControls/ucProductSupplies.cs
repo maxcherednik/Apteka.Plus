@@ -1,14 +1,14 @@
 ﻿using System.Windows.Forms;
-using Apteka.Helpers;
 using Apteka.Plus.Logic.BLL.Collections;
 using Apteka.Plus.Logic.BLL.Entities;
+using log4net;
 
 namespace Apteka.Plus.UserControls
 {
     public partial class ucProductSupplies : UserControl
     {
         #region Private fields
-        private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private bool _isInited;
         private int _DaysOfStockRotation;
         private FullProductInfo _selectedProduct;
@@ -29,8 +29,10 @@ namespace Apteka.Plus.UserControls
 
             foreach (MyStore myStore in MyStoresCollection.AllStores)
             {
-                ucProductSuppliesTable ucProductSuppliesTable = new ucProductSuppliesTable(myStore);
-                ucProductSuppliesTable.Dock = DockStyle.Fill;
+                ucProductSuppliesTable ucProductSuppliesTable = new ucProductSuppliesTable(myStore)
+                {
+                    Dock = DockStyle.Fill
+                };
 
                 tabControl1.TabPages.Add(myStore.ID.ToString(), myStore.Name);
 

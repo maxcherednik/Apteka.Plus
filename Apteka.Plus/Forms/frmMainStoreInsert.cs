@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Apteka.Helpers;
 using Apteka.Plus.Logic.BLL.Collections;
 using Apteka.Plus.UserControls;
+using log4net;
 using OrderConverter;
 using OrderConverter.BLL;
 
@@ -11,7 +11,7 @@ namespace Apteka.Plus.Forms
 {
     public partial class frmMainStoreInsert : Form
     {
-        private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private List<LocalOrder> _liLocalOrderRows;
 
         public frmMainStoreInsert()

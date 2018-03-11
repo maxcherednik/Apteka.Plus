@@ -1,11 +1,11 @@
-﻿
-using System.ServiceModel;
-using Apteka.Helpers;
+﻿using System.ServiceModel;
+using log4net;
+
 namespace Apteka.Plus.Satelite.Logic
 {
     public class WCFServer<T>
     {
-        private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private static ServiceHost _customerServiceHost;
 
         public void Start()

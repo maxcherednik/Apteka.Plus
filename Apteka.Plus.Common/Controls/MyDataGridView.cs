@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using Apteka.Helpers;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
+using log4net;
 
 namespace Apteka.Plus.Common.Controls
 {
     public class MyDataGridView : DataGridView
     {
-        private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private List<DataGridViewColumnSettingsRow> _liDataGridViewColumnSettingsLoaded;
         private DataGridViewColumnSettingsAccessor _stateDataSource;
@@ -240,13 +240,16 @@ namespace Apteka.Plus.Common.Controls
         {
             List<DataGridViewColumnSettingsRow> liDataGridViewColumnSettingsRows = new List<DataGridViewColumnSettingsRow>(this.Columns.Count);
 
-            for (int i = 0; i < this.Columns.Count; i++)
+            for (int i = 0; i < Columns.Count; i++)
             {
-                DataGridViewColumnSettingsRow settingsRow = new DataGridViewColumnSettingsRow();
-                settingsRow.ColumnIndex = i;
-                settingsRow.ColumnSize = this.Columns[i].Width;
-                settingsRow.GridName = this.Parent.Name + "_" + this.Name;
-                settingsRow.Employee = _employee;
+                DataGridViewColumnSettingsRow settingsRow = new DataGridViewColumnSettingsRow
+                {
+                    ColumnIndex = i,
+                    ColumnSize = Columns[i].Width,
+                    GridName = Parent.Name + "_" + Name,
+                    Employee = _employee
+                };
+
                 liDataGridViewColumnSettingsRows.Add(settingsRow);
             }
             return liDataGridViewColumnSettingsRows;

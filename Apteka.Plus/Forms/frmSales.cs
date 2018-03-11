@@ -8,12 +8,13 @@ using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
 using Apteka.Plus.UserControls;
 using BLToolkit.Data;
+using log4net;
 
 namespace Apteka.Plus.Forms
 {
     public partial class frmSales : Form
     {
-        private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private MyStore _mystoreSelected;
 

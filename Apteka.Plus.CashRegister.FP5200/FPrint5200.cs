@@ -1,15 +1,13 @@
-﻿using Apteka.Helpers;
+﻿using log4net;
 using System.Collections.Generic;
 
 namespace Apteka.Plus.CashRegister.FP5200
 {
     public class FPrint5200 : ICashRegister
     {
-        private readonly static Logger _logger = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog _logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private FprnM1C.IFprnM45 ECR = new FprnM1C.FprnM45();
-
-        #region ICashRegister Members
 
         public void PerformXReport()
         {
@@ -255,7 +253,5 @@ namespace Apteka.Plus.CashRegister.FP5200
                 return;
             }
         }
-
-        #endregion
     }
 }

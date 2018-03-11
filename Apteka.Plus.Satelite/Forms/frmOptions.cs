@@ -35,7 +35,7 @@ namespace Apteka.Plus.Satelite.Forms
         {
             TextBox tb = sender as TextBox;
             int result = -1;
-            e.Cancel = !(int.TryParse(tb.Text, out result) && result>1);
+            e.Cancel = !(int.TryParse(tb.Text, out result) && result > 1);
             if (e.Cancel)
             {
                 errorProvider1.SetError(tb, "Введите число больше 0");
@@ -45,6 +45,5 @@ namespace Apteka.Plus.Satelite.Forms
                 errorProvider1.Clear();
             }
         }
-
     }
 }

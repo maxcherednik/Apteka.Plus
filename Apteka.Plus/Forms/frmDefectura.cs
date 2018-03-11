@@ -9,13 +9,14 @@ using Apteka.Plus.Logic.DAL.Accessors;
 using Apteka.Plus.Properties;
 using Apteka.Plus.UserControls;
 using BLToolkit.Data;
+using log4net;
 using Microsoft.Reporting.WinForms;
 
 namespace Apteka.Plus.Forms
 {
     public partial class frmDefectura : Form
     {
-        private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public frmDefectura()
         {
@@ -173,8 +174,11 @@ namespace Apteka.Plus.Forms
         {
             tabControl1.TabPages.Add(key, name);
 
-            ucDefectTable ucDefectTable = new ucDefectTable();
-            ucDefectTable.Dock = DockStyle.Fill;
+            var ucDefectTable = new ucDefectTable
+            {
+                Dock = DockStyle.Fill
+            };
+
             ucDefectTable.CurrentRowChanged += new EventHandler<ucDefectTable.CurrentRowChangedEventArgs>(ucDefectTable_CurrentRowChanged);
             ucDefectTable.ProcessedRowsCountChanged += new EventHandler<ucDefectTable.ProcessedRowsCountChangedEventArgs>(ucDefectTable_ProcessedRowsCountChanged);
             ucDefectTable.RowAddedToExcludeList += new EventHandler<ucDefectTable.RowAddedToExcludeListEventArgs>(ucDefectTable_RowAddedToExcludeList);

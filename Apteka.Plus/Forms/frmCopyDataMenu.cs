@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -11,12 +10,13 @@ using Apteka.Plus.Logic.BLL;
 using Apteka.Plus.Logic.BLL.Collections;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.SettingsUtils;
+using log4net;
 
 namespace Apteka.Plus.Forms
 {
     public partial class frmCopyDataMenu : Form
     {
-        private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public frmCopyDataMenu()
         {
@@ -76,9 +76,12 @@ namespace Apteka.Plus.Forms
             cbMyStoresNet.DisplayMember = "Name";
             cbMyStoresNet.DataSource = liMyStores;
 
-            MyStore m = new MyStore();
-            m.ID = 0;
-            m.Name = "Все";
+            var m = new MyStore
+            {
+                ID = 0,
+                Name = "Все"
+            };
+
             liMyStores.Insert(0, m);
 
             cbMyStoresMS.ValueMember = "Id";

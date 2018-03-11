@@ -1,15 +1,16 @@
 ﻿using System;
 using System.Windows.Forms;
-using Apteka.Helpers;
 using Apteka.Plus.Logic.BLL;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
+using log4net;
 
 namespace Apteka.Plus.Satelite.Forms
 {
     public partial class frmEmployeeLogin : Form
     {
-        private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         public frmEmployeeLogin()
         {
             InitializeComponent();
@@ -21,7 +22,7 @@ namespace Apteka.Plus.Satelite.Forms
             Session.User = empl;
             frmMainSalesWindow frmMainSalesWindow = new frmMainSalesWindow(empl);
             frmMainSalesWindow.Show();
-            this.Hide();
+            Hide();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)

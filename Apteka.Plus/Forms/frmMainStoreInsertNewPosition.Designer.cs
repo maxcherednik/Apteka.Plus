@@ -283,7 +283,6 @@
             this.tbSupplierPrice.Name = "tbSupplierPrice";
             this.tbSupplierPrice.Size = new System.Drawing.Size(94, 20);
             this.tbSupplierPrice.TabIndex = 28;
-            this.tbSupplierPrice.TextChanged += new System.EventHandler(this.tbSupplierPrice_TextChanged);
             this.tbSupplierPrice.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbSupplierPrice_KeyDown);
             this.tbSupplierPrice.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.tbSupplierPrice_KeyPress);
             this.tbSupplierPrice.Validating += new System.ComponentModel.CancelEventHandler(this.tbSupplierPrice_Validating);

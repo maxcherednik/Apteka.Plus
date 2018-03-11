@@ -1,12 +1,12 @@
 ﻿using System.ServiceProcess;
-using Apteka.Helpers;
 using Apteka.Plus.Satelite.Logic;
+using log4net;
 
 namespace Satelite.Service
 {
     public partial class SateliteService : ServiceBase
     {
-        private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private WCFServer<SateliteServer> wcfServer = new WCFServer<SateliteServer>();
 

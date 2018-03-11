@@ -5,8 +5,6 @@ namespace Apteka.Plus.Satelite.Forms
 {
     public partial class frmIdentifyClient : Form
     {
-        private string _clientId;
-
         public frmIdentifyClient()
         {
             InitializeComponent();
@@ -14,15 +12,9 @@ namespace Apteka.Plus.Satelite.Forms
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            _clientId = tbClientID.Text;
+            ClientID = tbClientID.Text;
         }
 
-        public string ClientID
-        {
-            get
-            {
-                return _clientId;
-            }
-        }
+        public string ClientID { get; private set; }
     }
 }

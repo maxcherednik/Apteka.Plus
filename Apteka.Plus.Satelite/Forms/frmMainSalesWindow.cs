@@ -1,5 +1,4 @@
-﻿using Apteka.Helpers;
-using Apteka.Plus.CashRegister;
+﻿using Apteka.Plus.CashRegister;
 using Apteka.Plus.CashRegister.FP5200;
 using Apteka.Plus.Forms;
 using Apteka.Plus.Logic.BLL;
@@ -8,6 +7,7 @@ using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
 using Apteka.Plus.Satelite.Properties;
 using BLToolkit.Data;
+using log4net;
 using Microsoft.Reporting.WinForms;
 using RSDN;
 using System;
@@ -19,8 +19,7 @@ namespace Apteka.Plus.Satelite.Forms
 {
     public partial class frmMainSalesWindow : Form
     {
-        #region Private Fields
-        private readonly static Logger Log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private ICashRegister _cashRegister;
         private readonly Employee _currentEmployee;
@@ -36,8 +35,6 @@ namespace Apteka.Plus.Satelite.Forms
         private int _daysWarning;
         private double _discountExtraLimit;
 
-        #endregion
-
         public frmMainSalesWindow(Employee empl)
         {
             InitializeComponent();
@@ -48,9 +45,9 @@ namespace Apteka.Plus.Satelite.Forms
             }
             catch (Exception e)
             {
-
+                Log.Error("Can't initialize cash register module", e);
                 MessageBox.Show("Не могу инициализировать мудуль управления кассовым аппаратом. Убедитесь, что все необходимые драйвера установлены. Ошибка: " + e.Message, "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                this.Close();
+                Close();
             }
 
             _currentEmployee = empl;
@@ -63,7 +60,6 @@ namespace Apteka.Plus.Satelite.Forms
 
             InitializeDaysWarning();
             InitializeDiscountExtraLimit();
-
         }
 
         private void tsbCopyData_Click(object sender, EventArgs e)
@@ -87,12 +83,10 @@ namespace Apteka.Plus.Satelite.Forms
 
         private void ApplyStyle()
         {
-            Font f = new Font(this.Font.FontFamily, Convert.ToSingle(Settings.Default.FontSizeBase));
-            this.Font = f;
+            Font = new Font(this.Font.FontFamily, Convert.ToSingle(Settings.Default.FontSizeBase));
 
             splitContainer2.SplitterDistance = splitContainer2.Height - (tbSearch.Top + tbSearch.Height + tbSearch.Top);
             splitContainer3.SplitterDistance = splitContainer3.Height - (tbSearch.Top + tbSearch.Height + tbSearch.Top);
-
         }
 
         private void tbSearch_TextChanged(object sender, EventArgs e)
@@ -373,7 +367,6 @@ namespace Apteka.Plus.Satelite.Forms
                 default:
                     break;
             }
-
         }
 
         private void dgvLocalBillsToSale_KeyDown(object sender, KeyEventArgs e)
@@ -459,11 +452,14 @@ namespace Apteka.Plus.Satelite.Forms
                         int i = lba.ChangeAmount(salesRow.LocalBillsRow.ID, -1 * salesRow.Count);
                         if (i != 0)
                         {
-                            LocalBillsTransferRow trRow = new LocalBillsTransferRow();
-                            trRow.Price = salesRow.Price;
-                            trRow.Count = salesRow.Count;
-                            trRow.LocalBillsRow = salesRow.LocalBillsRow;
-                            trRow.Employee = _currentEmployee;
+                            LocalBillsTransferRow trRow = new LocalBillsTransferRow
+                            {
+                                Price = salesRow.Price,
+                                Count = salesRow.Count,
+                                LocalBillsRow = salesRow.LocalBillsRow,
+                                Employee = _currentEmployee
+                            };
+
                             lbta.Insert(trRow);
                         }
                         else
@@ -615,7 +611,6 @@ namespace Apteka.Plus.Satelite.Forms
             lblClientCaption.Visible = false;
             lblClientID.Visible = false;
             lblClientID.Text = "";
-
         }
 
         private void UpdateSum()
@@ -734,11 +729,13 @@ namespace Apteka.Plus.Satelite.Forms
 
                         e.Value = row.Amount;
                         e.ParsingApplied = true;
-                        SalesRow salesRow = new SalesRow();
-                        salesRow.Count = i;
-                        salesRow.LocalBillsRow = row;
-                        salesRow.Price = row.CurrentPrice;
-                        salesRow.Employee = _currentEmployee;
+                        var salesRow = new SalesRow
+                        {
+                            Count = i,
+                            LocalBillsRow = row,
+                            Price = row.CurrentPrice,
+                            Employee = _currentEmployee
+                        };
 
                         _liSalesRows.Add(salesRow);
 
@@ -749,7 +746,6 @@ namespace Apteka.Plus.Satelite.Forms
                         ActivateTimeBasedDiscount();
                         UpdateSum();
                         tbSearch.Text = "";
-
                     }
                     break;
             }
@@ -985,7 +981,7 @@ namespace Apteka.Plus.Satelite.Forms
 
         private void tsbShowObserver_Click(object sender, EventArgs e)
         {
-             new frmForeignStoresObserver().Show();
+            new frmForeignStoresObserver().Show();
         }
 
         private void tsmiXReport_Click(object sender, EventArgs e)

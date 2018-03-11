@@ -134,15 +134,13 @@ namespace Apteka.Plus.Forms
 
             switch (cell.OwningColumn.Name)
             {
-
                 case "Price":
                     {
                         if (cell.IsInEditMode)
                         {
-                            double LocalPrice;
                             string newPrice = cell.EditedFormattedValue.ToString().Replace(",", ".");
 
-                            if (double.TryParse(newPrice, out LocalPrice))
+                            if (double.TryParse(newPrice, out double LocalPrice))
                             {
                                 if (LocalPrice < 0)
                                 {

@@ -6,6 +6,7 @@ using Apteka.Plus.Logic.BLL.Enums;
 using Apteka.Plus.Logic.DAL.Accessors;
 using BLToolkit.Data;
 using BLToolkit.Mapping;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -15,43 +16,37 @@ namespace Apteka.Plus.UserControls
 {
     public partial class ucSalesHistory : UserControl
     {
-        #region Private fields
-        private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private List<SalesRow> _liSaleRows;
 
         private MyStore _mystoreSelected;
 
-        #endregion
-
-        #region Constructor
         public ucSalesHistory()
         {
             InitializeComponent();
         }
-        #endregion
-
-        #region Public methods
-
 
         public void ShowHistoryByName(MyStore store, string name)
         {
             _mystoreSelected = store;
-            this.dateAcceptedDataGridViewTextBoxColumn.DefaultCellStyle.Format = "f";
+            dateAcceptedDataGridViewTextBoxColumn.DefaultCellStyle.Format = "f";
 
-            using (DbManager dbSatelite = new DbManager(store.Name))
+            using (var dbSatelite = new DbManager(store.Name))
             {
-                SalesAccessor sa = SalesAccessor.CreateInstance<SalesAccessor>(dbSatelite);
+                var sa = SalesAccessor.CreateInstance<SalesAccessor>(dbSatelite);
                 _liSaleRows = sa.FindRowsByName(name);
             }
+
             SetResultsToGrid();
         }
 
         public void ShowHistoryByDate(MyStore store, DateTime date)
         {
             _mystoreSelected = store;
-            using (DbManager dbSatelite = new DbManager(store.Name))
+            using (var dbSatelite = new DbManager(store.Name))
             {
-                SalesAccessor sa = SalesAccessor.CreateInstance<SalesAccessor>(dbSatelite);
+                var sa = SalesAccessor.CreateInstance<SalesAccessor>(dbSatelite);
                 _liSaleRows = sa.GetRowsByDate(date);
             }
 
@@ -65,13 +60,6 @@ namespace Apteka.Plus.UserControls
             this.InvokeInGUIThread(() => salesRowBindingSource.DataSource = _liSaleRows);
         }
 
-        public void ShowHistoryByClient(string clientID)
-        {
-
-        }
-        #endregion
-
-        #region Properties
         public int NumberOfCustomers { get; private set; }
         public double Sum { get; private set; }
 
@@ -83,28 +71,21 @@ namespace Apteka.Plus.UserControls
             }
         }
 
-        #endregion
-
         private void tbSearch_TextChanged(object sender, EventArgs e)
         {
             if (tbSearch.Text.Length > 1)
             {
-
-                List<SalesRow> liFiltered = _liSaleRows.FindAll(p =>
+                var liFiltered = _liSaleRows.FindAll(p =>
                 {
-
                     return p.ProductName.IndexOf(tbSearch.Text, StringComparison.InvariantCultureIgnoreCase) >= 0
                         || p.PackageName.IndexOf(tbSearch.Text, StringComparison.InvariantCultureIgnoreCase) >= 0;
-
                 });
 
                 salesRowBindingSource.DataSource = liFiltered;
-
             }
             else
             {
                 salesRowBindingSource.DataSource = _liSaleRows;
-
             }
         }
 
@@ -189,12 +170,15 @@ namespace Apteka.Plus.UserControls
 
                                 lba.ChangeAmount(row.LocalBillsRow.ID, amountToReturn);
 
-                                RemoteAction ra = new RemoteAction();
-                                ra.LocalBillsRowID = row.LocalBillsRow.ID;
-                                ra.SalesRowID = row.ID;
-                                ra.AmountToReturn = amountToReturn;
-                                ra.TypeOfAction = RemoteActionEnum.SalesReturn;
-                                ra.Employee = Session.User;
+                                var ra = new RemoteAction
+                                {
+                                    LocalBillsRowID = row.LocalBillsRow.ID,
+                                    SalesRowID = row.ID,
+                                    AmountToReturn = amountToReturn,
+                                    TypeOfAction = RemoteActionEnum.SalesReturn,
+                                    Employee = Session.User
+                                };
+
                                 raa.Insert(ra);
 
                                 row.Count = newAmount;
@@ -242,23 +226,19 @@ namespace Apteka.Plus.UserControls
                     {
                         if (cell.IsInEditMode)
                         {
-                            int Count;
-
-                            if (int.TryParse(cell.EditedFormattedValue.ToString(), out Count))
+                            if (int.TryParse(cell.EditedFormattedValue.ToString(), out int Count))
                             {
                                 if (Count > salesRow.Count)
                                 {
                                     MessageBox.Show("Вы не можете вернуть число большее чем было продано", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                     e.Cancel = true;
                                 }
-
                             }
                             else
                             {
                                 MessageBox.Show("Вы ввели некорректное значение! Допускаются только числа.", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                 e.Cancel = true;
                             }
-
                         }
 
                     }
@@ -395,8 +375,6 @@ namespace Apteka.Plus.UserControls
         }
         #endregion
 
-        #region Private Methods
-
         private void SortBy(int columnIndex, Comparison<SalesRow> comparison, SortOrder sortOrder)
         {
             DataGridViewColumn oldColumn = dgvSales.Columns[columnIndex];
@@ -412,7 +390,6 @@ namespace Apteka.Plus.UserControls
             oldColumn.HeaderCell.SortGlyphDirection = sortOrder;
 
         }
-        #endregion
 
         private void cmsSalesGridMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
@@ -426,15 +403,6 @@ namespace Apteka.Plus.UserControls
                         frmClientBuysDetailed frmClientBuysDetailed = new frmClientBuysDetailed(new ClientSummaryRow() { ClientID = salesRow.ClientID });
                         frmClientBuysDetailed.Show();
                         Application.DoEvents();
-
-                    }
-                    break;
-                case "showWhoBuysThisItem":
-                    {
-                        //frmLocalTransfersHistory frmLocalTransfersHistory = new frmLocalTransfersHistory();
-                        //frmLocalTransfersHistory.Show();
-                        //Application.DoEvents();
-                        //frmLocalTransfersHistory.LoadDataFor(_mystoreSelected, financeRow.Date);
 
                     }
                     break;
@@ -462,6 +430,5 @@ namespace Apteka.Plus.UserControls
         {
             dgvSales.SetStateSourceAndLoadState(Session.User, DataGridViewColumnSettingsAccessor.CreateInstance<DataGridViewColumnSettingsAccessor>());
         }
-
     }
 }

@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Threading;
 using System.Windows.Forms;
-using Apteka.Helpers;
 using Apteka.Plus.Common.Forms;
 using Apteka.Plus.Logic.DAL;
 using Apteka.Plus.Satelite.Forms;
 using Apteka.Plus.Satelite.Properties;
+using log4net;
 
 namespace Apteka.Plus.Satelite
 {
     static class Program
     {
-        private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         [STAThread]
         static void Main()

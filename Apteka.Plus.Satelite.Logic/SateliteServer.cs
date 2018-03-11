@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
-using Apteka.Helpers;
 using Apteka.Plus.Logic;
 using Apteka.Plus.Logic.BLL;
+using log4net;
 
 namespace Apteka.Plus.Satelite.Logic
 {
@@ -10,9 +10,7 @@ namespace Apteka.Plus.Satelite.Logic
     {
         public static int SateliteID = 0;
 
-        private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-        #region ISatelite Members
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public byte[] GetSateliteData(int sateliteID)
         {
@@ -26,7 +24,6 @@ namespace Apteka.Plus.Satelite.Logic
                 fs.Read(data, 0, data.Length);
                 return data;
             }
-
         }
 
         public void InsertNewData(int sateliteID, byte[] file)
@@ -41,8 +38,5 @@ namespace Apteka.Plus.Satelite.Logic
             if (SateliteID != sateliteID)
                 throw new Exception("Вы подсоединились не к тому пункту");
         }
-
-        #endregion
-
     }
 }

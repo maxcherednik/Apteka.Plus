@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 using Apteka.Plus.Satelite.Properties;
 using Apteka.Plus.Logic.BLL;
@@ -18,6 +14,7 @@ namespace Apteka.Plus.Satelite.Forms
     {
         private List<LocalBillsRowEx> _liLocalBillRowsList;
         private List<LocalBillsRowEx> _liLocalBillRowsListCounted = new List<LocalBillsRowEx>();
+
         public frmAccounting()
         {
             InitializeComponent();

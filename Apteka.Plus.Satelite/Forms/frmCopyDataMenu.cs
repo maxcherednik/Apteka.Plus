@@ -1,9 +1,7 @@
 ﻿using System;
 using System.IO;
-using System.ServiceModel;
 using System.Windows.Forms;
 using Apteka.Helpers;
-using Apteka.Plus.Logic;
 using Apteka.Plus.Logic.BLL;
 using Apteka.Plus.Satelite.Properties;
 

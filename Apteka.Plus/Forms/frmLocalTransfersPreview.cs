@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Apteka.Helpers;
 using Apteka.Plus.Logic.BLL;
 using Apteka.Plus.Logic.BLL.Collections;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
 using BLToolkit.Data;
+using log4net;
 
 namespace Apteka.Plus.Forms
 {
     public partial class frmLocalTransfersPreview : Form
     {
-        private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public LocalBillsTransferInfoRow LocalBillsTransferInfoSelected;
         public frmLocalTransfersPreview()
@@ -23,8 +23,8 @@ namespace Apteka.Plus.Forms
         private void btnOk_Click(object sender, EventArgs e)
         {
             LocalBillsTransferInfoSelected = localBillsTransferInfoRowBindingSource.Current as LocalBillsTransferInfoRow;
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
         private void frmLocalTransfersPreview_Load(object sender, EventArgs e)

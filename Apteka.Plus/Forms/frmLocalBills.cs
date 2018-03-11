@@ -1,27 +1,22 @@
 ﻿using System;
 using System.Windows.Forms;
-using Apteka.Helpers;
 using Apteka.Plus.Logic.BLL.Collections;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Properties;
 using Apteka.Plus.UserControls;
+using log4net;
 using Microsoft.Reporting.WinForms;
 
 namespace Apteka.Plus.Forms
 {
     public partial class frmLocalBills : Form
     {
-        #region Private fields
-        private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        #endregion
-
-        #region Constructor
         public frmLocalBills()
         {
             InitializeComponent();
         }
-        #endregion
 
         private void frmLocalBills_FormClosed(object sender, FormClosedEventArgs e)
         {

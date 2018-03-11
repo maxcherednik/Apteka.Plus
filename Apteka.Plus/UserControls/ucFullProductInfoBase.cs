@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Apteka.Helpers;
 using Apteka.Plus.Common.Controls;
 using Apteka.Plus.Logic.BLL;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
+using log4net;
 
 namespace Apteka.Plus.UserControls
 {
     public partial class ucFullProductInfoBase : UserControl
     {
-        private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private List<FullProductInfo> _liFullProductInfo;
 
@@ -47,10 +47,7 @@ namespace Apteka.Plus.UserControls
 
         private void OnCurrentRowChange(FullProductInfo fullProductInfo)
         {
-            if (CurrentRowChanged != null)
-            {
-                CurrentRowChanged(dgvFullProductInfoList, new CurrentRowChangedEventArgs(fullProductInfo));
-            }
+            CurrentRowChanged?.Invoke(dgvFullProductInfoList, new CurrentRowChangedEventArgs(fullProductInfo));
 
         }
         public class CurrentRowChangedEventArgs : EventArgs

@@ -315,12 +315,11 @@ namespace Apteka.Plus.UserControls
 
                                     dbSatelite.CommitTransaction();
                                 }
-                                catch (Exception exc)
+                                catch
                                 {
-
                                     dbSatelite.RollbackTransaction();
 
-                                    throw exc;
+                                    throw;
                                 }
                             }
                         }

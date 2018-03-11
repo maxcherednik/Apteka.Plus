@@ -222,7 +222,7 @@ namespace Apteka.Plus.UserControls
                 OnProcessNotification("Сохраниение в базу данных", 0, dgvBill.RowCount);
 
             }
-            catch (Exception)
+            catch
             {
                 dbSklad.RollbackTransaction();
                 OnProcessNotification("Ошибка сохранения! Данные не сохранены!", 0, dgvBill.RowCount);
@@ -277,7 +277,7 @@ namespace Apteka.Plus.UserControls
                     db.CommitTransaction();
                     dbSklad.CommitTransaction();
                 }
-                catch (Exception)
+                catch
                 {
                     OnProcessNotification("Ошибка сохранения! Данные не сохранены!", 0, dgvBill.RowCount);
 

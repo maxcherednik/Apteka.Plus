@@ -152,19 +152,17 @@ namespace Apteka.Plus.UserControls
                         salesReturnHistoryRow.Amount = amountToReturn;
                         salesReturnHistoryRow.DateSold = row.DateAccepted;
 
-                        using (DbManager dbSatelite = new DbManager(_mystoreSelected.Name))
+                        using (var dbSatelite = new DbManager(_mystoreSelected.Name))
                         {
-                            /////////////////////////////
                             try
                             {
 
                                 dbSatelite.BeginTransaction();
 
-                                /////////////////////////////
-                                SalesAccessor sa = SalesAccessor.CreateInstance<SalesAccessor>(dbSatelite);
-                                SalesReturnHistoryAccessor srha = SalesReturnHistoryAccessor.CreateInstance<SalesReturnHistoryAccessor>(dbSatelite);
-                                LocalBillsAccessor lba = LocalBillsAccessor.CreateInstance<LocalBillsAccessor>(dbSatelite);
-                                RemoteActionAccessor raa = RemoteActionAccessor.CreateInstance<RemoteActionAccessor>(dbSatelite);
+                                var sa = SalesAccessor.CreateInstance<SalesAccessor>(dbSatelite);
+                                var srha = SalesReturnHistoryAccessor.CreateInstance<SalesReturnHistoryAccessor>(dbSatelite);
+                                var lba = LocalBillsAccessor.CreateInstance<LocalBillsAccessor>(dbSatelite);
+                                var raa = RemoteActionAccessor.CreateInstance<RemoteActionAccessor>(dbSatelite);
 
                                 srha.Insert(salesReturnHistoryRow);
 
@@ -196,9 +194,8 @@ namespace Apteka.Plus.UserControls
 
                                 dbSatelite.CommitTransaction();
                             }
-                            catch (Exception)
+                            catch
                             {
-
                                 dbSatelite.RollbackTransaction();
 
                                 throw;

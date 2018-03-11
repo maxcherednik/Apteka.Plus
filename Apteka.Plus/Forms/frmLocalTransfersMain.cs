@@ -92,14 +92,14 @@ namespace Apteka.Plus.Forms
                     MessageBox.Show("Накладная успешно сохранена.", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                 }
-                catch (Exception)
+                catch
                 {
                     dbDestination.RollbackTransaction();
                     dbSource.RollbackTransaction();
                     throw;
                 }
 
-                this.Close();
+                Close();
                 frmPrintBills frmPrintBills = new frmPrintBills();
 
                 frmPrintBills.Show();

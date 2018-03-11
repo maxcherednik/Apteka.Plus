@@ -59,11 +59,7 @@ namespace Apteka.Plus.UserControls
 
         protected virtual void OnCurrentRowChanged(LocalBillsRowEx row)
         {
-            var handler = CurrentRowChanged;
-            if (handler != null)
-            {
-                handler(this, new RowChangedEventArgs(row));
-            }
+            CurrentRowChanged?.Invoke(this, new RowChangedEventArgs(row));
         }
         #endregion
 
@@ -81,11 +77,7 @@ namespace Apteka.Plus.UserControls
 
         protected virtual void OnRowCountChanged(int rowCount)
         {
-            var handler = RowCountChanged;
-            if (handler != null)
-            {
-                handler(this, new RowCountChangedEventArgs(rowCount));
-            }
+            RowCountChanged?.Invoke(this, new RowCountChangedEventArgs(rowCount));
         }
         #endregion
 
@@ -99,8 +91,6 @@ namespace Apteka.Plus.UserControls
 
                 case Keys.Escape:
                     {
-                        //localBillsRowExBindingSource.DataSource = _liLocalBillRowsList;
-
                         e.SuppressKeyPress = true;
                     }
                     break;
@@ -122,11 +112,14 @@ namespace Apteka.Plus.UserControls
                                 {
 
                                     RemoteActionAccessor raa = RemoteActionAccessor.CreateInstance<RemoteActionAccessor>(dbSatelite);
-                                    var remoteAction = new RemoteAction();
-                                    remoteAction.LocalBillsRowID = row.ID;
-                                    remoteAction.Comment = frmSuppliesReturnConfirmation.Comment;
-                                    remoteAction.Employee = Session.User;
-                                    remoteAction.TypeOfAction = RemoteActionEnum.SuppliesReturn;
+                                    var remoteAction = new RemoteAction
+                                    {
+                                        LocalBillsRowID = row.ID,
+                                        Comment = frmSuppliesReturnConfirmation.Comment,
+                                        Employee = Session.User,
+                                        TypeOfAction = RemoteActionEnum.SuppliesReturn
+                                    };
+
                                     if (frmSuppliesReturnConfirmation.IsDeleteAll)
                                     {
                                         remoteAction.AmountToReturn = 0;
@@ -221,10 +214,7 @@ namespace Apteka.Plus.UserControls
             get
             {
                 return (List<LocalBillsRowEx>)localBillsRowExBindingSource.List;
-
             }
-
         }
-
     }
 }

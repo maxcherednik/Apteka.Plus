@@ -32,15 +32,12 @@ namespace Apteka.Plus.Forms
             {
                 var row = dataGridView1.Rows[i].DataBoundItem as MyStore;
 
-                string ip = null;
-                if (dictIps.TryGetValue(row.ID, out ip))
+                if (dictIps.TryGetValue(row.ID, out string ip))
                 {
                     dataGridView1["overridedIP", i].Value = ip;
                 }
             }
         }
-
-
 
         private void btnSave_Click(object sender, EventArgs e)
         {
@@ -63,7 +60,7 @@ namespace Apteka.Plus.Forms
             UserSettings.SaveOverridedIps(dictIps);
 
             MyStoresCollection.Refresh();
-            this.Close();
+            Close();
         }
     }
 }

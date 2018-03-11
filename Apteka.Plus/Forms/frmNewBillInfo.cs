@@ -35,11 +35,8 @@ namespace Apteka.Plus.Forms
                 BillNumber = tbBillNumber.Text;
                 Supplier = (Supplier)cbSuppliers.SelectedItem;
 
-
-
-                this.DialogResult = DialogResult.OK;
-                this.Close();
-
+                DialogResult = DialogResult.OK;
+                Close();
             }
             else
             {
@@ -55,7 +52,6 @@ namespace Apteka.Plus.Forms
                 }
             }
         }
-
 
         private void frmNewBillInfo_Load(object sender, EventArgs e)
         {

@@ -13,16 +13,12 @@ namespace Apteka.Plus.UserControls
 {
     public partial class ucProductSuppliesTable : UserControl
     {
-        #region Private fields
-
         private MyStore _myStore;
         private int _DaysOfStockRotation;
         private FullProductInfo _fullProductInfo;
         private int _topRows;
         private DataLoader<List<LocalBillsRowEx>> _dataLoader;
-        #endregion
 
-        #region Constructors
         public ucProductSuppliesTable()
         {
             InitializeComponent();
@@ -37,12 +33,9 @@ namespace Apteka.Plus.UserControls
         {
             _myStore = myStore;
         }
-        #endregion
 
-        #region Public Methods
         public void LoadProductSupples(FullProductInfo fullProductInfo, int topRows, int daysOfStockRotation)
         {
-
             lock (_dataLoader.SyncRoot)
             {
                 _fullProductInfo = fullProductInfo;
@@ -51,7 +44,6 @@ namespace Apteka.Plus.UserControls
             }
 
             _dataLoader.MakeRequest();
-
         }
 
         private List<LocalBillsRowEx> LoadData()
@@ -78,21 +70,15 @@ namespace Apteka.Plus.UserControls
 
             return liLocalBillsRowEx;
         }
-        #endregion
 
-        #region Private Methods
         private void SetData(List<LocalBillsRowEx> liLocalBillsRowEx)
         {
             localBillsRowExBindingSource.DataSource = liLocalBillsRowEx;
 
         }
-        #endregion
-
-        #region Local handlers
 
         private void dgvProductSupplies_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-
             DataGridView dgv = sender as DataGridView;
             DataGridViewCell cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
 
@@ -112,12 +98,10 @@ namespace Apteka.Plus.UserControls
 
                             if (val > _DaysOfStockRotation)
                             {
-
                                 e.CellStyle.BackColor = Color.RosyBrown;
                                 Font f = new Font(e.CellStyle.Font, FontStyle.Bold);
                                 e.CellStyle.Font = f;
                                 e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
-                                //e.FormattingApplied = true;
                             }
 
                         }
@@ -126,7 +110,6 @@ namespace Apteka.Plus.UserControls
                             e.Value = "";
                             e.FormattingApplied = true;
                         }
-
                     }
                     break;
                 case "TimeSpan":
@@ -224,7 +207,6 @@ namespace Apteka.Plus.UserControls
 
                 switch (cell.OwningColumn.Name)
                 {
-
                     case "CurrentPrice":
                         {
                             if (localBillsRow.Amount > 0)
@@ -250,10 +232,9 @@ namespace Apteka.Plus.UserControls
                     {
                         if (cell.IsInEditMode)
                         {
-                            double LocalPrice;
                             string newPrice = cell.EditedFormattedValue.ToString().Replace(",", ".");
 
-                            if (double.TryParse(newPrice, out LocalPrice))
+                            if (double.TryParse(newPrice, out double LocalPrice))
                             {
                                 if (LocalPrice < 0)
                                 {
@@ -306,11 +287,13 @@ namespace Apteka.Plus.UserControls
 
                                     lba.UpdatePrice(localBillsRow.ID, dNewPrice);
 
-                                    RemoteAction ra = new RemoteAction();
-                                    ra.LocalBillsRowID = localBillsRow.ID;
-                                    ra.NewPrice = dNewPrice;
-                                    ra.TypeOfAction = RemoteActionEnum.PriceChange;
-                                    ra.Employee = Session.User;
+                                    RemoteAction ra = new RemoteAction
+                                    {
+                                        LocalBillsRowID = localBillsRow.ID,
+                                        NewPrice = dNewPrice,
+                                        TypeOfAction = RemoteActionEnum.PriceChange,
+                                        Employee = Session.User
+                                    };
                                     raa.Insert(ra);
 
                                     dbSatelite.CommitTransaction();
@@ -329,7 +312,6 @@ namespace Apteka.Plus.UserControls
 
             }
         }
-        #endregion
 
         void _dataLoader_ItsGonnaTakeAWhile(object sender, DataLoader<List<LocalBillsRowEx>>.ItsGonnaTakeAWhileEventArgs e)
         {

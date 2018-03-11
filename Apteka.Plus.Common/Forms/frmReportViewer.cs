@@ -1,5 +1,4 @@
 ﻿using Microsoft.Reporting.WinForms;
-using System.Collections;
 using System.Windows.Forms;
 
 namespace Apteka.Plus.Forms

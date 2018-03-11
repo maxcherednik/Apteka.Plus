@@ -7,13 +7,7 @@ namespace Apteka.Plus.Forms
 {
     public partial class frmMyStoreSelectBox : Form
     {
-
-        private MyStore _selectedStore;
-
-        public MyStore SelectedStore
-        {
-            get { return _selectedStore; }
-        }
+        public MyStore SelectedStore { get; private set; }
 
         public frmMyStoreSelectBox()
         {
@@ -27,7 +21,7 @@ namespace Apteka.Plus.Forms
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            _selectedStore = (MyStore)cbMyStores.SelectedItem;
+            SelectedStore = (MyStore)cbMyStores.SelectedItem;
         }
     }
 }

@@ -71,16 +71,11 @@ namespace Apteka.Plus.Forms
             }
         }
 
-
-
-
-
         private void frmMainStoreInsert_Shown(object sender, EventArgs e)
         {
             frmNewBillInfo frmNewBillInfo = new frmNewBillInfo();
-            DialogResult dres = frmNewBillInfo.ShowDialog(this);
-
-            if (dres == DialogResult.OK)
+           
+            if (frmNewBillInfo.ShowDialog(this) == DialogResult.OK)
             {
                 ucNewBillPage1.UpdateOrderInfo(frmNewBillInfo.BillDate, frmNewBillInfo.BillNumber, frmNewBillInfo.Supplier);
 
@@ -97,12 +92,10 @@ namespace Apteka.Plus.Forms
                         }
                     }
                 }
-
             }
             else
             {
-                this.Close();
-
+                Close();
             }
         }
 
@@ -121,12 +114,9 @@ namespace Apteka.Plus.Forms
                     {
                         ucNewBillPage1.ProcessEOrder(_liLocalOrderRows, frmMyStoreSelectBox.SelectedStore, lifeImportantSelectBox.SelectedIsLifeImportant);
                     }
-
                 }
             }
         }
-
-
 
         private void tsbSaveBill_Click(object sender, EventArgs e)
         {
@@ -161,6 +151,5 @@ namespace Apteka.Plus.Forms
             frmMainStoreInsertOptions frmMainStoreInsertOptions = new frmMainStoreInsertOptions();
             frmMainStoreInsertOptions.ShowDialog();
         }
-
     }
 }

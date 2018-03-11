@@ -38,7 +38,6 @@ namespace Apteka.Plus.Forms
             liSalesRow.Sort(SalesRow.DateComparison);
             liSalesRow.Reverse();
             salesRowBindingSource.DataSource = liSalesRow;
-
         }
     }
 }

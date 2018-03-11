@@ -597,20 +597,6 @@ namespace Apteka.Plus.UserControls
 
             switch (cell.OwningColumn.Name)
             {
-                //case "Amount":
-                //    {
-                //        MainStoreInsertRow mainStoreInsertRow = dgv.Rows[e.RowIndex].DataBoundItem as MainStoreInsertRow;
-
-                //        string newPrice = e.Value.ToString().Replace(",", ".");
-                //        double dNewPrice = double.Parse(newPrice);
-                //        e.Value = dNewPrice;
-
-                //        mainStoreInsertRow.Extra = ((dNewPrice - mainStoreInsertRow.SupplierPrice) / mainStoreInsertRow.SupplierPrice) * 100.0;
-
-                //        e.ParsingApplied = true;
-                //    }
-                //    break;
-
                 case "LocalPrice":
                     {
                         MainStoreInsertRow mainStoreInsertRow = dgv.Rows[e.RowIndex].DataBoundItem as MainStoreInsertRow;

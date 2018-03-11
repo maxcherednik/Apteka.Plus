@@ -82,15 +82,9 @@ namespace Apteka.Plus.Forms
 
                     if (res == DialogResult.Yes)
                     {
-                        //if (_newDefectList != null)
-                        //{
-
                         ProductIntegrationInfoAccessor piia = ProductIntegrationInfoAccessor.CreateInstance<ProductIntegrationInfoAccessor>();
 
                         piia.DeleteByKey(pii.ID);
-
-                        ////}
-
                         dgv.Rows.RemoveAt(e.RowIndex);
                     }
                 }
@@ -100,14 +94,16 @@ namespace Apteka.Plus.Forms
         private void btnAddIntegrationInfo_Click(object sender, EventArgs e)
         {
             ProductIntegrationInfoAccessor piia = ProductIntegrationInfoAccessor.CreateInstance<ProductIntegrationInfoAccessor>();
-            ProductIntegrationInfo pii = new ProductIntegrationInfo();
-            pii.SupplierProductID = Convert.ToInt32(tbID.Text);
-            pii.Supplier = cboSuppliers.SelectedItem as Supplier;
-            pii.ParentFullProductInfo = _FullProductInfo;
+            ProductIntegrationInfo pii = new ProductIntegrationInfo
+            {
+                SupplierProductID = Convert.ToInt32(tbID.Text),
+                Supplier = cboSuppliers.SelectedItem as Supplier,
+                ParentFullProductInfo = _FullProductInfo
+            };
+
             pii.ID = piia.Insert(pii);
             _liProductIntegrationInfos.Add(pii);
             productIntegrationInfoBindingSource.ResetBindings(false);
-
         }
     }
 }

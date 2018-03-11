@@ -30,9 +30,12 @@ namespace Apteka.Plus.Forms
 
             List<Supplier> liSuppliers = SuppliersCollection.AllSuppliers;
 
-            Supplier s = new Supplier();
-            s.ID = 0;
-            s.Name = "Все";
+            Supplier s = new Supplier
+            {
+                ID = 0,
+                Name = "Все"
+            };
+
             liSuppliers.Insert(0, s);
 
             supplierBindingSource.DataSource = liSuppliers;

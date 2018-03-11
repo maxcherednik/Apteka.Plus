@@ -31,7 +31,7 @@ namespace Apteka.Plus.Forms
 
         private void tbSearch_TextChanged(object sender, EventArgs e)
         {
-            ucGoodsViewer1.FilterByName( tbSearch.Text);
+            ucGoodsViewer1.FilterByName(tbSearch.Text);
         }
 
 
@@ -82,7 +82,7 @@ namespace Apteka.Plus.Forms
 
             ReportParameter Date = new ReportParameter("Date", DateTime.Now.ToString());
             ReportParameter MyStore = new ReportParameter("MyStore", store.Name);
-            
+
 
             frmReportViewer.SetParameters(Date, MyStore);
 

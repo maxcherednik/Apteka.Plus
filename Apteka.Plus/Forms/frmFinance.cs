@@ -17,6 +17,7 @@ namespace Apteka.Plus.Forms
         private MyStore _mystoreSelected;
         private DateTime _selectedDate;
         private DataLoader<List<FinanceRow>> _dataLoader;
+
         public frmFinance()
         {
             InitializeComponent();
@@ -124,19 +125,17 @@ namespace Apteka.Plus.Forms
 
         private List<FinanceRow> LoadData()
         {
-
             using (DbManager dbSatelite = new DbManager(_mystoreSelected.Name))
             {
                 FinanceAccessor fa = FinanceAccessor.CreateInstance<FinanceAccessor>(dbSatelite);
                 return fa.GetFinanceDaily(_selectedDate);
-
             }
         }
 
         private void frmFinance_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (this.Owner != null)
-                this.Owner.Show();
+            if (Owner != null)
+                Owner.Show();
         }
 
         private void btnLoad_Click(object sender, EventArgs e)
@@ -146,7 +145,6 @@ namespace Apteka.Plus.Forms
             _mystoreSelected = cbMyStores.SelectedItem as MyStore;
             _selectedDate = dtpDate.Value.Date;
             _dataLoader.MakeRequest();
-
         }
 
         private void frmFinance_Load(object sender, EventArgs e)
@@ -189,8 +187,7 @@ namespace Apteka.Plus.Forms
                     {
                         if (e.Value != null)
                         {
-                            double sum = 0;
-                            if (double.TryParse(e.Value.ToString(), out sum))
+                            if (double.TryParse(e.Value.ToString(), out double sum))
                             {
                                 if (sum == 0)
                                 {
@@ -207,12 +204,10 @@ namespace Apteka.Plus.Forms
 
         private void dgvFinanceDaily_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
         {
-
             DataGridView dgv = sender as DataGridView;
             if (dgv.Rows.Count > 0)
             {
                 PerformDailyTextBoxPositionin(dgv);
-
             }
         }
 
@@ -294,12 +289,11 @@ namespace Apteka.Plus.Forms
                 FinanceAccessor fa = FinanceAccessor.CreateInstance<FinanceAccessor>(dbSatelite);
                 dbSatelite.Command.CommandTimeout = 360;
 
-                //liFinanceRows = fa.GetFinanceMonthlyPeriod(new DateTime(iYear,1,1),new DateTime(iYear,12,31));
                 liFinanceRows = fa.GetFinanceMonthlyPeriod(new DateTime(iYear, 1, 1), DateTime.Now);
 
                 financeRowBindingSource1.DataSource = liFinanceRows;
-
             }
+
             double RevenueSum = 0;
             double RevenueAvg = 0;
 
@@ -323,6 +317,7 @@ namespace Apteka.Plus.Forms
                 row.StockInTradeSum = lastStockInTradeSum - row.Revenue + row.Receipt + row.PriceChangesSum - row.LocalTransferSum;
                 lastStockInTradeSum = row.StockInTradeSum;
             }
+
             tbStockInTradeMonthlySumAfter.Text = lastStockInTradeSum.ToString("0.00");
             RevenueAvg = RevenueSum / liFinanceRows.Count;
             ReceiptAvg = ReceiptSum / liFinanceRows.Count;
@@ -344,7 +339,6 @@ namespace Apteka.Plus.Forms
             button2.Enabled = true;
 
             PerformMonthlyTextBoxPositionin(dgvFinanceMonthly);
-
         }
 
         private void button2_Click(object sender, EventArgs e)
@@ -373,7 +367,6 @@ namespace Apteka.Plus.Forms
             if (dgv.Rows.Count > 0)
             {
                 PerformMonthlyTextBoxPositionin(dgv);
-
             }
         }
 
@@ -437,8 +430,7 @@ namespace Apteka.Plus.Forms
                     {
                         if (e.Value != null)
                         {
-                            double sum = 0;
-                            if (double.TryParse(e.Value.ToString(), out sum))
+                            if (double.TryParse(e.Value.ToString(), out double sum))
                             {
                                 if (sum == 0)
                                 {
@@ -489,7 +481,6 @@ namespace Apteka.Plus.Forms
                 {
                     cmsFinance.Show(dgv, e.Location);
                 }
-
             }
         }
 
@@ -516,11 +507,6 @@ namespace Apteka.Plus.Forms
                         frmLocalTransfersHistory.Show();
                         Application.DoEvents();
                         frmLocalTransfersHistory.LoadDataFor(_mystoreSelected, financeRow.Date);
-
-                    }
-                    break;
-                case "supplies":
-                    {
 
                     }
                     break;
@@ -563,12 +549,6 @@ namespace Apteka.Plus.Forms
             }
 
             cmsFinance.Items["supplies"].Enabled = false;
-
-        }
-
-        private void sales_Click(object sender, EventArgs e)
-        {
-
         }
     }
 }

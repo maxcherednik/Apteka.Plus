@@ -85,7 +85,6 @@ namespace Apteka.Plus.UserControls
             }
             else
             {
-                //_liFiltered = null;
                 fullProductInfoBindingSource.DataSource = _liFullProductInfo;
             }
         }

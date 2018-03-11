@@ -336,12 +336,6 @@
     <Compile Include="Forms\frmSalesStatistics.Designer.cs">
       <DependentUpon>frmSalesStatistics.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmSuppliers.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\frmSuppliers.Designer.cs">
-      <DependentUpon>frmSuppliers.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\frmSuppliersSummaries.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -530,9 +524,6 @@
     <EmbeddedResource Include="UserControls\ucSalesReturnHistory.resx">
       <DependentUpon>ucSalesReturnHistory.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="UserControls\ucSuppliesHistory.resx">
-      <DependentUpon>ucSuppliesHistory.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="UserControls\ucSuppliesReturnHistory.resx">
       <DependentUpon>ucSuppliesReturnHistory.cs</DependentUpon>
     </EmbeddedResource>
@@ -617,12 +608,6 @@
     </Compile>
     <Compile Include="UserControls\ucSalesReturnHistory.Designer.cs">
       <DependentUpon>ucSalesReturnHistory.cs</DependentUpon>
-    </Compile>
-    <Compile Include="UserControls\ucSuppliesHistory.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="UserControls\ucSuppliesHistory.Designer.cs">
-      <DependentUpon>ucSuppliesHistory.cs</DependentUpon>
     </Compile>
     <Compile Include="UserControls\ucSuppliesReturnHistory.cs">
       <SubType>UserControl</SubType>

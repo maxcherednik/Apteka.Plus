@@ -60,9 +60,7 @@ namespace Apteka.Plus.UserControls
 
         protected virtual void OnRowCountChanged(int rowCount)
         {
-            var eventHandler = RowCountChanged;
-            if (eventHandler != null)
-                eventHandler(this, new RowCountChangedEventArgs(rowCount));
+            RowCountChanged?.Invoke(this, new RowCountChangedEventArgs(rowCount));
         }
 
     }

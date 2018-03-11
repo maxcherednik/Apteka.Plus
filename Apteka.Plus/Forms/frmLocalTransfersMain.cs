@@ -31,7 +31,6 @@ namespace Apteka.Plus.Forms
             dgvLocalTransfersMain.CurrentRowChanged += new EventHandler<MyDataGridView.CurrentRowChangedEventArgs>(dgvLocalTransfersMain_CurrentRowChanged);
 
             dgvLocalTransfersMain.Select();
-
         }
 
         void dgvLocalTransfersMain_CurrentRowChanged(object sender, MyDataGridView.CurrentRowChangedEventArgs e)
@@ -39,7 +38,6 @@ namespace Apteka.Plus.Forms
             DataGridView dgv = sender as DataGridView;
             LocalBillsTransferRow LocalBillsTransferRow = dgv.Rows[e.RowIndex].DataBoundItem as LocalBillsTransferRow;
 
-            //progressBar1.Style = ProgressBarStyle.Marquee;
             int DaysForAnalysis = Convert.ToInt16(Settings.Default.DaysForAnalysis);
             int DaysOfStockRotation = Convert.ToInt16(Settings.Default.DaysOfStockRotation);
             int ProductSuppliesTopRows = Convert.ToInt16(Settings.Default.ProductSuppliesTopRows);
@@ -181,13 +179,11 @@ namespace Apteka.Plus.Forms
                     }
                     break;
             }
-
         }
 
         private void frmLocalTransfersMain_Load(object sender, EventArgs e)
         {
             dgvLocalTransfersMain.SetStateSourceAndLoadState(Session.User, DataGridViewColumnSettingsAccessor.CreateInstance<DataGridViewColumnSettingsAccessor>());
         }
-
     }
 }

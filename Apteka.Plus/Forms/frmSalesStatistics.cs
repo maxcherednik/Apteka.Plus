@@ -101,17 +101,14 @@ namespace Apteka.Plus.Forms
                         || row["Фасовка"].ToString().IndexOf(tbSearch.Text, StringComparison.InvariantCultureIgnoreCase) >= 0)
                     {
                         filtered.ImportRow(row);
-                        //filtered.Rows.Add(row);
                     }
                 }
 
                 dgvSalesStatistics.DataSource = filtered;
-
             }
             else
             {
                 dgvSalesStatistics.DataSource = _ResultRows;
-
             }
         }
     }

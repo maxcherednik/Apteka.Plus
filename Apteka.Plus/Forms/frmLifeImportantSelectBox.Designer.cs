@@ -86,7 +86,6 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "Укажите тип препаратов";
             this.TopMost = true;
-            this.Load += new System.EventHandler(this.frmLifeImportantSelectBox_Load);
             ((System.ComponentModel.ISupportInitialize)(this.myStoreBindingSource)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

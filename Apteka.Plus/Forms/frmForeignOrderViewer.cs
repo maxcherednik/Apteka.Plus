@@ -68,8 +68,8 @@ namespace Apteka.Plus.Forms
         {
             frmMainStoreInsert frmMainStoreInsert = new frmMainStoreInsert(_liLocalOrderRows);
 
-            frmMainStoreInsert.Show(this.Owner);
-            this.Close();
+            frmMainStoreInsert.Show(Owner);
+            Close();
         }
     }
 }

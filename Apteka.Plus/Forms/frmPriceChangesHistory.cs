@@ -18,6 +18,7 @@ namespace Apteka.Plus.Forms
         {
             PerformLoadData();
         }
+
         private void PerformLoadData()
         {
             _mystoreSelected = cbMyStores.SelectedItem as MyStore;

@@ -22,9 +22,8 @@ namespace Apteka.Plus.Forms
 
         private void ValidateTextBox(TextBox textBox,CancelEventArgs e)
         {
-            double doubleValue = 0;
             string stringToCheck = textBox.Text.Replace('.', ',');
-            if (!Double.TryParse(stringToCheck, out doubleValue))
+            if (!Double.TryParse(stringToCheck, out double doubleValue))
             {
                 MessageBox.Show("Вы ввели неверное значение. Поле должно содержать число.", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 e.Cancel = true;

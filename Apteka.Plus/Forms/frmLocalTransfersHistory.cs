@@ -54,8 +54,6 @@ namespace Apteka.Plus.Forms
             dtpDate.Value = date;
 
             PerformLoadData();
-
         }
-
     }
 }

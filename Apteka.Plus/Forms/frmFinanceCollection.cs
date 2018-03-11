@@ -171,15 +171,7 @@ namespace Apteka.Plus.Forms
                     {
                         if (cell.IsInEditMode)
                         {
-                            double Amount;
-
-                            //if (cell.EditedFormattedValue.ToString().Trim() == "")
-                            //{
-
-                            //    return;
-                            //}
-
-                            if (double.TryParse(cell.EditedFormattedValue.ToString(), out Amount))
+                            if (double.TryParse(cell.EditedFormattedValue.ToString(), out double Amount))
                             {
                                 if (Amount < 0)
                                 {
@@ -210,6 +202,5 @@ namespace Apteka.Plus.Forms
 
             frmReportViewer.ShowDialog();
         }
-
     }
 }

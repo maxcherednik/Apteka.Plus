@@ -10,8 +10,6 @@ namespace Apteka.Plus.Forms
             InitializeComponent();
         }
 
-       
-
         private void btnOK_Click(object sender, EventArgs e)
         {
             Properties.Settings.Default.Save();

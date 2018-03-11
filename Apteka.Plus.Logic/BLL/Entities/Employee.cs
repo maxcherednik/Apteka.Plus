@@ -20,14 +20,10 @@ namespace Apteka.Plus.Logic.BLL.Entities
 
         public override string ToString() => FullName;
 
-        #region IUserInfo Members
-
         [MapIgnore()]
         string IUserInfo.ID => ID.ToString();
 
         [MapIgnore()]
         string IUserInfo.Name => Login;
-
-        #endregion
     }
 }

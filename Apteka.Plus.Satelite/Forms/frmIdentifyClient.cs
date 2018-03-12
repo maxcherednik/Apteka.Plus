@@ -12,9 +12,9 @@ namespace Apteka.Plus.Satelite.Forms
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            ClientID = tbClientID.Text;
+            ClientId = tbClientID.Text;
         }
 
-        public string ClientID { get; private set; }
+        public string ClientId { get; private set; }
     }
 }

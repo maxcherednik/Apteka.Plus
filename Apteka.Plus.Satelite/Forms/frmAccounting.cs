@@ -6,7 +6,7 @@ using Apteka.Plus.Satelite.Properties;
 using Apteka.Plus.Logic.BLL;
 using Apteka.Plus.Logic.DAL.Accessors;
 using Apteka.Plus.Logic.BLL.Entities;
-using BLToolkit.Data;
+using BLToolkit.DataAccess;
 
 namespace Apteka.Plus.Satelite.Forms
 {
@@ -24,8 +24,8 @@ namespace Apteka.Plus.Satelite.Forms
         {
             ApplyStyle();
 
-            dgvLocalBills.SetStateSourceAndLoadState(Session.User, DataGridViewColumnSettingsAccessor.CreateInstance<DataGridViewColumnSettingsAccessor>());
-            dgvLocalBillsToCount.SetStateSourceAndLoadState(Session.User, DataGridViewColumnSettingsAccessor.CreateInstance<DataGridViewColumnSettingsAccessor>());
+            dgvLocalBills.SetStateSourceAndLoadState(Session.User, DataAccessor.CreateInstance<DataGridViewColumnSettingsAccessor>());
+            dgvLocalBillsToCount.SetStateSourceAndLoadState(Session.User, DataAccessor.CreateInstance<DataGridViewColumnSettingsAccessor>());
 
             LoadLocalBillsByLetter("А");
             LoadLocalBillsCountedByLetter("А");
@@ -38,7 +38,7 @@ namespace Apteka.Plus.Satelite.Forms
 
         private void LoadLocalBillsByLetter(string letter)
         {
-            LocalBillsAccountingAccessor lba = LocalBillsAccountingAccessor.CreateInstance<LocalBillsAccountingAccessor>();
+            var lba = DataAccessor.CreateInstance<LocalBillsAccountingAccessor>();
             _liLocalBillRowsList = lba.GetRowsByStartLetter(letter);
 
             localBillsRowExBindingSource.DataSource = _liLocalBillRowsList;
@@ -46,7 +46,7 @@ namespace Apteka.Plus.Satelite.Forms
 
         private void LoadLocalBillsCountedByLetter(string letter)
         {
-            LocalBillsAccountingAccessor lba = LocalBillsAccountingAccessor.CreateInstance<LocalBillsAccountingAccessor>();
+            var lba = DataAccessor.CreateInstance<LocalBillsAccountingAccessor>();
             _liLocalBillRowsListCounted = lba.GetRowsAccountedByStartLetter(letter);
 
             localBillsRowExBindingSource1.DataSource = _liLocalBillRowsListCounted;
@@ -54,7 +54,7 @@ namespace Apteka.Plus.Satelite.Forms
 
         private void dgvLocalBills_KeyDown(object sender, KeyEventArgs e)
         {
-            var dgv = sender as DataGridView;
+            var dgv = (DataGridView)sender;
 
             switch (e.KeyCode)
             {
@@ -135,24 +135,24 @@ namespace Apteka.Plus.Satelite.Forms
 
         private void dgvLocalBills_CellParsing(object sender, DataGridViewCellParsingEventArgs e)
         {
-            var dgv = sender as DataGridView;
-            DataGridViewCell cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            var dgv = (DataGridView)sender;
+            var cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
 
             switch (cell.OwningColumn.Name)
             {
                 case "Count":
                     {
-                        var row = dgv.Rows[e.RowIndex].DataBoundItem as LocalBillsRowEx;
+                        var row = (LocalBillsRowEx)dgv.Rows[e.RowIndex].DataBoundItem;
 
-                        if (!int.TryParse(e.Value.ToString(), out int i))
+                        if (!int.TryParse(e.Value.ToString(), out var i))
                         {
-                            MessageBox.Show("Вы ввели недопустимый символ");
+                            MessageBox.Show(@"Вы ввели недопустимый символ");
                             e.Value = row.Amount;
                             e.ParsingApplied = true;
                             return;
                         }
 
-                        LocalBillsAccountingAccessor lbaAccounting = LocalBillsAccountingAccessor.CreateInstance<LocalBillsAccountingAccessor>();
+                        var lbaAccounting = DataAccessor.CreateInstance<LocalBillsAccountingAccessor>();
                         if (lbaAccounting.AddAccountedValue(row.ID, -i) > 0)
                         {
                             e.Value = row.Amount - i;
@@ -161,14 +161,17 @@ namespace Apteka.Plus.Satelite.Forms
                             var newRow = new LocalBillsRowEx
                             {
                                 Amount = i,
-                                CurrentPrice = row.CurrentPrice
+                                CurrentPrice = row.CurrentPrice,
+                                MainStoreRow =
+                                {
+                                    FullProductInfo = new FullProductInfo
+                                    {
+                                        ProductName = row.ProductName,
+                                        PackageName = row.PackageName
+                                    }
+                                }
                             };
 
-                            newRow.MainStoreRow.FullProductInfo = new FullProductInfo
-                            {
-                                ProductName = row.ProductName,
-                                PackageName = row.PackageName
-                            };
 
                             localBillsRowExBindingSource1.List.Add(newRow);
 
@@ -178,7 +181,7 @@ namespace Apteka.Plus.Satelite.Forms
                         }
                         else
                         {
-                            MessageBox.Show("Вы пытаетесь отпустить больше чем есть на самом деле");
+                            MessageBox.Show(@"Вы пытаетесь отпустить больше чем есть на самом деле");
                             e.Value = row.Amount;
                             e.ParsingApplied = true;
                         }
@@ -189,14 +192,14 @@ namespace Apteka.Plus.Satelite.Forms
 
         private void dgvLocalBillsToCount_KeyDown(object sender, KeyEventArgs e)
         {
-            var dgv = sender as DataGridView;
+            var dgv = (DataGridView)sender;
 
             switch (e.KeyCode)
             {
                 case Keys.Delete:
                     {
-                        var row = dgv.CurrentRow.DataBoundItem as LocalBillsRowEx;
-                        LocalBillsAccountingAccessor lbaAccounting = LocalBillsAccountingAccessor.CreateInstance<LocalBillsAccountingAccessor>();
+                        var row = (LocalBillsRowEx)dgv.CurrentRow.DataBoundItem;
+                        var lbaAccounting = DataAccessor.CreateInstance<LocalBillsAccountingAccessor>();
 
                         lbaAccounting.AddAccountedValue(row.ID, row.Amount);
                         _liLocalBillRowsListCounted.Remove(row);
@@ -231,21 +234,18 @@ namespace Apteka.Plus.Satelite.Forms
 
         private void button1_Click(object sender, EventArgs e)
         {
-            using (var db = new DbManager())
+            var lba = DataAccessor.CreateInstance<LocalBillsAccessor>();
+            var lbaAccounting = DataAccessor.CreateInstance<LocalBillsAccountingAccessor>();
+            var liAccountedRows = lbaAccounting.GetRowsByStartLetter("");
+            if (liAccountedRows.Count == 0)
             {
-                LocalBillsAccessor lba = LocalBillsAccessor.CreateInstance<LocalBillsAccessor>();
-                LocalBillsAccountingAccessor lbaAccounting = LocalBillsAccountingAccessor.CreateInstance<LocalBillsAccountingAccessor>();
-                List<LocalBillsRowEx> liAccountedRows = lbaAccounting.GetRowsByStartLetter("");
-                if (liAccountedRows.Count == 0)
-                {
-                    List<LocalBillsRowEx> _liLocalBillRowsList = lba.GetRowsByStartLetter("");
-                    lbaAccounting.InsertList(_liLocalBillRowsList);
-                    MessageBox.Show("Таблица инициализирована");
-                }
-                else
-                {
-                    MessageBox.Show("Таблица с учетными данными не пуста");
-                }
+                var liLocalBillRowsList = lba.GetRowsByStartLetter("");
+                lbaAccounting.InsertList(liLocalBillRowsList);
+                MessageBox.Show(@"Таблица инициализирована");
+            }
+            else
+            {
+                MessageBox.Show(@"Таблица с учетными данными не пуста");
             }
         }
     }

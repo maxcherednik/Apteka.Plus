@@ -17,8 +17,8 @@ namespace Apteka.Plus.Satelite
         static void Main()
         {
             Log.Info("Старт приложения!");
-            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
-            Application.ThreadException += new ThreadExceptionEventHandler(Application_ThreadException);
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            Application.ThreadException += Application_ThreadException;
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -58,14 +58,14 @@ namespace Apteka.Plus.Satelite
         static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
         {
             Log.Error("Произошла ошибка!", e.Exception);
-            MessageBox.Show("Произошла ошибка: " + e.Exception.Message, "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(@"Произошла ошибка: " + e.Exception.Message, @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             Exception exc = (Exception)e.ExceptionObject;
             Log.Error("Произошла ошибка!", exc);
-            MessageBox.Show("Произошла ошибка: " + exc.Message, "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show(@"Произошла ошибка: " + exc.Message, @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

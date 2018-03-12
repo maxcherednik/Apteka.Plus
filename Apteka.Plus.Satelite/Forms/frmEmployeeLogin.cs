@@ -3,14 +3,12 @@ using System.Windows.Forms;
 using Apteka.Plus.Logic.BLL;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
-using log4net;
+using BLToolkit.DataAccess;
 
 namespace Apteka.Plus.Satelite.Forms
 {
     public partial class frmEmployeeLogin : Form
     {
-        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
         public frmEmployeeLogin()
         {
             InitializeComponent();
@@ -18,9 +16,9 @@ namespace Apteka.Plus.Satelite.Forms
 
         private void btnOk_Click(object sender, EventArgs e)
         {
-            Employee empl = dgvEmployeeList.CurrentRow.DataBoundItem as Employee;
+            var empl = (Employee)dgvEmployeeList.CurrentRow.DataBoundItem;
             Session.User = empl;
-            frmMainSalesWindow frmMainSalesWindow = new frmMainSalesWindow(empl);
+            var frmMainSalesWindow = new frmMainSalesWindow(empl);
             frmMainSalesWindow.Show();
             Hide();
         }
@@ -32,19 +30,15 @@ namespace Apteka.Plus.Satelite.Forms
 
         private void frmEmployeeLogin_Load(object sender, EventArgs e)
         {
-            EmployeesAccessor ea = EmployeesAccessor.CreateInstance<EmployeesAccessor>();
+            var ea = DataAccessor.CreateInstance<EmployeesAccessor>();
             employeeBindingSource.DataSource = ea.GetAllActiveEmployees();
         }
 
         private void dgvEmployeeList_KeyDown(object sender, KeyEventArgs e)
         {
-            switch (e.KeyCode)
+            if (e.KeyCode == Keys.Enter)
             {
-                case Keys.Enter:
-                    {
-                        btnOk.PerformClick();
-                    }
-                    break;
+                btnOk.PerformClick();
             }
         }
     }

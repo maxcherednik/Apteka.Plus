@@ -5,15 +5,17 @@ using Apteka.Plus.Logic.BLL.Collections;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
 using BLToolkit.Data;
+using BLToolkit.DataAccess;
 using log4net;
 
 namespace Apteka.Plus.Forms
 {
     public partial class frmClientsSummary : Form
     {
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        List<ClientSummaryRow> _summaryRows = new List<ClientSummaryRow>();
+        private readonly List<ClientSummaryRow> _summaryRows = new List<ClientSummaryRow>();
+
         public frmClientsSummary()
         {
             InitializeComponent();
@@ -23,13 +25,12 @@ namespace Apteka.Plus.Forms
         {
             _summaryRows.Clear();
 
-            foreach (MyStore myStore in MyStoresCollection.AllStores)
+            foreach (var myStore in MyStoresCollection.AllStores)
             {
-                using (DbManager dbSatelite = new DbManager(myStore.Name))
+                using (var dbSatelite = new DbManager(myStore.Name))
                 {
-
-                    ClientsSummaryAccessor csa = ClientsSummaryAccessor.CreateInstance<ClientsSummaryAccessor>(dbSatelite);
-                    List<ClientSummaryRow> summaryRowsTemp = csa.GetClientsSummary();
+                    var csa = DataAccessor.CreateInstance<ClientsSummaryAccessor>(dbSatelite);
+                    var summaryRowsTemp = csa.GetClientsSummary();
 
                     if (_summaryRows.Count == 0)
                     {
@@ -37,9 +38,9 @@ namespace Apteka.Plus.Forms
                     }
                     else
                     {
-                        foreach (ClientSummaryRow summaryRow in summaryRowsTemp)
+                        foreach (var summaryRow in summaryRowsTemp)
                         {
-                            ClientSummaryRow oldRow = _summaryRows.Find(p => summaryRow.ClientID == p.ClientID);
+                            var oldRow = _summaryRows.Find(p => summaryRow.ClientID == p.ClientID);
 
                             if (oldRow != null)
                             {
@@ -56,54 +57,49 @@ namespace Apteka.Plus.Forms
                                 _summaryRows.Add(summaryRow);
                             }
                         }
-
                     }
-
                 }
-
             }
 
-            ClientAccessor сlientAccessor = ClientAccessor.CreateInstance<ClientAccessor>();
+            var сlientAccessor = DataAccessor.CreateInstance<ClientAccessor>();
             IList<Client> liClients = сlientAccessor.Query.SelectAll();
 
-            foreach (Client client in liClients)
+            foreach (var client in liClients)
             {
-                ClientSummaryRow oldRow = _summaryRows.Find(p => client.Id == p.ClientID);
+                var oldRow = _summaryRows.Find(p => client.Id == p.ClientID);
 
                 if (oldRow != null)
                 {
                     oldRow.DiscountSize = client.Discount;
-
                 }
             }
 
-            tslSummary.Text = string.Format("Всего покупателей: {0}", _summaryRows.Count);
-            tslPersonalDiscount.Text = string.Format("Персональная скидка: {0}", liClients.Count);
+            tslSummary.Text = $@"Всего покупателей: {_summaryRows.Count}";
+            tslPersonalDiscount.Text = $@"Персональная скидка: {liClients.Count}";
             clientSummaryRowBindingSource.DataSource = _summaryRows;
             SortBy(1, ClientSummaryRow.SumComparison, SortOrder.Descending);
         }
 
-        private void SortBy(int columnIndex, Comparison<ClientSummaryRow> comparison, SortOrder SortOrder)
+        private void SortBy(int columnIndex, Comparison<ClientSummaryRow> comparison, SortOrder sortOrder)
         {
-            DataGridViewColumn oldColumn = dgvClientsSummary.Columns[columnIndex];
+            var oldColumn = dgvClientsSummary.Columns[columnIndex];
 
             _summaryRows.Sort(comparison);
 
-            if (SortOrder == SortOrder.Descending)
+            if (sortOrder == SortOrder.Descending)
             {
                 _summaryRows.Reverse();
             }
 
             clientSummaryRowBindingSource.ResetBindings(false);
-            oldColumn.HeaderCell.SortGlyphDirection = SortOrder;
-
+            oldColumn.HeaderCell.SortGlyphDirection = sortOrder;
         }
 
         private void dgvClientsSummary_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            DataGridViewColumn oldColumn = dgvClientsSummary.Columns[e.ColumnIndex];
+            var oldColumn = dgvClientsSummary.Columns[e.ColumnIndex];
 
-            Comparison<ClientSummaryRow> comparison = new Comparison<ClientSummaryRow>(ClientSummaryRow.ClientIDComparison);
+            var comparison = ClientSummaryRow.ClientIDComparison;
             switch (e.ColumnIndex)
             {
                 case 0:
@@ -133,7 +129,6 @@ namespace Apteka.Plus.Forms
                         || oldColumn.HeaderCell.SortGlyphDirection == SortOrder.None)
             {
                 SortBy(e.ColumnIndex, comparison, SortOrder.Ascending);
-
             }
             else
             {
@@ -143,117 +138,90 @@ namespace Apteka.Plus.Forms
 
         private void frmClientsSummary_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (this.Owner != null)
-                this.Owner.Show();
+            Owner?.Show();
         }
 
         private void dgvClientsSummary_KeyDown(object sender, KeyEventArgs e)
         {
-            log.DebugFormat("Key down:{0}", e.KeyCode.ToString());
-            DataGridView dgv = sender as DataGridView;
-
-            switch (e.KeyCode)
+            Log.DebugFormat("Key down:{0}", e.KeyCode.ToString());
+            if (e.KeyCode == Keys.Enter)
             {
-
-                case Keys.Enter:
-                    {
-
-                        e.Handled = true;
-                        e.SuppressKeyPress = true;
-                        ClientSummaryRow selectedClientSummaryRow = clientSummaryRowBindingSource.Current as ClientSummaryRow;
-                        frmClientBuysDetailed frmClientBuysDetailed = new frmClientBuysDetailed(selectedClientSummaryRow);
-                        frmClientBuysDetailed.ShowDialog(this);
-
-                    }
-                    break;
-
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+                var frmClientBuysDetailed =
+                    new frmClientBuysDetailed((ClientSummaryRow)clientSummaryRowBindingSource.Current);
+                frmClientBuysDetailed.ShowDialog(this);
             }
         }
 
         private void tsbClientDiscountSettings_Click(object sender, EventArgs e)
         {
-            frmClientsDiscountSettings frmClientsDiscountSettings = new frmClientsDiscountSettings();
+            var frmClientsDiscountSettings = new frmClientsDiscountSettings();
             frmClientsDiscountSettings.ShowDialog(this);
         }
 
         private void dgvClientsSummary_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
-            DataGridViewCell cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            var dgv = (DataGridView)sender;
+            var cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
 
-            switch (cell.OwningColumn.Name)
+            if (cell.OwningColumn.Name == "DiscountSize")
             {
-                case "DiscountSize":
-                    {
-                        if (dgv.CurrentRow != null)
-                        {
-                            dgv.CurrentCell = cell;
-                            dgv.BeginEdit(true);
-                        }
-                    }
-                    break;
+                if (dgv.CurrentRow != null)
+                {
+                    dgv.CurrentCell = cell;
+                    dgv.BeginEdit(true);
+                }
             }
         }
 
         private void dgvClientsSummary_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
-            DataGridViewCell cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            var dgv = (DataGridView)sender;
+            var cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
 
-            switch (cell.OwningColumn.Name)
+            if (cell.OwningColumn.Name == "DiscountSize")
             {
-                case "DiscountSize":
+                if (cell.IsInEditMode)
+                {
+                    if (!float.TryParse(cell.EditedFormattedValue.ToString(), out var _) &&
+                        !string.IsNullOrEmpty(cell.EditedFormattedValue.ToString()))
                     {
-                        if (cell.IsInEditMode)
-                        {
-                            if (!float.TryParse(cell.EditedFormattedValue.ToString(), out float newValue) && !string.IsNullOrEmpty(cell.EditedFormattedValue.ToString()))
-                            {
-                                MessageBox.Show("Вы ввели некорректное значение! Допускаются только числа и пустые значения.", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                                e.Cancel = true;
-                            }
-                        }
+                        MessageBox.Show(
+                            @"Вы ввели некорректное значение! Допускаются только числа и пустые значения.",
+                            @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        e.Cancel = true;
                     }
-                    break;
-
-                default:
-                    break;
+                }
             }
         }
 
         private void dgvClientsSummary_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
-            DataGridViewCell cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            var dgv = (DataGridView)sender;
+            var cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
 
-            switch (cell.OwningColumn.Name)
+            if (cell.OwningColumn.Name == "DiscountSize")
             {
-                case "DiscountSize":
+                var row = (ClientSummaryRow)dgv.Rows[e.RowIndex].DataBoundItem;
+                var clientAccessor = DataAccessor.CreateInstance<ClientAccessor>();
+                if (row.DiscountSize.HasValue)
+                {
+                    var client = new Client { Id = row.ClientID, Discount = row.DiscountSize.Value };
+                    var clientFromDb = clientAccessor.Query.SelectByKey(client.Id);
+                    if (clientFromDb != null)
                     {
-                        ClientSummaryRow row = dgv.Rows[e.RowIndex].DataBoundItem as ClientSummaryRow;
-                        ClientAccessor clientAccessor = ClientAccessor.CreateInstance<ClientAccessor>();
-                        if (row.DiscountSize.HasValue)
-                        {
-                            Client client = new Client() { Id = row.ClientID, Discount = row.DiscountSize.Value };
-                            Client clientFromDB = clientAccessor.Query.SelectByKey(client.Id);
-                            if (clientFromDB != null)
-                            {
-                                clientAccessor.Query.Update(client);
-                            }
-                            else
-                            {
-                                clientAccessor.Query.Insert(client);
-                            }
-                        }
-                        else
-                        {
-                            clientAccessor.Query.DeleteByKey(row.ClientID);
-                        }
-
+                        clientAccessor.Query.Update(client);
                     }
-                    break;
-
-                default:
-                    break;
+                    else
+                    {
+                        clientAccessor.Query.Insert(client);
+                    }
+                }
+                else
+                {
+                    clientAccessor.Query.DeleteByKey(row.ClientID);
+                }
             }
         }
     }

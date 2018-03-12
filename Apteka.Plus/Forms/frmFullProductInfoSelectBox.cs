@@ -2,13 +2,12 @@
 using System.Windows.Forms;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
-using log4net;
+using BLToolkit.DataAccess;
 
 namespace Apteka.Plus.Forms
 {
     public partial class frmFullProductInfoSelectBox : Form
     {
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         public FullProductInfo FullProductInfoSelected { get; private set; }
 
         public frmFullProductInfoSelectBox()
@@ -45,31 +44,31 @@ namespace Apteka.Plus.Forms
         private void btnOk_Click(object sender, EventArgs e)
         {
             FullProductInfoSelected = ucFullProductInfoBase1.SeletedItem;
-            this.DialogResult = DialogResult.OK;
-            this.Close();
+            DialogResult = DialogResult.OK;
+            Close();
         }
 
         private void frmFullProductInfoSelectBox_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (this.Owner != null)
-                this.Owner.Show();
+            Owner?.Show();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void tsbDelete_Click(object sender, EventArgs e)
         {
-            FullProductInfo fpi = ucFullProductInfoBase1.SeletedItem;
+            var fpi = ucFullProductInfoBase1.SeletedItem;
+
             if (fpi != null)
             {
-                DialogResult res = MessageBox.Show("Вы уверены, что хотите удалить " + fpi.ProductName + " " + fpi.PackageName + " из списка препаратов?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                var res = MessageBox.Show($@"Вы уверены, что хотите удалить {fpi.ProductName} {fpi.PackageName} из списка препаратов?", @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                 if (res == DialogResult.Yes)
                 {
-                    FullProductInfoAccessor fpia = FullProductInfoAccessor.CreateInstance<FullProductInfoAccessor>();
+                    var fpia = DataAccessor.CreateInstance<FullProductInfoAccessor>();
                     fpia.MarkAsDeleted(fpi);
                     ucFullProductInfoBase1.RemoveItem(fpi);
                 }

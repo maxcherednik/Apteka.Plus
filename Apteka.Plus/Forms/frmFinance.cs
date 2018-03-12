@@ -9,6 +9,7 @@ using Apteka.Plus.Logic.BLL.Collections;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
 using BLToolkit.Data;
+using BLToolkit.DataAccess;
 
 namespace Apteka.Plus.Forms
 {
@@ -16,107 +17,102 @@ namespace Apteka.Plus.Forms
     {
         private MyStore _mystoreSelected;
         private DateTime _selectedDate;
-        private DataLoader<List<FinanceRow>> _dataLoader;
+        private readonly DataLoader<List<FinanceRow>> _dataLoader;
 
         public frmFinance()
         {
             InitializeComponent();
-            _dataLoader = new DataLoader<List<FinanceRow>>(() => LoadData(), 0);
-            _dataLoader.RequestCompleted += new EventHandler<DataLoader<List<FinanceRow>>.RequestCompletedEventArgs>(_dataLoader_RequestCompleted);
-            _dataLoader.ItsGonnaTakeAWhile += new EventHandler<DataLoader<List<FinanceRow>>.ItsGonnaTakeAWhileEventArgs>(_dataLoader_ItsGonnaTakeAWhile);
+            _dataLoader = new DataLoader<List<FinanceRow>>(LoadData, 0);
+            _dataLoader.RequestCompleted += _dataLoader_RequestCompleted;
+            _dataLoader.ItsGonnaTakeAWhile += _dataLoader_ItsGonnaTakeAWhile;
 
             myStoreBindingSource.DataSource = MyStoresCollection.AllStores;
 
-            dgvFinanceDaily.SetStateSourceAndLoadState(Session.User, DataGridViewColumnSettingsAccessor.CreateInstance<DataGridViewColumnSettingsAccessor>());
-            dgvFinanceMonthly.SetStateSourceAndLoadState(Session.User, DataGridViewColumnSettingsAccessor.CreateInstance<DataGridViewColumnSettingsAccessor>());
+            dgvFinanceDaily.SetStateSourceAndLoadState(Session.User, DataAccessor.CreateInstance<DataGridViewColumnSettingsAccessor>());
+            dgvFinanceMonthly.SetStateSourceAndLoadState(Session.User, DataAccessor.CreateInstance<DataGridViewColumnSettingsAccessor>());
         }
 
-        void _dataLoader_ItsGonnaTakeAWhile(object sender, DataLoader<List<FinanceRow>>.ItsGonnaTakeAWhileEventArgs e)
+        private void _dataLoader_ItsGonnaTakeAWhile(object sender, DataLoader<List<FinanceRow>>.ItsGonnaTakeAWhileEventArgs e)
         {
             progressIndicatorEx1.Show();
         }
 
-        void _dataLoader_RequestCompleted(object sender, DataLoader<List<FinanceRow>>.RequestCompletedEventArgs e)
+        private void _dataLoader_RequestCompleted(object sender, DataLoader<List<FinanceRow>>.RequestCompletedEventArgs e)
         {
             btnLoad.Enabled = true;
             progressIndicatorEx1.Hide();
-            List<FinanceRow> liFinanceRows = e.Results;
+            var liFinanceRows = e.Results;
 
-            double StockInTradeSum = 0;
+            double stockInTradeSum;
 
-            using (DbManager dbSatelite = new DbManager(_mystoreSelected.Name))
+            using (var dbSatelite = new DbManager(_mystoreSelected.Name))
             {
-                LocalBillsAccessor lba = LocalBillsAccessor.CreateInstance<LocalBillsAccessor>(dbSatelite);
-                StockInTradeSum = lba.GetStockInTradeSumByDate(new DateTime(dtpDate.Value.Date.Year, dtpDate.Value.Date.Month, 1));
-                tbStockInTradeSumBefore.Text = StockInTradeSum.ToString("0.00");
+                var lba = DataAccessor.CreateInstance<LocalBillsAccessor>(dbSatelite);
+                stockInTradeSum = lba.GetStockInTradeSumByDate(new DateTime(dtpDate.Value.Date.Year, dtpDate.Value.Date.Month, 1));
+                tbStockInTradeSumBefore.Text = stockInTradeSum.ToString("0.00");
             }
 
             financeRowBindingSource.DataSource = liFinanceRows;
 
-            double RevenueSum = 0;
-            double RevenueAvg = 0;
+            double revenueSum = 0;
 
-            double ReceiptSum = 0;
-            double ReceiptAvg = 0;
+            double receiptSum = 0;
 
-            double NetProfitSum = 0;
-            double NetProfitAvg = 0;
+            double netProfitSum = 0;
 
-            double CostsSum = 0;
-            double CostsAvg = 0;
+            double costsSum = 0;
 
-            double DiscountSum = 0;
-            double DiscountAvg = 0;
+            double discountSum = 0;
 
-            double PriceChangesSum = 0;
-            double PriceChangesAvg = 0;
+            double priceChangesSum = 0;
 
-            double LocalTransfersSum = 0;
-            double LocalTransfersAvg = 0;
+            double localTransfersSum = 0;
 
-            double lastStockInTradeSum = StockInTradeSum;
-            foreach (FinanceRow row in liFinanceRows)
+            var lastStockInTradeSum = stockInTradeSum;
+
+            foreach (var row in liFinanceRows)
             {
-                RevenueSum += row.Revenue;
-                ReceiptSum += row.Receipt;
-                NetProfitSum += row.NetProfit;
-                CostsSum += row.Costs;
-                DiscountSum += row.Discount;
-                PriceChangesSum += row.PriceChangesSum;
-                LocalTransfersSum += row.LocalTransferSum;
+                revenueSum += row.Revenue;
+                receiptSum += row.Receipt;
+                netProfitSum += row.NetProfit;
+                costsSum += row.Costs;
+                discountSum += row.Discount;
+                priceChangesSum += row.PriceChangesSum;
+                localTransfersSum += row.LocalTransferSum;
 
                 row.StockInTradeSum = lastStockInTradeSum - row.Revenue + row.Receipt + row.PriceChangesSum - row.LocalTransferSum;
                 lastStockInTradeSum = row.StockInTradeSum;
             }
+
             tbStockInTradeSumAfter.Text = lastStockInTradeSum.ToString("0.00");
-            RevenueAvg = RevenueSum / liFinanceRows.Count;
-            ReceiptAvg = ReceiptSum / liFinanceRows.Count;
-            NetProfitAvg = NetProfitSum / liFinanceRows.Count;
-            CostsAvg = CostsSum / liFinanceRows.Count;
-            DiscountAvg = DiscountSum / liFinanceRows.Count;
-            PriceChangesAvg = PriceChangesSum / liFinanceRows.Count;
-            LocalTransfersAvg = LocalTransfersSum / liFinanceRows.Count;
+            var revenueAvg = revenueSum / liFinanceRows.Count;
+            var receiptAvg = receiptSum / liFinanceRows.Count;
+            var netProfitAvg = netProfitSum / liFinanceRows.Count;
+            var costsAvg = costsSum / liFinanceRows.Count;
+            var discountAvg = discountSum / liFinanceRows.Count;
+            var priceChangesAvg = priceChangesSum / liFinanceRows.Count;
+            var localTransfersAvg = localTransfersSum / liFinanceRows.Count;
 
-            tbRevenueAvg.Text = RevenueAvg.ToString("0.00");
-            tbRevenueSum.Text = RevenueSum.ToString("0.00");
+            tbRevenueAvg.Text = revenueAvg.ToString("0.00");
+            tbRevenueSum.Text = revenueSum.ToString("0.00");
 
-            tbRecieptAvg.Text = ReceiptAvg.ToString("0.00");
-            tbRecieptSum.Text = ReceiptSum.ToString("0.00");
+            tbRecieptAvg.Text = receiptAvg.ToString("0.00");
+            tbRecieptSum.Text = receiptSum.ToString("0.00");
 
-            tbNetProfitAvg.Text = NetProfitAvg.ToString("0.00");
-            tbNetProfitSum.Text = NetProfitSum.ToString("0.00");
+            tbNetProfitAvg.Text = netProfitAvg.ToString("0.00");
+            tbNetProfitSum.Text = netProfitSum.ToString("0.00");
 
-            tbCostsAvg.Text = CostsAvg.ToString("0.00");
-            tbCostsSum.Text = CostsSum.ToString("0.00");
+            tbCostsAvg.Text = costsAvg.ToString("0.00");
+            tbCostsSum.Text = costsSum.ToString("0.00");
 
-            tbDiscountAvg.Text = DiscountAvg.ToString("0.00");
-            tbDiscountSum.Text = DiscountSum.ToString("0.00");
+            tbDiscountAvg.Text = discountAvg.ToString("0.00");
+            tbDiscountSum.Text = discountSum.ToString("0.00");
 
-            tbPriceChangesAvg.Text = PriceChangesAvg.ToString("0.00");
-            tbPriceChangesSum.Text = PriceChangesSum.ToString("0.00");
+            tbPriceChangesAvg.Text = priceChangesAvg.ToString("0.00");
+            tbPriceChangesSum.Text = priceChangesSum.ToString("0.00");
 
-            tbLocalTransfersAvg.Text = LocalTransfersAvg.ToString("0.00");
-            tbLocalTransfersSum.Text = LocalTransfersSum.ToString("0.00");
+            tbLocalTransfersAvg.Text = localTransfersAvg.ToString("0.00");
+            tbLocalTransfersSum.Text = localTransfersSum.ToString("0.00");
 
             button1.Enabled = true;
 
@@ -125,24 +121,23 @@ namespace Apteka.Plus.Forms
 
         private List<FinanceRow> LoadData()
         {
-            using (DbManager dbSatelite = new DbManager(_mystoreSelected.Name))
+            using (var dbSatelite = new DbManager(_mystoreSelected.Name))
             {
-                FinanceAccessor fa = FinanceAccessor.CreateInstance<FinanceAccessor>(dbSatelite);
+                var fa = DataAccessor.CreateInstance<FinanceAccessor>(dbSatelite);
                 return fa.GetFinanceDaily(_selectedDate);
             }
         }
 
         private void frmFinance_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (Owner != null)
-                Owner.Show();
+            Owner?.Show();
         }
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
             btnLoad.Enabled = false;
 
-            _mystoreSelected = cbMyStores.SelectedItem as MyStore;
+            _mystoreSelected = (MyStore)cbMyStores.SelectedItem;
             _selectedDate = dtpDate.Value.Date;
             _dataLoader.MakeRequest();
         }
@@ -154,8 +149,8 @@ namespace Apteka.Plus.Forms
 
         private void dgvFinanceDaily_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
-            FinanceRow row = dgv.Rows[e.RowIndex].DataBoundItem as FinanceRow;
+            var dgv = (DataGridView)sender;
+            var row = (FinanceRow)dgv.Rows[e.RowIndex].DataBoundItem;
 
             switch (dgv[e.ColumnIndex, e.RowIndex].OwningColumn.Name)
             {
@@ -164,8 +159,7 @@ namespace Apteka.Plus.Forms
                         if (row.Date.DayOfWeek == DayOfWeek.Sunday)
                         {
                             e.CellStyle.BackColor = Color.LightGreen;
-                            Font f = new Font(e.CellStyle.Font, FontStyle.Bold);
-                            e.CellStyle.Font = f;
+                            e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);
 
                         }
                         e.Value = row.Date.Day + " - " + row.Date.ToString("ddd");
@@ -175,9 +169,8 @@ namespace Apteka.Plus.Forms
                     break;
                 case "NetProfit":
                     {
-                        double Percent = 0;
-                        Percent = row.NetProfit * 100.0 / row.Revenue;
-                        e.Value = string.Format("{0}     ({1}%)", row.NetProfit.ToString("0.00"), Percent.ToString("0.00"));
+                        var percent = row.NetProfit * 100.0 / row.Revenue;
+                        e.Value = $"{row.NetProfit:0.00}     ({percent:0.00}%)";
                         e.FormattingApplied = true;
 
                     }
@@ -187,7 +180,7 @@ namespace Apteka.Plus.Forms
                     {
                         if (e.Value != null)
                         {
-                            if (double.TryParse(e.Value.ToString(), out double sum))
+                            if (double.TryParse(e.Value.ToString(), out var sum))
                             {
                                 if (sum == 0)
                                 {
@@ -204,7 +197,7 @@ namespace Apteka.Plus.Forms
 
         private void dgvFinanceDaily_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
+            var dgv = (DataGridView)sender;
             if (dgv.Rows.Count > 0)
             {
                 PerformDailyTextBoxPositionin(dgv);
@@ -213,7 +206,7 @@ namespace Apteka.Plus.Forms
 
         private void PerformDailyTextBoxPositionin(DataGridView dgv)
         {
-            Rectangle rect = dgv.GetCellDisplayRectangle(2, 0, false);
+            var rect = dgv.GetCellDisplayRectangle(2, 0, false);
             rect.Location = dgv.PointToScreen(rect.Location);
             tbRevenueAvg.Left = rect.X;
             tbRevenueAvg.Width = rect.Width;
@@ -261,32 +254,31 @@ namespace Apteka.Plus.Forms
             tbPriceChangesAvg.Width = rect.Width;
             tbPriceChangesSum.Left = rect.X;
             tbPriceChangesSum.Width = rect.Width;
-
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            frmReportViewer frmReportViewer = new frmReportViewer("Apteka.Plus.Common.Reports.Finances.FinanceDaily.rdlc");
+            var frmReportViewer = new frmReportViewer("Apteka.Plus.Common.Reports.Finances.FinanceDaily.rdlc");
             frmReportViewer.SetDataSource("FinanceRow", financeRowBindingSource);
             frmReportViewer.ShowDialog();
         }
 
         private void btnLoadMonthlyFinance_Click(object sender, EventArgs e)
         {
-            _mystoreSelected = cbMyStores.SelectedItem as MyStore;
+            _mystoreSelected = (MyStore)cbMyStores.SelectedItem;
             List<FinanceRow> liFinanceRows;
 
-            double StockInTradeMonthlySum = 0;
+            double stockInTradeMonthlySum;
 
-            using (DbManager dbSatelite = new DbManager(_mystoreSelected.Name))
-            {
+            var iYear = int.Parse(tbYear.Text);
 
-                int iYear = int.Parse(tbYear.Text);
-                LocalBillsAccessor lba = LocalBillsAccessor.CreateInstance<LocalBillsAccessor>(dbSatelite);
-                StockInTradeMonthlySum = lba.GetStockInTradeSumByDate(new DateTime(iYear, 1, 1));
-                tbStockInTradeMonthlySumBefore.Text = StockInTradeMonthlySum.ToString("0.00");
+            using (var dbSatelite = new DbManager(_mystoreSelected.Name))
+            {   
+                var lba = DataAccessor.CreateInstance<LocalBillsAccessor>(dbSatelite);
+                stockInTradeMonthlySum = lba.GetStockInTradeSumByDate(new DateTime(iYear, 1, 1));
+                tbStockInTradeMonthlySumBefore.Text = stockInTradeMonthlySum.ToString("0.00");
 
-                FinanceAccessor fa = FinanceAccessor.CreateInstance<FinanceAccessor>(dbSatelite);
+                var fa = DataAccessor.CreateInstance<FinanceAccessor>(dbSatelite);
                 dbSatelite.Command.CommandTimeout = 360;
 
                 liFinanceRows = fa.GetFinanceMonthlyPeriod(new DateTime(iYear, 1, 1), DateTime.Now);
@@ -294,47 +286,44 @@ namespace Apteka.Plus.Forms
                 financeRowBindingSource1.DataSource = liFinanceRows;
             }
 
-            double RevenueSum = 0;
-            double RevenueAvg = 0;
+            double revenueSum = 0;
 
-            double ReceiptSum = 0;
-            double ReceiptAvg = 0;
+            double receiptSum = 0;
 
-            double NetProfitSum = 0;
-            double NetProfitAvg = 0;
+            double netProfitSum = 0;
 
-            double CostsSum = 0;
-            double CostsAvg = 0;
+            double costsSum = 0;
 
-            double lastStockInTradeSum = StockInTradeMonthlySum;
-            foreach (FinanceRow row in liFinanceRows)
+            var lastStockInTradeSum = stockInTradeMonthlySum;
+
+            foreach (var row in liFinanceRows)
             {
-                RevenueSum += row.Revenue;
-                ReceiptSum += row.Receipt;
-                NetProfitSum += row.NetProfit;
-                CostsSum += row.Costs;
+                revenueSum += row.Revenue;
+                receiptSum += row.Receipt;
+                netProfitSum += row.NetProfit;
+                costsSum += row.Costs;
 
                 row.StockInTradeSum = lastStockInTradeSum - row.Revenue + row.Receipt + row.PriceChangesSum - row.LocalTransferSum;
                 lastStockInTradeSum = row.StockInTradeSum;
             }
 
             tbStockInTradeMonthlySumAfter.Text = lastStockInTradeSum.ToString("0.00");
-            RevenueAvg = RevenueSum / liFinanceRows.Count;
-            ReceiptAvg = ReceiptSum / liFinanceRows.Count;
-            NetProfitAvg = NetProfitSum / liFinanceRows.Count;
-            CostsAvg = CostsSum / liFinanceRows.Count;
+            var revenueAvg = revenueSum / liFinanceRows.Count;
+            var receiptAvg = receiptSum / liFinanceRows.Count;
+            var netProfitAvg = netProfitSum / liFinanceRows.Count;
+            var costsAvg = costsSum / liFinanceRows.Count;
 
-            tbRevenueMonthlyAvg.Text = RevenueAvg.ToString("0.00");
-            tbRevenueMonthlySum.Text = RevenueSum.ToString("0.00");
+            tbRevenueMonthlyAvg.Text = revenueAvg.ToString("0.00");
+            tbRevenueMonthlySum.Text = revenueSum.ToString("0.00");
 
-            tbRecieptMonthlyAvg.Text = ReceiptAvg.ToString("0.00");
-            tbRecieptMonthlySum.Text = ReceiptSum.ToString("0.00");
+            tbRecieptMonthlyAvg.Text = receiptAvg.ToString("0.00");
+            tbRecieptMonthlySum.Text = receiptSum.ToString("0.00");
 
-            tbNetProfitMonthlyAvg.Text = NetProfitAvg.ToString("0.00");
-            tbNetProfitMonthlySum.Text = NetProfitSum.ToString("0.00");
+            tbNetProfitMonthlyAvg.Text = netProfitAvg.ToString("0.00");
+            tbNetProfitMonthlySum.Text = netProfitSum.ToString("0.00");
 
-            tbCostsMonthlyAvg.Text = CostsAvg.ToString("0.00");
-            tbCostsMonthlySum.Text = CostsSum.ToString("0.00");
+            tbCostsMonthlyAvg.Text = costsAvg.ToString("0.00");
+            tbCostsMonthlySum.Text = costsSum.ToString("0.00");
 
             button2.Enabled = true;
 
@@ -343,7 +332,7 @@ namespace Apteka.Plus.Forms
 
         private void button2_Click(object sender, EventArgs e)
         {
-            frmReportViewer frmReportViewer = new frmReportViewer("Apteka.Plus.Common.Reports.Finances.FinanceMonthly.rdlc");
+            var frmReportViewer = new frmReportViewer("Apteka.Plus.Common.Reports.Finances.FinanceMonthly.rdlc");
 
             frmReportViewer.SetDataSource("FinanceRow", financeRowBindingSource1);
 
@@ -363,7 +352,7 @@ namespace Apteka.Plus.Forms
 
         private void dgvFinanceMonthly_ColumnWidthChanged(object sender, DataGridViewColumnEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
+            var dgv = (DataGridView)sender;
             if (dgv.Rows.Count > 0)
             {
                 PerformMonthlyTextBoxPositionin(dgv);
@@ -372,7 +361,7 @@ namespace Apteka.Plus.Forms
 
         private void PerformMonthlyTextBoxPositionin(DataGridView dgv)
         {
-            Rectangle rect = dgv.GetCellDisplayRectangle(2, 0, false);
+            var rect = dgv.GetCellDisplayRectangle(2, 0, false);
             rect.Location = dgv.PointToScreen(rect.Location);
             tbRevenueMonthlyAvg.Left = rect.X;
             tbRevenueMonthlyAvg.Width = rect.Width;
@@ -403,26 +392,22 @@ namespace Apteka.Plus.Forms
 
         private void dgvFinanceMonthly_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
-            FinanceRow row = dgv.Rows[e.RowIndex].DataBoundItem as FinanceRow;
+            var dgv = (DataGridView)sender;
+            var row = (FinanceRow)dgv.Rows[e.RowIndex].DataBoundItem;
 
             switch (dgv[e.ColumnIndex, e.RowIndex].OwningColumn.Name)
             {
                 case "DateMonthly":
                     {
-
-                        e.Value = row.Date.Year.ToString() + " " + row.Date.ToString("MMMM");
+                        e.Value = row.Date.Year + " " + row.Date.ToString("MMMM");
                         e.FormattingApplied = true;
-
                     }
                     break;
                 case "NetProfit":
                     {
-                        double Percent = 0;
-                        Percent = row.NetProfit * 100.0 / row.Revenue;
-                        e.Value = string.Format("{0}     ({1}%)", row.NetProfit.ToString("0.00"), Percent.ToString("0.00"));
+                        var percent = row.NetProfit * 100.0 / row.Revenue;
+                        e.Value = $"{row.NetProfit:0.00}     ({percent:0.00}%)";
                         e.FormattingApplied = true;
-
                     }
                     break;
 
@@ -430,7 +415,7 @@ namespace Apteka.Plus.Forms
                     {
                         if (e.Value != null)
                         {
-                            if (double.TryParse(e.Value.ToString(), out double sum))
+                            if (double.TryParse(e.Value.ToString(), out var sum))
                             {
                                 if (sum == 0)
                                 {
@@ -439,7 +424,6 @@ namespace Apteka.Plus.Forms
                                 }
                             }
                         }
-
                     }
                     break;
             }
@@ -447,14 +431,12 @@ namespace Apteka.Plus.Forms
 
         private void dgvFinanceDaily_MouseDown(object sender, MouseEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
+            var dgv = (DataGridView)sender;
 
             // Load context menu on right mouse click
-            DataGridView.HitTestInfo hitTestInfo;
             if (e.Button == MouseButtons.Right)
             {
-
-                hitTestInfo = dgv.HitTest(e.X, e.Y);
+                var hitTestInfo = dgv.HitTest(e.X, e.Y);
                 // If column is first column
                 if (hitTestInfo.Type == DataGridViewHitTestType.Cell && hitTestInfo.RowIndex >= 0)
                 {
@@ -469,12 +451,11 @@ namespace Apteka.Plus.Forms
 
         private void dgvFinanceDaily_MouseUp(object sender, MouseEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
+            DataGridView dgv = (DataGridView)sender;
             // Load context menu on right mouse click
-            DataGridView.HitTestInfo hitTestInfo;
             if (e.Button == MouseButtons.Right)
             {
-                hitTestInfo = dgv.HitTest(e.X, e.Y);
+                var hitTestInfo = dgv.HitTest(e.X, e.Y);
                 // If column is first column
                 if (hitTestInfo.Type == DataGridViewHitTestType.Cell
                     && hitTestInfo.RowIndex >= 0)
@@ -486,7 +467,7 @@ namespace Apteka.Plus.Forms
 
         private void cmsFinance_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            FinanceRow financeRow = dgvFinanceDaily.CurrentRow.DataBoundItem as FinanceRow;
+            var financeRow = (FinanceRow)dgvFinanceDaily.CurrentRow.DataBoundItem;
 
             cmsFinance.Close();
 
@@ -494,7 +475,7 @@ namespace Apteka.Plus.Forms
             {
                 case "sales":
                     {
-                        frmSales frmSales = new frmSales();
+                        var frmSales = new frmSales();
                         frmSales.Show();
                         Application.DoEvents();
                         frmSales.LoadDataFor(_mystoreSelected, financeRow.Date);
@@ -503,7 +484,7 @@ namespace Apteka.Plus.Forms
                     break;
                 case "transfers":
                     {
-                        frmLocalTransfersHistory frmLocalTransfersHistory = new frmLocalTransfersHistory();
+                        var frmLocalTransfersHistory = new frmLocalTransfersHistory();
                         frmLocalTransfersHistory.Show();
                         Application.DoEvents();
                         frmLocalTransfersHistory.LoadDataFor(_mystoreSelected, financeRow.Date);
@@ -512,15 +493,11 @@ namespace Apteka.Plus.Forms
                     break;
                 case "price_changes":
                     {
-                        frmPriceChangesHistory frmPriceChangesHistory = new frmPriceChangesHistory();
+                        var frmPriceChangesHistory = new frmPriceChangesHistory();
                         frmPriceChangesHistory.Show();
                         Application.DoEvents();
                         frmPriceChangesHistory.LoadDataFor(_mystoreSelected, financeRow.Date);
-
                     }
-                    break;
-
-                default:
                     break;
             }
 
@@ -528,7 +505,7 @@ namespace Apteka.Plus.Forms
 
         private void cmsFinance_Opening(object sender, CancelEventArgs e)
         {
-            FinanceRow financeRow = dgvFinanceDaily.CurrentRow.DataBoundItem as FinanceRow;
+            var financeRow = (FinanceRow)dgvFinanceDaily.CurrentRow.DataBoundItem;
 
             if (financeRow.LocalTransferSum == 0)
             {

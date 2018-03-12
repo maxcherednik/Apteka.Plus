@@ -11,14 +11,6 @@ namespace Apteka.Plus.Logic.DAL.Accessors
         public abstract long Insert(DefectList obj);
 
         private SqlQuery<DefectList> _query;
-        public SqlQuery<DefectList> Query
-        {
-            get
-            {
-                if (_query == null)
-                    _query = new SqlQuery<DefectList>(DbManager);
-                return _query;
-            }
-        }
+        public SqlQuery<DefectList> Query => _query ?? (_query = new SqlQuery<DefectList>(DbManager));
     }
 }

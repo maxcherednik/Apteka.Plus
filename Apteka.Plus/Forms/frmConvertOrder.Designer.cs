@@ -1,4 +1,4 @@
-﻿namespace OrderConverter
+﻿namespace Apteka.Plus.Forms
 {
     partial class frmConvertOrder
     {

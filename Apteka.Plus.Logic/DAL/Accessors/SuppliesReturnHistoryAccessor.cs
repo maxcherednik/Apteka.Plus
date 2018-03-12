@@ -7,7 +7,6 @@ namespace Apteka.Plus.Logic.DAL.Accessors
 {
     public abstract class SuppliesReturnHistoryAccessor : DataAccessor<SuppliesReturnHistoryRow>
     {
-
         public abstract long Insert(SuppliesReturnHistoryRow row);
 
         public abstract List<SuppliesReturnHistoryRow> GetRows(DateTime startDate, DateTime endDate);

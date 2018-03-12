@@ -249,7 +249,6 @@
             this.tbSeries.Size = new System.Drawing.Size(107, 20);
             this.tbSeries.TabIndex = 32;
             this.tbSeries.KeyDown += new System.Windows.Forms.KeyEventHandler(this.tbSeries_KeyDown);
-            this.tbSeries.Validating += new System.ComponentModel.CancelEventHandler(this.tbSeries_Validating);
             // 
             // label10
             // 

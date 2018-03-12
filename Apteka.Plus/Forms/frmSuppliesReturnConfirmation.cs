@@ -6,42 +6,22 @@ namespace Apteka.Plus.Forms
 {
     public partial class frmSuppliesReturnConfirmation : Form
     {
-        private bool _deleteAll;
-
-        private bool _deleteAmount;
-
-        private string _comment;
-
-        private int _amount;
-
         public frmSuppliesReturnConfirmation()
         {
             InitializeComponent();
         }
 
-        public bool IsDeleteAll
-        {
-            get { return _deleteAll; }
-        }
+        public bool IsDeleteAll { get; private set; }
 
-        public bool IsDeleteAmount
-        {
-            get { return _deleteAmount; }
-        }
+        public bool IsDeleteAmount { get; private set; }
 
-        public string Comment
-        {
-            get { return _comment; }
-        }
+        public string Comment { get; private set; }
 
-        public int Amount
-        {
-            get { return _amount; }
-        }
+        public int Amount { get; private set; }
 
         private void rbDeleteAmount_CheckedChanged(object sender, EventArgs e)
         {
-            if (rbDeleteAmount.Checked == true)
+            if (rbDeleteAmount.Checked)
             {
                 tbAmount.Enabled = true;
                 tbAmount.Select();
@@ -54,18 +34,17 @@ namespace Apteka.Plus.Forms
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-
             if (tbComment.Text.Trim() == "")
             {
-                MessageBox.Show("Вы не ввели комментарий", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(@"Вы не ввели комментарий", @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 tbComment.Select();
             }
             else
             {
                 DialogResult = DialogResult.OK;
-                _deleteAll = rbDeleteAll.Checked;
-                _deleteAmount = rbDeleteAmount.Checked;
-                _comment = tbComment.Text;
+                IsDeleteAll = rbDeleteAll.Checked;
+                IsDeleteAmount = rbDeleteAmount.Checked;
+                Comment = tbComment.Text;
 
                 Close();
             }
@@ -73,24 +52,24 @@ namespace Apteka.Plus.Forms
 
         private void tbAmount_Validating(object sender, CancelEventArgs e)
         {
-            TextBox tb = sender as TextBox;
-            string strAmount = tb.Text;
+            var tb = (TextBox)sender;
+            var strAmount = tb.Text;
 
-            if (int.TryParse(strAmount, out int intAmount))
+            if (int.TryParse(strAmount, out var intAmount))
             {
                 if (intAmount <= 0)
                 {
-                    MessageBox.Show("Количество должно быть больше 0", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show(@"Количество должно быть больше 0", @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     e.Cancel = true;
                 }
             }
             else
             {
-                MessageBox.Show("Вы ввели некорректное значение! Допускаются только числа.", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(@"Вы ввели некорректное значение! Допускаются только числа.", @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 e.Cancel = true;
             }
 
-            _amount = intAmount;
+            Amount = intAmount;
         }
 
         private void tbAmount_KeyDown(object sender, KeyEventArgs e)

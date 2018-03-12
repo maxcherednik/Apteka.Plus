@@ -312,12 +312,6 @@
     <Compile Include="Forms\frmProductSupplies.Designer.cs">
       <DependentUpon>frmProductSupplies.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\frmProductSuppliesSummary.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Forms\frmProductSuppliesSummary.Designer.cs">
-      <DependentUpon>frmProductSuppliesSummary.cs</DependentUpon>
-    </Compile>
     <Compile Include="Forms\frmSales.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -397,9 +391,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmPriceChangesHistory.resx">
       <DependentUpon>frmPriceChangesHistory.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Forms\frmProductSuppliesSummary.resx">
-      <DependentUpon>frmProductSuppliesSummary.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmSalesReturnHistory.resx">
       <DependentUpon>frmSalesReturnHistory.cs</DependentUpon>

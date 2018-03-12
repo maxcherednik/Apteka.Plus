@@ -18,7 +18,7 @@ namespace Apteka.Plus.Logic.DAL.Accessors
 
         public void UpdateTables(DbManager db, List<TableInfo> liTablesInfo)
         {
-            foreach (TableInfo tableInfo in liTablesInfo)
+            foreach (var tableInfo in liTablesInfo)
             {
                 UpdateToID(tableInfo.Name, tableInfo.MaxID);
             }
@@ -29,7 +29,7 @@ namespace Apteka.Plus.Logic.DAL.Accessors
 
         public void InitTables(List<TableInfo> liTablesInfo)
         {
-            foreach (TableInfo tableInfo in liTablesInfo)
+            foreach (var tableInfo in liTablesInfo)
             {
                 DeleteAll(tableInfo.Name);
                 SetInitialCounterValue(tableInfo.Name, tableInfo.MaxID);
@@ -41,6 +41,5 @@ namespace Apteka.Plus.Logic.DAL.Accessors
 
         [SqlQuery("Delete from {0}")]
         public abstract void DeleteAll([Format(0)]string tableName);
-
     }
 }

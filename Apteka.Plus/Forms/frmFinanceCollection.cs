@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using Apteka.Plus.Logic.BLL;
@@ -7,6 +6,7 @@ using Apteka.Plus.Logic.BLL.Collections;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
 using BLToolkit.Data;
+using BLToolkit.DataAccess;
 
 namespace Apteka.Plus.Forms
 {
@@ -19,25 +19,23 @@ namespace Apteka.Plus.Forms
             InitializeComponent();
             myStoreBindingSource.DataSource = MyStoresCollection.AllStores;
 
-            dgvFinanceCollection.SetStateSourceAndLoadState(Session.User, DataGridViewColumnSettingsAccessor.CreateInstance<DataGridViewColumnSettingsAccessor>());
+            dgvFinanceCollection.SetStateSourceAndLoadState(Session.User, DataAccessor.CreateInstance<DataGridViewColumnSettingsAccessor>());
         }
 
         private void frmFinanceCollection_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (this.Owner != null)
-                this.Owner.Show();
+            Owner?.Show();
         }
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
-            _mystoreSelected = cbMyStores.SelectedItem as MyStore;
+            _mystoreSelected = (MyStore)cbMyStores.SelectedItem;
 
-            using (DbManager dbSatelite = new DbManager(_mystoreSelected.Name))
+            using (var dbSatelite = new DbManager(_mystoreSelected.Name))
             {
+                var fca = DataAccessor.CreateInstance<FinanceCollectionAccessor>(dbSatelite);
 
-                FinanceCollectionAccessor fca = FinanceCollectionAccessor.CreateInstance<FinanceCollectionAccessor>(dbSatelite);
-
-                List<FinanceCollectionRow> liFinanceCollectionRows = fca.SelectByMonth(dtpDate.Value.Date);
+                var liFinanceCollectionRows = fca.SelectByMonth(dtpDate.Value.Date);
 
                 financeCollectionRowBindingSource.DataSource = liFinanceCollectionRows;
             }
@@ -47,43 +45,33 @@ namespace Apteka.Plus.Forms
 
         private void dgvFinanceCollection_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
-            FinanceCollectionRow row = dgv.Rows[e.RowIndex].DataBoundItem as FinanceCollectionRow;
+            var dgv = (DataGridView)sender;
+            var row = (FinanceCollectionRow)dgv.Rows[e.RowIndex].DataBoundItem;
 
-            switch (dgv[e.ColumnIndex, e.RowIndex].OwningColumn.Name)
+            if (dgv[e.ColumnIndex, e.RowIndex].OwningColumn.Name == "AmountCollected")
             {
-                case "AmountCollected":
+                if (row.AmountCollected == 0)
+                {
+                    e.Value = "";
+                }
+            }
+            else if (dgv[e.ColumnIndex, e.RowIndex].OwningColumn.Name == "Difference")
+            {
+                {
+                    if (row.AmountCollected != 0)
                     {
-                        if (row.AmountCollected == 0)
+                        var dif = row.AmountCollected - row.AmountComputer;
+                        e.Value = dif;
+                        if (dif < 0)
                         {
-                            e.Value = "";
-
+                            e.CellStyle.BackColor = Color.Salmon;
                         }
-
                     }
-                    break;
-
-                case "Difference":
+                    else
                     {
-                        if (row.AmountCollected != 0)
-                        {
-                            double dif = row.AmountCollected - row.AmountComputer;
-                            e.Value = dif;
-                            if (dif < 0)
-                            {
-                                e.CellStyle.BackColor = Color.Salmon;
-                            }
-                        }
-                        else
-                        {
-                            e.Value = "";
-                        }
-
+                        e.Value = "";
                     }
-                    break;
-
-                default:
-                    break;
+                }
             }
         }
 
@@ -91,8 +79,8 @@ namespace Apteka.Plus.Forms
         {
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
             {
-                DataGridView dgv = sender as DataGridView;
-                DataGridViewCell cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                var dgv = (DataGridView)sender;
+                var cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
                 if (cell.OwningColumn.Name == "AmountCollected" || cell.OwningColumn.Name == "Comment")
                 {
                     dgv.CurrentCell = cell;
@@ -103,23 +91,20 @@ namespace Apteka.Plus.Forms
 
         private void dgvFinanceCollection_CellParsing(object sender, DataGridViewCellParsingEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
-            DataGridViewCell cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            var dgv = (DataGridView)sender;
+            var cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
 
-            FinanceCollectionRow row = dgv.Rows[e.RowIndex].DataBoundItem as FinanceCollectionRow;
+            var row = (FinanceCollectionRow)dgv.Rows[e.RowIndex].DataBoundItem;
 
             switch (cell.OwningColumn.Name)
             {
-
                 case "AmountCollected":
                     {
-                        using (DbManager dbSatelite = new DbManager(_mystoreSelected.Name))
+                        using (var dbSatelite = new DbManager(_mystoreSelected.Name))
                         {
+                            var fca = DataAccessor.CreateInstance<FinanceCollectionAccessor>(dbSatelite);
 
-                            FinanceCollectionAccessor fca =
-                                FinanceCollectionAccessor.CreateInstance<FinanceCollectionAccessor>(dbSatelite);
-
-                            double amount = double.Parse(cell.EditedFormattedValue.ToString());
+                            var amount = double.Parse(cell.EditedFormattedValue.ToString());
                             row.AmountCollected = amount;
                             if (row.ID == 0)
                             {
@@ -130,17 +115,14 @@ namespace Apteka.Plus.Forms
                                 fca.Update(row);
                             }
                         }
-
                     }
                     break;
 
                 case "Comment":
                     {
-                        using (DbManager dbSatelite = new DbManager(_mystoreSelected.Name))
+                        using (var dbSatelite = new DbManager(_mystoreSelected.Name))
                         {
-
-                            FinanceCollectionAccessor fca =
-                                FinanceCollectionAccessor.CreateInstance<FinanceCollectionAccessor>(dbSatelite);
+                            var fca = DataAccessor.CreateInstance<FinanceCollectionAccessor>(dbSatelite);
 
                             row.Comment = e.Value.ToString();
                             if (row.ID == 0)
@@ -161,42 +143,35 @@ namespace Apteka.Plus.Forms
 
         private void dgvFinanceCollection_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
-            DataGridViewCell cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            var dgv = (DataGridView)sender;
+            var cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
 
-            switch (cell.OwningColumn.Name)
+            if (cell.OwningColumn.Name == "AmountCollected")
             {
-
-                case "AmountCollected":
+                if (cell.IsInEditMode)
+                {
+                    if (double.TryParse(cell.EditedFormattedValue.ToString(), out var amount))
                     {
-                        if (cell.IsInEditMode)
+                        if (amount < 0)
                         {
-                            if (double.TryParse(cell.EditedFormattedValue.ToString(), out double Amount))
-                            {
-                                if (Amount < 0)
-                                {
-                                    MessageBox.Show("Вы не можете вести отрицательное число.", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                                    e.Cancel = true;
-                                }
-
-                            }
-                            else
-                            {
-                                MessageBox.Show("Вы ввели некорректное значение! Допускаются только числа.", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                                e.Cancel = true;
-                            }
-
+                            MessageBox.Show(@"Вы не можете вести отрицательное число.", @"Внимание",
+                                MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                            e.Cancel = true;
                         }
-
                     }
-                    break;
-
+                    else
+                    {
+                        MessageBox.Show(@"Вы ввели некорректное значение! Допускаются только числа.", @"Внимание",
+                            MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        e.Cancel = true;
+                    }
+                }
             }
         }
 
         private void btnReport_Click(object sender, EventArgs e)
         {
-            frmReportViewer frmReportViewer = new frmReportViewer("Apteka.Plus.Common.Reports.Finances.FinanceCollectionDetailed.rdlc");
+            var frmReportViewer = new frmReportViewer("Apteka.Plus.Common.Reports.Finances.FinanceCollectionDetailed.rdlc");
 
             frmReportViewer.SetDataSource("FinanceCollectionRow", financeCollectionRowBindingSource);
 

@@ -7,71 +7,71 @@ using BLToolkit.Data;
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
+using BLToolkit.DataAccess;
 
 namespace Apteka.Plus.Forms
 {
     public partial class frmLocalTransfersMain : Form
     {
-        List<LocalBillsTransferRow> _liLocalBillsTransferRows;
-        LocalBillsTransferInfoRow _LocalBillsTransferInfoRow;
-        public frmLocalTransfersMain(LocalBillsTransferInfoRow LocalBillsTransferInfoRow)
+        private readonly List<LocalBillsTransferRow> _liLocalBillsTransferRows;
+        private readonly LocalBillsTransferInfoRow _localBillsTransferInfoRow;
+
+        public frmLocalTransfersMain(LocalBillsTransferInfoRow localBillsTransferInfoRow)
         {
             InitializeComponent();
 
-            _LocalBillsTransferInfoRow = LocalBillsTransferInfoRow;
-            lblFrom.Text = _LocalBillsTransferInfoRow.SourceStore.Name;
-            lblTo.Text = _LocalBillsTransferInfoRow.DestinationStore.Name;
-            using (DbManager db = new DbManager(_LocalBillsTransferInfoRow.SourceStore.Name))
+            _localBillsTransferInfoRow = localBillsTransferInfoRow;
+            lblFrom.Text = _localBillsTransferInfoRow.SourceStore.Name;
+            lblTo.Text = _localBillsTransferInfoRow.DestinationStore.Name;
+            using (var db = new DbManager(_localBillsTransferInfoRow.SourceStore.Name))
             {
-                LocalBillsTransfersAccessor lbta = LocalBillsTransfersAccessor.CreateInstance<LocalBillsTransfersAccessor>(db);
-                _liLocalBillsTransferRows = lbta.GetUnprocessedRowsByDate(_LocalBillsTransferInfoRow.DateAccepted);
+                var lbta = DataAccessor.CreateInstance<LocalBillsTransfersAccessor>(db);
+                _liLocalBillsTransferRows = lbta.GetUnprocessedRowsByDate(_localBillsTransferInfoRow.DateAccepted);
                 localBillsTransferRowBindingSource.DataSource = _liLocalBillsTransferRows;
             }
 
-            dgvLocalTransfersMain.CurrentRowChanged += new EventHandler<MyDataGridView.CurrentRowChangedEventArgs>(dgvLocalTransfersMain_CurrentRowChanged);
+            dgvLocalTransfersMain.CurrentRowChanged += dgvLocalTransfersMain_CurrentRowChanged;
 
             dgvLocalTransfersMain.Select();
         }
 
-        void dgvLocalTransfersMain_CurrentRowChanged(object sender, MyDataGridView.CurrentRowChangedEventArgs e)
+        private void dgvLocalTransfersMain_CurrentRowChanged(object sender, MyDataGridView.CurrentRowChangedEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
-            LocalBillsTransferRow LocalBillsTransferRow = dgv.Rows[e.RowIndex].DataBoundItem as LocalBillsTransferRow;
+            var dgv = (DataGridView)sender;
+            var localBillsTransferRow = (LocalBillsTransferRow)dgv.Rows[e.RowIndex].DataBoundItem;
 
-            int DaysForAnalysis = Convert.ToInt16(Settings.Default.DaysForAnalysis);
-            int DaysOfStockRotation = Convert.ToInt16(Settings.Default.DaysOfStockRotation);
-            int ProductSuppliesTopRows = Convert.ToInt16(Settings.Default.ProductSuppliesTopRows);
-            ucProductSupplies1.GetInfo(LocalBillsTransferRow.LocalBillsRow.MainStoreRow.FullProductInfo, ProductSuppliesTopRows, DaysOfStockRotation);
-
+            int daysOfStockRotation = Convert.ToInt16(Settings.Default.DaysOfStockRotation);
+            int productSuppliesTopRows = Convert.ToInt16(Settings.Default.ProductSuppliesTopRows);
+            ucProductSupplies1.GetInfo(localBillsTransferRow.LocalBillsRow.MainStoreRow.FullProductInfo, productSuppliesTopRows, daysOfStockRotation);
         }
 
         private void tsbSave_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Вы уверены, что хотите отпусть накладную?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBox.Show(@"Вы уверены, что хотите отпусть накладную?", @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
+                var dbSource = new DbManager(_localBillsTransferInfoRow.SourceStore.Name);
+                var dbDestination = new DbManager(_localBillsTransferInfoRow.DestinationStore.Name);
 
-                DbManager dbSource = new DbManager(_LocalBillsTransferInfoRow.SourceStore.Name);
-                DbManager dbDestination = new DbManager(_LocalBillsTransferInfoRow.DestinationStore.Name);
                 try
                 {
 
                     dbDestination.BeginTransaction();
                     dbSource.BeginTransaction();
-                    PropertyAccessor pa = PropertyAccessor.CreateInstance<PropertyAccessor>(dbDestination);
-                    Property pLocalBillNumber = pa.GetByName("LocalBillNumber");
-                    long LocalBillNumber = long.Parse(pLocalBillNumber.Value);
+                    var pa = DataAccessor.CreateInstance<PropertyAccessor>(dbDestination);
+                    var pLocalBillNumber = pa.GetByName("LocalBillNumber");
+                    var localBillNumber = long.Parse(pLocalBillNumber.Value);
 
-                    LocalBillsAccessor lba = LocalBillsAccessor.CreateInstance<LocalBillsAccessor>(dbDestination);
-                    LocalBillsTransfersAccessor lbta = LocalBillsTransfersAccessor.CreateInstance<LocalBillsTransfersAccessor>(dbSource);
+                    var lba = DataAccessor.CreateInstance<LocalBillsAccessor>(dbDestination);
+                    var lbta = DataAccessor.CreateInstance<LocalBillsTransfersAccessor>(dbSource);
 
-                    foreach (LocalBillsTransferRow row in _liLocalBillsTransferRows)
+                    foreach (var row in _liLocalBillsTransferRows)
                     {
                         row.LocalBillsRow.StartPrice = row.Price;
                         row.LocalBillsRow.CurrentPrice = row.Price;
-                        row.LocalBillsRow.MyStore = _LocalBillsTransferInfoRow.SourceStore;
+                        row.LocalBillsRow.MyStore = _localBillsTransferInfoRow.SourceStore;
                         row.LocalBillsRow.StartAmount = row.Count;
                         row.LocalBillsRow.Amount = row.Count;
-                        row.LocalBillsRow.LocalBillNumber = LocalBillNumber;
+                        row.LocalBillsRow.LocalBillNumber = localBillNumber;
                         row.LocalBillsRow.DateAccepted = DateTime.Today.Date;
                         if (lba.Insert(row.LocalBillsRow) <= 0)
                             throw new Exception("Не удалось вставить запись в таблицу LocalBills");
@@ -81,14 +81,13 @@ namespace Apteka.Plus.Forms
 
                     }
 
-                    LocalBillNumber++;
-                    pLocalBillNumber.Value = LocalBillNumber.ToString();
+                    localBillNumber++;
+                    pLocalBillNumber.Value = localBillNumber.ToString();
                     pa.Update(pLocalBillNumber);
 
                     dbDestination.CommitTransaction();
                     dbSource.CommitTransaction();
-                    MessageBox.Show("Накладная успешно сохранена.", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
+                    MessageBox.Show(@"Накладная успешно сохранена.", @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
                 catch
                 {
@@ -98,8 +97,8 @@ namespace Apteka.Plus.Forms
                 }
 
                 Close();
-                frmPrintBills frmPrintBills = new frmPrintBills();
 
+                var frmPrintBills = new frmPrintBills();
                 frmPrintBills.Show();
             }
         }
@@ -108,82 +107,63 @@ namespace Apteka.Plus.Forms
         {
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
             {
-                DataGridView dgv = sender as DataGridView;
-                DataGridViewCell cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                var dgv = (DataGridView)sender;
+                var cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
 
-                switch (cell.OwningColumn.Name)
+                if (cell.OwningColumn.Name == "Price")
                 {
-
-                    case "Price":
-                        {
-                            dgv.BeginEdit(true);
-
-                        }
-                        break;
-
+                    dgv.BeginEdit(true);
                 }
             }
         }
 
         private void dgvLocalTransfersMain_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
-            DataGridViewCell cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            var dgv = (DataGridView)sender;
+            var cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
 
-            switch (cell.OwningColumn.Name)
+            if (cell.OwningColumn.Name == "Price")
             {
-                case "Price":
+                if (cell.IsInEditMode)
+                {
+                    var newPrice = cell.EditedFormattedValue.ToString().Replace(",", ".");
+
+                    if (double.TryParse(newPrice, out var localPrice))
                     {
-                        if (cell.IsInEditMode)
+                        if (localPrice < 0)
                         {
-                            string newPrice = cell.EditedFormattedValue.ToString().Replace(",", ".");
-
-                            if (double.TryParse(newPrice, out double LocalPrice))
-                            {
-                                if (LocalPrice < 0)
-                                {
-                                    MessageBox.Show("Цена не может быть отрицательной", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                                    e.Cancel = true;
-                                }
-
-                            }
-                            else
-                            {
-                                MessageBox.Show("Вы ввели некорректное значение! Допускаются только числа.", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                                e.Cancel = true;
-                            }
-
+                            MessageBox.Show(@"Цена не может быть отрицательной", @"Внимание", MessageBoxButtons.OK,
+                                MessageBoxIcon.Exclamation);
+                            e.Cancel = true;
                         }
-
                     }
-                    break;
+                    else
+                    {
+                        MessageBox.Show(@"Вы ввели некорректное значение! Допускаются только числа.", @"Внимание",
+                            MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                        e.Cancel = true;
+                    }
+                }
             }
-
         }
 
         private void dgvLocalTransfersMain_CellParsing(object sender, DataGridViewCellParsingEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
-            DataGridViewCell cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            var dgv = (DataGridView)sender;
+            var cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
 
-            switch (cell.OwningColumn.Name)
+            if (cell.OwningColumn.Name == "Price")
             {
-
-                case "Price":
-                    {
-
-                        string newPrice = e.Value.ToString().Replace(",", ".");
-                        double dNewPrice = double.Parse(newPrice);
-                        e.Value = dNewPrice;
-                        e.ParsingApplied = true;
-                    }
-                    break;
+                var newPrice = e.Value.ToString().Replace(",", ".");
+                var dNewPrice = double.Parse(newPrice);
+                e.Value = dNewPrice;
+                e.ParsingApplied = true;
             }
         }
 
         private void frmLocalTransfersMain_Load(object sender, EventArgs e)
         {
-            dgvLocalTransfersMain.SetStateSourceAndLoadState(Session.User, DataGridViewColumnSettingsAccessor.CreateInstance<DataGridViewColumnSettingsAccessor>());
+            dgvLocalTransfersMain.SetStateSourceAndLoadState(Session.User, DataAccessor.CreateInstance<DataGridViewColumnSettingsAccessor>());
         }
     }
 }

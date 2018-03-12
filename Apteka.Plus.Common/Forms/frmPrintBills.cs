@@ -14,7 +14,7 @@ namespace Apteka.Plus.Forms
 {
     public partial class frmPrintBills : Form
     {
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private const string BaseDirectory = "Apteka.Plus.Common.Reports.";
 
@@ -128,7 +128,7 @@ namespace Apteka.Plus.Forms
 
         private void dgvLocalBill_KeyDown(object sender, KeyEventArgs e)
         {
-            log.DebugFormat("Key down:{0}", e.KeyCode.ToString());
+            Log.DebugFormat("Key down:{0}", e.KeyCode.ToString());
             DataGridView dgv = sender as DataGridView;
 
             switch (e.KeyCode)

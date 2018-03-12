@@ -16,8 +16,5 @@ namespace Apteka.Plus.Logic.DAL.Accessors
         public abstract long GetMaxRowID();
 
         public abstract List<PriceChangeRow> GetUnsyncedRows();
-
-        
-        
     }
 }

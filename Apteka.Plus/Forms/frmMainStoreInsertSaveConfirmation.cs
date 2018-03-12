@@ -6,28 +6,28 @@ namespace Apteka.Plus.Forms
 {
     public partial class frmMainStoreInsertSaveConfirmation : Form
     {
-        public bool DelayLocalBills = false;
+        public bool DelayLocalBills;
 
         public frmMainStoreInsertSaveConfirmation()
         {
             InitializeComponent();
         }
 
-        public frmMainStoreInsertSaveConfirmation(Supplier Supplier, DateTime BillDate, string SupplierBillNumber, double Sum)
+        public frmMainStoreInsertSaveConfirmation(Supplier supplier, DateTime billDate, string supplierBillNumber, double sum)
         {
             InitializeComponent();
 
-            tbDate.Text = BillDate.ToShortDateString();
-            tbSupplier.Text = Supplier.Name;
-            tbSupplierBillNumber.Text = SupplierBillNumber;
-            tbSum.Text = Sum.ToString();
+            tbDate.Text = billDate.ToShortDateString();
+            tbSupplier.Text = supplier.Name;
+            tbSupplierBillNumber.Text = supplierBillNumber;
+            tbSum.Text = sum.ToString();
         }
 
         private void btnOK_Click(object sender, EventArgs e)
         {
             DelayLocalBills = cbDelayLocalBills.Checked;
             DialogResult = DialogResult.OK;
-            this.Close();
+            Close();
         }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Data;
 using System.Windows.Forms;
 using Apteka.Helpers;
 using Apteka.Plus.Logic.BLL;
@@ -8,14 +7,12 @@ using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
 using Apteka.Plus.UserControls;
 using BLToolkit.Data;
-using log4net;
+using BLToolkit.DataAccess;
 
 namespace Apteka.Plus.Forms
 {
     public partial class frmSales : Form
     {
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
         private MyStore _mystoreSelected;
 
         public frmSales()
@@ -25,41 +22,39 @@ namespace Apteka.Plus.Forms
             myStoreBindingSource.DataSource = MyStoresCollection.AllStores;
 
             ucSalesHistory1.LoadSettings();
-            mdgvSummary.SetStateSourceAndLoadState(Session.User, DataGridViewColumnSettingsAccessor.CreateInstance<DataGridViewColumnSettingsAccessor>());
+            mdgvSummary.SetStateSourceAndLoadState(Session.User, DataAccessor.CreateInstance<DataGridViewColumnSettingsAccessor>());
             ucSalesHistory2.LoadSettings();
         }
 
-        #region RowCount EventHandlers
-        void ucSuppliesReturnHistory1_RowCountChanged(object sender, ucSuppliesReturnHistory.RowCountChangedEventArgs e)
+        private void ucSuppliesReturnHistory1_RowCountChanged(object sender, ucSuppliesReturnHistory.RowCountChangedEventArgs e)
         {
-            tpSuppliesReturns.Text = String.Format("Возврат из поступления ({0})", ucSuppliesReturnHistory1.RowCount);
+            tpSuppliesReturns.Text = $@"Возврат из поступления ({ucSuppliesReturnHistory1.RowCount})";
             tpSuppliesReturns.Enabled = ucSuppliesReturnHistory1.RowCount > 0;
         }
 
-        void ucProductSuppliesHistory1_RowCountChanged(object sender, ucProductSuppliesHistory.RowCountChangedEventArgs e)
+        private void ucProductSuppliesHistory1_RowCountChanged(object sender, ucProductSuppliesHistory.RowCountChangedEventArgs e)
         {
-            tpSupplies.Text = String.Format("Приход ({0})", ucProductSuppliesHistory1.RowCount);
+            tpSupplies.Text = $@"Приход ({ucProductSuppliesHistory1.RowCount})";
             tpSupplies.Enabled = ucProductSuppliesHistory1.RowCount > 0;
         }
 
-        void ucLocalBillsTransfersHistory1_RowCountChanged(object sender, ucLocalBillsTransfersHistory.RowCountChangedEventArgs e)
+        private void ucLocalBillsTransfersHistory1_RowCountChanged(object sender, ucLocalBillsTransfersHistory.RowCountChangedEventArgs e)
         {
-            tpLocalTransfers.Text = String.Format("Передачи ({0})", ucLocalBillsTransfersHistory1.RowCount);
+            tpLocalTransfers.Text = $@"Передачи ({ucLocalBillsTransfersHistory1.RowCount})";
             tpLocalTransfers.Enabled = ucLocalBillsTransfersHistory1.RowCount > 0;
         }
 
-        void ucSalesReturnHistory1_RowCountChanged(object sender, ucSalesReturnHistory.RowCountChangedEventArgs e)
+        private void ucSalesReturnHistory1_RowCountChanged(object sender, ucSalesReturnHistory.RowCountChangedEventArgs e)
         {
-            tpReturns.Text = String.Format("Возврат из продаж ({0})", ucSalesReturnHistory1.RowCount);
+            tpReturns.Text = $@"Возврат из продаж ({ucSalesReturnHistory1.RowCount})";
             tpReturns.Enabled = ucSalesReturnHistory1.RowCount > 0;
         }
 
-        void ucPriceChangesHistory1_RowCountChanged(object sender, Apteka.Plus.UserControls.ucPriceChangesHistory.RowCountChangedEventArgs e)
+        private void ucPriceChangesHistory1_RowCountChanged(object sender, ucPriceChangesHistory.RowCountChangedEventArgs e)
         {
-            tpPriceChanges.Text = String.Format("Изменения цен ({0})", ucPriceChangesHistory1.RowCount);
+            tpPriceChanges.Text = $@"Изменения цен ({ucPriceChangesHistory1.RowCount})";
             tpPriceChanges.Enabled = ucPriceChangesHistory1.RowCount > 0;
         }
-        #endregion
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
@@ -75,13 +70,11 @@ namespace Apteka.Plus.Forms
                 _mystoreSelected = cbMyStores.SelectedItem as MyStore;
             });
 
-            #region Load data
-
             ucSalesHistory1.ShowHistoryByDate(_mystoreSelected, dtpDate.Value.Date);
 
-            int maxCustomerNumber = 0;
+            var maxCustomerNumber = 0;
             double dSum = 0;
-            foreach (SalesRow row in ucSalesHistory1.SaleRows)
+            foreach (var row in ucSalesHistory1.SaleRows)
             {
                 if (row.CustomerNumber > maxCustomerNumber)
                     maxCustomerNumber = row.CustomerNumber;
@@ -94,17 +87,16 @@ namespace Apteka.Plus.Forms
                 {
                     dSum += row.Count * row.Price;
                 }
-
             }
 
-            tsslCustomerCounter.Text = string.Format("Кол-во покупателей: {0}", maxCustomerNumber);
-            tsslSum.Text = string.Format("Сумма: {0}", dSum.ToString("### ##0.00"));
+            tsslCustomerCounter.Text = $@"Кол-во покупателей: {maxCustomerNumber}";
+            tsslSum.Text = $@"Сумма: {dSum:### ##0.00}";
 
-            using (DbManager dbSatelite = new DbManager(_mystoreSelected.Name))
+            using (var dbSatelite = new DbManager(_mystoreSelected.Name))
             {
-                SalesAccessor sa = SalesAccessor.CreateInstance<SalesAccessor>(dbSatelite);
+                var sa = DataAccessor.CreateInstance<SalesAccessor>(dbSatelite);
 
-                DataTable dt = sa.GetSummary(dtpDate.Value.Date);
+                var dt = sa.GetSummary(dtpDate.Value.Date);
 
                 this.InvokeInGUIThread(() =>
                 {
@@ -123,10 +115,7 @@ namespace Apteka.Plus.Forms
                 ucProductSuppliesHistory1.LoadData(_mystoreSelected, dtpDate.Value.Date, dtpDate.Value.Date);
 
                 ucSuppliesReturnHistory1.LoadData(_mystoreSelected, dtpDate.Value.Date, dtpDate.Value.Date);
-
             }
-
-            #endregion
 
             this.InvokeInGUIThread(() =>
             {
@@ -138,8 +127,7 @@ namespace Apteka.Plus.Forms
 
         private void frmSales_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (this.Owner != null)
-                this.Owner.Show();
+            Owner?.Show();
         }
 
         private void btnLoadHistory_Click(object sender, EventArgs e)
@@ -151,34 +139,20 @@ namespace Apteka.Plus.Forms
         {
             if (tbSearchHistory.Text.Trim() != "")
             {
-                MyStore mystore = cbMystoresHistory.SelectedItem as MyStore;
+                var mystore = (MyStore)cbMystoresHistory.SelectedItem;
 
                 ucSalesHistory2.ShowHistoryByName(mystore, tbSearchHistory.Text.Trim());
             }
             else
             {
-                MessageBox.Show("Вы не ввели условия поиска!", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(@"Вы не ввели условия поиска!", @"Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 tbSearchHistory.Select();
-
-            }
-        }
-
-        private void tbSearchHistory_KeyDown(object sender, KeyEventArgs e)
-        {
-            log.InfoFormat("Пользователь нажал клавишу {0}", e.KeyCode);
-            switch (e.KeyCode)
-            {
-                case Keys.Enter:
-                    {
-                        PerformSearch();
-                        break;
-                    }
             }
         }
 
         private void btnReport_Click(object sender, EventArgs e)
         {
-            frmReportViewer frmReportViewer = new frmReportViewer("Apteka.Plus.Common.Reports.CustomersFlow.rdlc");
+            var frmReportViewer = new frmReportViewer("Apteka.Plus.Common.Reports.CustomersFlow.rdlc");
             frmReportViewer.SetDataSource("SalesRow", ucSalesHistory1.SaleRows);
             frmReportViewer.ShowDialog();
         }
@@ -189,7 +163,6 @@ namespace Apteka.Plus.Forms
             dtpDate.Value = date;
 
             bgwDataLoader.RunWorkerAsync();
-
         }
 
         private void bgwDataLoader_DoWork(object sender, System.ComponentModel.DoWorkEventArgs e)

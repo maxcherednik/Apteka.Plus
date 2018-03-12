@@ -7,7 +7,7 @@ namespace Apteka.Plus.UserControls
 {
     public partial class ucProductSupplies : UserControl
     {
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private bool _isInited;
         private int _DaysOfStockRotation;
         private FullProductInfo _selectedProduct;
@@ -20,7 +20,7 @@ namespace Apteka.Plus.UserControls
 
         private void Init()
         {
-            log.DebugFormat("Init controls");
+            Log.DebugFormat("Init controls");
             tabControl1.TabPages.Clear();
 
             foreach (MyStore myStore in MyStoresCollection.AllStores)
@@ -41,7 +41,7 @@ namespace Apteka.Plus.UserControls
 
         public void GetInfo(FullProductInfo fullProductInfo, int topRows, int daysOfStockRotation)
         {
-            log.DebugFormat("Get info: {0} - {1}", fullProductInfo.ProductName, fullProductInfo.PackageName);
+            Log.DebugFormat("Get info: {0} - {1}", fullProductInfo.ProductName, fullProductInfo.PackageName);
 
             if (!_isInited)
                 Init();

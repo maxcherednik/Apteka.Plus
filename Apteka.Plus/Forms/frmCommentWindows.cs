@@ -5,26 +5,23 @@ namespace Apteka.Plus.Forms
 {
     public partial class frmCommentWindows : Form
     {
-        private string _comment;
-
         public frmCommentWindows()
         {
             InitializeComponent();
         }
 
-        public string Comment { get { return _comment; } }
+        public string Comment { get; private set; }
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            if (tbComment.Text.Trim()=="")
+            if (tbComment.Text.Trim() == "")
             {
-                MessageBox.Show("Вы не ввели комментарий","Внимание",MessageBoxButtons.OK,MessageBoxIcon.Exclamation);
-            
+                MessageBox.Show(@"Вы не ввели комментарий", @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
             {
-                this.DialogResult = DialogResult.OK;
-                _comment = tbComment.Text;
+                DialogResult = DialogResult.OK;
+                Comment = tbComment.Text;
             }
         }
     }

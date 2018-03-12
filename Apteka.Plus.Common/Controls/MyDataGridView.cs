@@ -10,7 +10,7 @@ namespace Apteka.Plus.Common.Controls
 {
     public class MyDataGridView : DataGridView
     {
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private List<DataGridViewColumnSettingsRow> _liDataGridViewColumnSettingsLoaded;
         private DataGridViewColumnSettingsAccessor _stateDataSource;

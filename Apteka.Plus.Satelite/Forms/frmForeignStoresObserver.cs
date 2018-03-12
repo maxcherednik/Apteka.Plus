@@ -15,7 +15,7 @@ namespace Apteka.Plus.Satelite.Forms
 {
     public partial class frmForeignStoresObserver : Form
     {
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private List<LocalBillsRowEx> _liLocalBillRowsList;
         private MyStore _currentStore;
@@ -54,7 +54,7 @@ namespace Apteka.Plus.Satelite.Forms
 
         private void dgvLocalBills_KeyDown(object sender, KeyEventArgs e)
         {
-            log.DebugFormat("Key down:{0}", e.KeyCode.ToString());
+            Log.DebugFormat("Key down:{0}", e.KeyCode.ToString());
             DataGridView dgv = sender as DataGridView;
 
             switch (e.KeyCode)

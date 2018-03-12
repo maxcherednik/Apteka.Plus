@@ -16,7 +16,7 @@ namespace Apteka.Plus.UserControls
 {
     public partial class ucSalesHistory : UserControl
     {
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private List<SalesRow> _liSaleRows;
 
@@ -286,7 +286,7 @@ namespace Apteka.Plus.UserControls
         private void dgvSales_KeyDown(object sender, KeyEventArgs e)
         {
 
-            log.InfoFormat("Пользователь нажал клавишу {0}", e.KeyCode);
+            Log.InfoFormat("Пользователь нажал клавишу {0}", e.KeyCode);
             switch (e.KeyCode)
             {
                 case Keys.Back:

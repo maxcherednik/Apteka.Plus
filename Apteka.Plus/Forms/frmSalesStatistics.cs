@@ -5,16 +5,15 @@ using Apteka.Plus.Logic.BLL.Collections;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
 using BLToolkit.Data;
-using log4net;
+using BLToolkit.DataAccess;
 
 namespace Apteka.Plus.Forms
 {
     public partial class frmSalesStatistics : Form
     {
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private MyStore _mystoreSelected;
+        private DataTable _resultRows;
 
-        MyStore _mystoreSelected;
-        DataTable _ResultRows; 
         public frmSalesStatistics()
         {
             InitializeComponent();
@@ -22,8 +21,7 @@ namespace Apteka.Plus.Forms
 
         private void frmSalesStatistics_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (this.Owner != null)
-                this.Owner.Show(); 
+            Owner?.Show();
         }
 
         private void frmSalesStatistics_Load(object sender, EventArgs e)
@@ -33,20 +31,19 @@ namespace Apteka.Plus.Forms
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
-            _mystoreSelected = cbMyStores.SelectedItem as MyStore;
+            _mystoreSelected = (MyStore)cbMyStores.SelectedItem;
 
-            using (DbManager dbSatelite = new DbManager(_mystoreSelected.Name))
+            using (var dbSatelite = new DbManager(_mystoreSelected.Name))
             {
-                SalesAccessor sa = SalesAccessor.CreateInstance<SalesAccessor>(dbSatelite);
+                var sa = DataAccessor.CreateInstance<SalesAccessor>(dbSatelite);
 
-                _ResultRows = sa.GetSalesStatistics(dbSatelite, dtpStartDate.Value.Date, dtpEndDate.Value.Date);
+                _resultRows = sa.GetSalesStatistics(dbSatelite, dtpStartDate.Value.Date, dtpEndDate.Value.Date);
 
-                _ResultRows.Columns.Remove("FullProductInfoID");
-                dgvSalesStatistics.DataSource = _ResultRows;
+                _resultRows.Columns.Remove("FullProductInfoID");
+                dgvSalesStatistics.DataSource = _resultRows;
                 dgvSalesStatistics.Select();
                 dgvSalesStatistics.Columns[0].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
                 dgvSalesStatistics.Columns[1].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells;
-
             }
         }
 
@@ -57,34 +54,20 @@ namespace Apteka.Plus.Forms
 
         private void dgvSalesStatistics_KeyDown(object sender, KeyEventArgs e)
         {
-            log.InfoFormat("Пользователь нажал клавишу {0}", e.KeyCode);
-            switch (e.KeyCode)
+            if (e.KeyCode == Keys.Back)
             {
-                case Keys.Back:
-                    {
-                        if (tbSearch.Text.Length != 0)
-                        {
-                            tbSearch.Text = tbSearch.Text.Substring(0, tbSearch.Text.Length - 1);
-                        }
+                if (tbSearch.Text.Length != 0)
+                {
+                    tbSearch.Text = tbSearch.Text.Substring(0, tbSearch.Text.Length - 1);
+                }
 
-                        e.SuppressKeyPress = true;
-                    }
-
-                    break;
-
-                
-
-                case Keys.Escape:
-                    {
-
-                        tbSearch.Text = "";
-                        e.Handled = true;
-                        e.SuppressKeyPress = true;
-
-                    }
-                    break;
-
-                
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.Escape)
+            {
+                tbSearch.Text = "";
+                e.Handled = true;
+                e.SuppressKeyPress = true;
             }
         }
 
@@ -92,10 +75,9 @@ namespace Apteka.Plus.Forms
         {
             if (tbSearch.Text.Length > 1)
             {
-                DataTable filtered = _ResultRows.Clone() ;
-                
-                
-                foreach (DataRow row in _ResultRows.Rows)
+                var filtered = _resultRows.Clone();
+
+                foreach (DataRow row in _resultRows.Rows)
                 {
                     if (row["Название"].ToString().IndexOf(tbSearch.Text, StringComparison.InvariantCultureIgnoreCase) >= 0
                         || row["Фасовка"].ToString().IndexOf(tbSearch.Text, StringComparison.InvariantCultureIgnoreCase) >= 0)
@@ -108,7 +90,7 @@ namespace Apteka.Plus.Forms
             }
             else
             {
-                dgvSalesStatistics.DataSource = _ResultRows;
+                dgvSalesStatistics.DataSource = _resultRows;
             }
         }
     }

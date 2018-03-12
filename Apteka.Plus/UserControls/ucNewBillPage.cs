@@ -6,17 +6,17 @@ using Apteka.Plus.Logic.DAL.Accessors;
 using Apteka.Plus.Properties;
 using BLToolkit.Data;
 using log4net;
-using OrderConverter.BLL;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using Apteka.Plus.Logic.OrderConverter.BLL;
 
 namespace Apteka.Plus.UserControls
 {
     public partial class UcNewBillPage : UserControl
     {
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private IList<MyStore> _liMyStores;
         private MyStore _selectedStoreForEOrder;
@@ -343,7 +343,7 @@ namespace Apteka.Plus.UserControls
 
         private void dgvBill_KeyUp(object sender, KeyEventArgs e)
         {
-            log.InfoFormat("Пользователь нажал клавишу {0}", e.KeyCode);
+            Log.InfoFormat("Пользователь нажал клавишу {0}", e.KeyCode);
             switch (e.KeyCode)
             {
                 case Keys.Insert:

@@ -11,8 +11,7 @@ namespace Apteka.Plus.Forms
 
         private void frmSuppliesReturnHistory_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (this.Owner != null)
-                this.Owner.Show();  
+            Owner?.Show();
         }
     }
 }

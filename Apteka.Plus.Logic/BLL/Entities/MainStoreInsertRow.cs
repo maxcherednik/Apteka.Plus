@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using OrderConverter.BLL;
+using Apteka.Plus.Logic.OrderConverter.BLL;
 
 namespace Apteka.Plus.Logic.BLL.Entities
 {

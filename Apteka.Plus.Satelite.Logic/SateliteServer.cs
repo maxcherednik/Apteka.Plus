@@ -10,7 +10,7 @@ namespace Apteka.Plus.Satelite.Logic
     {
         public static int SateliteID = 0;
 
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public byte[] GetSateliteData(int sateliteID)
         {

@@ -11,7 +11,7 @@ namespace Apteka.Plus.UserControls
 {
     public partial class ucFullProductInfoBase : UserControl
     {
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private List<FullProductInfo> _liFullProductInfo;
 
@@ -91,7 +91,7 @@ namespace Apteka.Plus.UserControls
 
         private void dgvFullProductInfoList_KeyDown(object sender, KeyEventArgs e)
         {
-            log.DebugFormat("Key down:{0}", e.KeyCode.ToString());
+            Log.DebugFormat("Key down:{0}", e.KeyCode.ToString());
             DataGridView dgv = sender as DataGridView;
 
             switch (e.KeyCode)

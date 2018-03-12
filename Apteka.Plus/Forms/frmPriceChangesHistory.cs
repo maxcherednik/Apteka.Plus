@@ -21,11 +21,11 @@ namespace Apteka.Plus.Forms
 
         private void PerformLoadData()
         {
-            _mystoreSelected = cbMyStores.SelectedItem as MyStore;
+            _mystoreSelected = (MyStore)cbMyStores.SelectedItem;
 
             ucPriceChangesHistory1.LoadData(_mystoreSelected, dtpDate.Value.Date, dtpDate.Value.Date);
 
-            tsslSum.Text = string.Format("Изменения на сумму: {0}", ucPriceChangesHistory1.DiffSum.ToString("### ##0.00"));
+            tsslSum.Text = $@"Изменения на сумму: {ucPriceChangesHistory1.DiffSum:### ##0.00}";
         }
 
         public void LoadDataFor(MyStore mystore, DateTime date)

@@ -4,27 +4,17 @@ using System.Windows.Forms;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
 using BLToolkit.Data;
+using BLToolkit.DataAccess;
 
 namespace Apteka.Plus.Forms
 {
     public partial class frmDefecturaNewList : Form
     {
-        private string _newListName;
+        public string NewListName { get; private set; }
 
-        DefectList _newDefectList;
+        public DefectList NewDefectList { get; set; }
 
-        public string NewListName
-        {
-            get { return _newListName; }
-        }
-
-        public DefectList NewDefectList
-        {
-            get { return _newDefectList; }
-            set { _newDefectList = value; }
-        }
-
-        List<DefectListCriteria> _liCriteria = new List<DefectListCriteria>();
+        private readonly List<DefectListCriteria> _liCriteria = new List<DefectListCriteria>();
 
         public frmDefecturaNewList()
         {
@@ -35,49 +25,46 @@ namespace Apteka.Plus.Forms
         {
             if (tbName.Text.Trim() == "")
             {
-                MessageBox.Show("Название листа не может быть путым!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(@"Название листа не может быть путым!", @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 tbName.Focus();
 
                 return;
             }
 
-            _newListName = tbName.Text;
+            NewListName = tbName.Text;
 
-            if (_newDefectList == null)
+            if (NewDefectList == null)
             {
-                _newDefectList = new DefectList
+                NewDefectList = new DefectList
                 {
-                    Name = _newListName,
+                    Name = NewListName,
                     IsSmartList = chkbIsSmartList.Checked
                 };
 
-                using (DbManager db = new DbManager())
+                using (var db = new DbManager())
                 {
-                    DefectListCriteriaAccessor DefectListCriteriaAccessor = DefectListCriteriaAccessor.CreateInstance<DefectListCriteriaAccessor>(db);
-                    DefectListsAccessor DefectListsAccessor = DefectListsAccessor.CreateInstance<DefectListsAccessor>(db);
+                    var defectListCriteriaAccessor = DataAccessor.CreateInstance<DefectListCriteriaAccessor>(db);
+                    var defectListsAccessor = DataAccessor.CreateInstance<DefectListsAccessor>(db);
 
-                    _newDefectList.ID = DefectListsAccessor.Insert(_newDefectList);
+                    NewDefectList.ID = defectListsAccessor.Insert(NewDefectList);
 
-                    foreach (DefectListCriteria criteria in _liCriteria)
+                    foreach (var criteria in _liCriteria)
                     {
-                        criteria.DefectListID = _newDefectList.ID;
-                        DefectListCriteriaAccessor.Query.Insert(criteria);
+                        criteria.DefectListID = NewDefectList.ID;
+                        defectListCriteriaAccessor.Query.Insert(criteria);
                     }
                 }
-
             }
             else
             {
-                if (_newDefectList.Name != _newListName)
+                if (NewDefectList.Name != NewListName)
                 {
-                    _newDefectList.Name = _newListName;
+                    NewDefectList.Name = NewListName;
 
-                    using (DbManager db = new DbManager())
+                    using (var db = new DbManager())
                     {
-
-                        DefectListsAccessor DefectListsAccessor = DefectListsAccessor.CreateInstance<DefectListsAccessor>(db);
-                        DefectListsAccessor.Query.Update(_newDefectList);
-
+                        var defectListsAccessor = DataAccessor.CreateInstance<DefectListsAccessor>(db);
+                        defectListsAccessor.Query.Update(NewDefectList);
                     }
                 }
             }
@@ -85,36 +72,33 @@ namespace Apteka.Plus.Forms
 
         private void frmDefecturaNewList_Load(object sender, EventArgs e)
         {
-            frmDefectura frm = Owner as frmDefectura;
-
             defectListCriteriaBindingSource.DataSource = _liCriteria;
 
-            if (_newDefectList != null)
+            if (NewDefectList != null)
             {
                 btnDelList.Visible = true;
-                tbName.Text = _newDefectList.Name;
-                chkbIsSmartList.Checked = _newDefectList.IsSmartList;
+                tbName.Text = NewDefectList.Name;
+                chkbIsSmartList.Checked = NewDefectList.IsSmartList;
                 chkbIsSmartList.Enabled = false;
 
-                if (_newDefectList.IsSmartList)
+                if (NewDefectList.IsSmartList)
                 {
                     List<DefectListCriteria> liCriteria;
-                    using (DbManager db = new DbManager())
+                    using (var db = new DbManager())
                     {
-                        DefectListCriteriaAccessor DefectListCriteriaAccessor = DefectListCriteriaAccessor.CreateInstance<DefectListCriteriaAccessor>(db);
+                        var defectListCriteriaAccessor = DataAccessor.CreateInstance<DefectListCriteriaAccessor>(db);
 
-                        liCriteria = DefectListCriteriaAccessor.SelectByKey(_newDefectList.ID);
+                        liCriteria = defectListCriteriaAccessor.SelectByKey(NewDefectList.ID);
                     }
 
                     defectListCriteriaBindingSource.DataSource = liCriteria;
                 }
             }
-
         }
 
         private void btnAddCriteria_Click(object sender, EventArgs e)
         {
-            DefectListCriteria criteria = new DefectListCriteria
+            var criteria = new DefectListCriteria
             {
                 FieldName = cboCriteria.Text,
                 SearchValue = tbSearchValue.Text
@@ -122,17 +106,15 @@ namespace Apteka.Plus.Forms
 
             defectListCriteriaBindingSource.Add(criteria);
 
-            if (_newDefectList != null)
+            if (NewDefectList != null)
             {
-
-                using (DbManager db = new DbManager())
+                using (var db = new DbManager())
                 {
-                    DefectListCriteriaAccessor DefectListCriteriaAccessor = DefectListCriteriaAccessor.CreateInstance<DefectListCriteriaAccessor>(db);
-                    criteria.DefectListID = _newDefectList.ID;
-                    DefectListCriteriaAccessor.Query.Insert(criteria);
+                    var defectListCriteriaAccessor = DataAccessor.CreateInstance<DefectListCriteriaAccessor>(db);
+                    criteria.DefectListID = NewDefectList.ID;
+                    defectListCriteriaAccessor.Query.Insert(criteria);
                 }
             }
-
         }
 
         private void chkbIsSmartList_CheckedChanged(object sender, EventArgs e)
@@ -142,17 +124,18 @@ namespace Apteka.Plus.Forms
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
-            string value = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
+            var dgv = (DataGridView)sender;
+            var value = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
+
             if (value == "Удалить")
             {
-                if (_newDefectList != null)
+                if (NewDefectList != null)
                 {
-                    DefectListCriteria criteria = dgv.Rows[e.RowIndex].DataBoundItem as DefectListCriteria;
-                    using (DbManager db = new DbManager())
+                    var criteria = (DefectListCriteria)dgv.Rows[e.RowIndex].DataBoundItem;
+                    using (var db = new DbManager())
                     {
-                        DefectListCriteriaAccessor DefectListCriteriaAccessor = DefectListCriteriaAccessor.CreateInstance<DefectListCriteriaAccessor>(db);
-                        DefectListCriteriaAccessor.Query.Delete(criteria);
+                        var defectListCriteriaAccessor = DataAccessor.CreateInstance<DefectListCriteriaAccessor>(db);
+                        defectListCriteriaAccessor.Query.Delete(criteria);
                     }
                 }
 
@@ -162,16 +145,16 @@ namespace Apteka.Plus.Forms
 
         private void btnDelList_Click(object sender, EventArgs e)
         {
-            DialogResult res = MessageBox.Show("Вы уверены, что хотите удалить лист " + _newDefectList.Name + "?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            var res = MessageBox.Show($@"Вы уверены, что хотите удалить лист {NewDefectList.Name}?", @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
             if (res == DialogResult.Yes)
             {
-                using (DbManager db = new DbManager())
+                using (var db = new DbManager())
                 {
-                    DefectListsAccessor DefectListsAccessor = DefectListsAccessor.CreateInstance<DefectListsAccessor>(db);
-                    DefectListsAccessor.Query.Delete(_newDefectList);
+                    var defectListsAccessor = DataAccessor.CreateInstance<DefectListsAccessor>(db);
+                    defectListsAccessor.Query.Delete(NewDefectList);
                 }
-                this.Close();
+                Close();
             }
         }
     }

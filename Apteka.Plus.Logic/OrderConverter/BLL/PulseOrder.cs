@@ -1,6 +1,5 @@
 ﻿using System;
 using BLToolkit.Mapping;
-using OrderConverter.BLL;
 
 namespace Apteka.Plus.Logic.OrderConverter.BLL
 {
@@ -50,11 +49,9 @@ namespace Apteka.Plus.Logic.OrderConverter.BLL
         [MapField("GNLVS")]
         public bool IsLifeImportant { get; set; }
         
-        #region IForeignOrderConverter Members
-
         public LocalOrder ConvertToLocalOrder()
         {
-            LocalOrder localOrder = new LocalOrder
+            return new LocalOrder
             {
                 Count = Count,
                 PriceReestr = PriceReestr,
@@ -71,9 +68,6 @@ namespace Apteka.Plus.Logic.OrderConverter.BLL
                 SupplierProductName = SupplierProductName,
                 IsLifeImportant = IsLifeImportant
             };
-            return localOrder; 
         }
-
-        #endregion
     }
 }

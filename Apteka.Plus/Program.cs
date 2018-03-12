@@ -10,12 +10,12 @@ namespace Apteka.Plus
 {
     static class Program
     {
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         [STAThread]
         static void Main()
         {
-            log.Info("Старт приложения!");
+            Log.Info("Старт приложения!");
             AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
             Application.ThreadException += new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
             Application.EnableVisualStyles();
@@ -56,7 +56,7 @@ namespace Apteka.Plus
 
         static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
         {
-            log.Error("Произошла ошибка!", e.Exception);
+            Log.Error("Произошла ошибка!", e.Exception);
 
             MessageBox.Show("Произошла ошибка: " + e.Exception.Message, "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
@@ -65,7 +65,7 @@ namespace Apteka.Plus
         {
             Exception exc = (Exception)e.ExceptionObject;
 
-            log.Error("Произошла ошибка!", exc);
+            Log.Error("Произошла ошибка!", exc);
 
             MessageBox.Show("Произошла ошибка: " + exc.Message, "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }

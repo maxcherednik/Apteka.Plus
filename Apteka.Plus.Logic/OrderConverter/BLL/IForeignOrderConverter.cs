@@ -1,5 +1,4 @@
-﻿
-namespace OrderConverter.BLL
+﻿namespace Apteka.Plus.Logic.OrderConverter.BLL
 {
     public interface IForeignOrderConverter
     {

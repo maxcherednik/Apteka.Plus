@@ -6,19 +6,21 @@ using Apteka.Plus.Logic.BLL.Collections;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
 using BLToolkit.Data;
+using BLToolkit.DataAccess;
 
 namespace Apteka.Plus.Forms
 {
     public partial class frmLocalTransfersHistory : Form
     {
-        MyStore _mystoreSelected;
-        List<LocalBillsTransferRow> _liLocalBillsTransferRows;
+        private MyStore _mystoreSelected;
+        private List<LocalBillsTransferRow> _liLocalBillsTransferRows;
+
         public frmLocalTransfersHistory()
         {
             InitializeComponent();
 
             myStoreBindingSource.DataSource = MyStoresCollection.AllStores;
-            dgvLocalTransfers.SetStateSourceAndLoadState(Session.User, DataGridViewColumnSettingsAccessor.CreateInstance<DataGridViewColumnSettingsAccessor>());
+            dgvLocalTransfers.SetStateSourceAndLoadState(Session.User, DataAccessor.CreateInstance<DataGridViewColumnSettingsAccessor>());
         }
 
         private void btnLoad_Click(object sender, EventArgs e)
@@ -28,23 +30,23 @@ namespace Apteka.Plus.Forms
 
         private void PerformLoadData()
         {
-            _mystoreSelected = cbMyStores.SelectedItem as MyStore;
+            _mystoreSelected = (MyStore)cbMyStores.SelectedItem;
 
-            using (DbManager dbSatelite = new DbManager(_mystoreSelected.Name))
+            using (var dbSatelite = new DbManager(_mystoreSelected.Name))
             {
-                LocalBillsTransfersAccessor lbta = LocalBillsTransfersAccessor.CreateInstance<LocalBillsTransfersAccessor>(dbSatelite);
+                var lbta = DataAccessor.CreateInstance<LocalBillsTransfersAccessor>(dbSatelite);
                 _liLocalBillsTransferRows = lbta.GetRowsByDate(dtpDate.Value.Date);
                 localBillsTransferRowBindingSource.DataSource = _liLocalBillsTransferRows;
 
                 double dSum = 0;
-                foreach (LocalBillsTransferRow row in _liLocalBillsTransferRows)
+                foreach (var row in _liLocalBillsTransferRows)
                 {
                     dSum += row.Count * row.Price;
                 }
 
-                tsslSum.Text = string.Format("Сумма: {0}", dSum.ToString("### ##0.00"));
+                tsslSum.Text = $@"Сумма: {dSum:### ##0.00}";
 
-                dgvLocalTransfers.Columns[1].HeaderCell.SortGlyphDirection = System.Windows.Forms.SortOrder.Ascending;
+                dgvLocalTransfers.Columns[1].HeaderCell.SortGlyphDirection = SortOrder.Ascending;
             }
         }
 

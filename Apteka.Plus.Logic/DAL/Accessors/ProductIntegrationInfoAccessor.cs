@@ -6,7 +6,6 @@ namespace Apteka.Plus.Logic.DAL.Accessors
 {
     public abstract class ProductIntegrationInfoAccessor : DataAccessor<ProductIntegrationInfo>
     {
-
         public abstract List<ProductIntegrationInfo> SelectByFullProductInfoID(long FullProductInfoID);
 
         public abstract long Insert(ProductIntegrationInfo row);
@@ -14,6 +13,5 @@ namespace Apteka.Plus.Logic.DAL.Accessors
         public abstract long DeleteByKey(long id);
 
         public abstract ProductIntegrationInfo Get(long SupplierProductID, long SupplierID);
-
     }
 }

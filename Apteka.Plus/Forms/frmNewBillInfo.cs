@@ -40,7 +40,7 @@ namespace Apteka.Plus.Forms
             }
             else
             {
-                MessageBox.Show("Вы не ввели номер накладной или не указали поставщика!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(@"Вы не ввели номер накладной или не указали поставщика!", @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 if (tbBillNumber.Text.Trim() == "")
                 {
                     tbBillNumber.Focus();

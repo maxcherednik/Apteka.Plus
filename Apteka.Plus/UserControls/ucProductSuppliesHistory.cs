@@ -14,7 +14,7 @@ namespace Apteka.Plus.UserControls
 {
     public partial class ucProductSuppliesHistory : UserControl
     {
-        private static readonly ILog log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private MyStore _myStore;
         private int _rowCount;
@@ -75,7 +75,7 @@ namespace Apteka.Plus.UserControls
             DataGridView dgv = sender as DataGridView;
             LocalBillsRowEx row = dgv.CurrentRow.DataBoundItem as LocalBillsRowEx;
 
-            log.InfoFormat("Пользователь нажал клавишу {0}", e.KeyCode);
+            Log.InfoFormat("Пользователь нажал клавишу {0}", e.KeyCode);
             switch (e.KeyCode)
             {
                 case Keys.Back:

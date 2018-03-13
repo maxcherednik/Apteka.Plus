@@ -34,7 +34,7 @@ namespace Apteka.Plus.UserControls
                 _liSalesReturnHistoryRows = srha.GetRows(startDate, endDate);
                 _rowCount = _liSalesReturnHistoryRows.Count;
 
-                this.InvokeInGUIThread(() =>
+                this.InvokeInGuiThread(() =>
                 {
                     OnRowCountChanged(_liSalesReturnHistoryRows.Count);
                     salesReturnHistoryRowBindingSource.DataSource = _liSalesReturnHistoryRows;

@@ -37,7 +37,7 @@ namespace Apteka.Plus.UserControls
 
                 _rowCount = _liLocalBillsRows.Count;
 
-                this.InvokeInGUIThread(() =>
+                this.InvokeInGuiThread(() =>
                 {
                     OnRowCountChanged(_liLocalBillsRows.Count);
                     localBillsRowExBindingSource.DataSource = _liLocalBillsRows;

@@ -1,23 +1,20 @@
-﻿// A set of C# classes for spelling Russian numerics 
-// Copyright (c) 2002 RSDN Group
-
-using System;
+﻿using System;
+using System.Collections.Specialized;
+using System.Configuration;
 using System.Text;
 using System.Xml;
-using System.Configuration;
-using System.Collections.Specialized;
 
-namespace RSDN
+namespace Apteka.Helpers
 {
     public class RusNumber
     {
-        private static string[] hunds =
+        private static readonly string[] Hunds =
         {
             "", "сто ", "двести ", "триста ", "четыреста ",
             "пятьсот ", "шестьсот ", "семьсот ", "восемьсот ", "девятьсот "
         };
 
-        private static string[] tens =
+        private static readonly string[] Tens =
         {
             "", "десять ", "двадцать ", "тридцать ", "сорок ", "пятьдесят ",
             "шестьдесят ", "семьдесят ", "восемьдесят ", "девяносто "
@@ -33,16 +30,16 @@ namespace RSDN
                 "шестнадцать ", "семнадцать ", "восемнадцать ", "девятнадцать "
             };
 
-            int num = val % 1000;
-            if (0 == num) return "";
-            if (num < 0) throw new ArgumentOutOfRangeException("val", "Параметр не может быть отрицательным");
+            var num = val % 1000;
+            if (0 == num) return string.Empty;
+            if (num < 0) throw new ArgumentOutOfRangeException(nameof(val), "Параметр не может быть отрицательным");
             if (!male)
             {
                 frac20[1] = "одна ";
                 frac20[2] = "две ";
             }
 
-            StringBuilder r = new StringBuilder(hunds[num / 100]);
+            var r = new StringBuilder(Hunds[num / 100]);
 
             if (num % 100 < 20)
             {
@@ -50,7 +47,7 @@ namespace RSDN
             }
             else
             {
-                r.Append(tens[num % 100 / 10]);
+                r.Append(Tens[num % 100 / 10]);
                 r.Append(frac20[num % 10]);
             }
 
@@ -62,7 +59,7 @@ namespace RSDN
 
         public static string Case(int val, string one, string two, string five)
         {
-            int t = (val % 100 > 20) ? val % 10 : val % 20;
+            var t = val % 100 > 20 ? val % 10 : val % 20;
 
             switch (t)
             {
@@ -75,11 +72,15 @@ namespace RSDN
         }
     };
 
-    struct CurrencyInfo
+    internal struct CurrencyInfo
     {
-        public bool male;
-        public string seniorOne, seniorTwo, seniorFive;
-        public string juniorOne, juniorTwo, juniorFive;
+        public bool Male;
+        public string SeniorOne;
+        public string SeniorTwo;
+        public string SeniorFive;
+        public string JuniorOne;
+        public string JuniorTwo;
+        public string JuniorFive;
     };
 
     public class RusCurrencySectionHandler : IConfigurationSectionHandler
@@ -109,7 +110,7 @@ namespace RSDN
 
     public class RusCurrency
     {
-        private static HybridDictionary currencies = new HybridDictionary();
+        private static readonly HybridDictionary Currencies = new HybridDictionary();
 
         static RusCurrency()
         {
@@ -123,10 +124,10 @@ namespace RSDN
             string juniorOne, string juniorTwo, string juniorFive)
         {
             CurrencyInfo info;
-            info.male = male;
-            info.seniorOne = seniorOne; info.seniorTwo = seniorTwo; info.seniorFive = seniorFive;
-            info.juniorOne = juniorOne; info.juniorTwo = juniorTwo; info.juniorFive = juniorFive;
-            currencies.Add(currency, info);
+            info.Male = male;
+            info.SeniorOne = seniorOne; info.SeniorTwo = seniorTwo; info.SeniorFive = seniorFive;
+            info.JuniorOne = juniorOne; info.JuniorTwo = juniorTwo; info.JuniorFive = juniorFive;
+            Currencies.Add(currency, info);
         }
 
         public static string Str(double val)
@@ -136,32 +137,31 @@ namespace RSDN
 
         public static string Str(double val, string currency)
         {
-            if (!currencies.Contains(currency))
-                throw new ArgumentOutOfRangeException("currency", "Валюта \"" + currency + "\" не зарегистрирована");
+            if (!Currencies.Contains(currency))
+                throw new ArgumentOutOfRangeException(nameof(currency), "Валюта \"" + currency + "\" не зарегистрирована");
 
-            CurrencyInfo info = (CurrencyInfo)currencies[currency];
-            return Str(val, info.male,
-                info.seniorOne, info.seniorTwo, info.seniorFive,
-                info.juniorOne, info.juniorTwo, info.juniorFive);
+            var info = (CurrencyInfo)Currencies[currency];
+            return Str(val, info.Male,
+                info.SeniorOne, info.SeniorTwo, info.SeniorFive,
+                info.JuniorOne, info.JuniorTwo, info.JuniorFive);
         }
 
         public static string Str(double val, bool male,
             string seniorOne, string seniorTwo, string seniorFive,
             string juniorOne, string juniorTwo, string juniorFive)
         {
-            bool minus = false;
+            var minus = false;
             if (val < 0) { val = -val; minus = true; }
 
-            int n = (int)val;
-            int remainder = (int)((val - n + 0.005) * 100);
+            var n = (int)val;
+            var remainder = (int)((val - n + 0.005) * 100);
 
-            StringBuilder r = new StringBuilder();
+            var r = new StringBuilder();
 
             if (0 == n) r.Append("0 ");
-            if (n % 1000 != 0)
-                r.Append(RusNumber.Str(n, male, seniorOne, seniorTwo, seniorFive));
-            else
-                r.Append(seniorFive);
+            r.Append(n % 1000 != 0 
+                ? RusNumber.Str(n, male, seniorOne, seniorTwo, seniorFive) 
+                : seniorFive);
 
             n /= 1000;
 

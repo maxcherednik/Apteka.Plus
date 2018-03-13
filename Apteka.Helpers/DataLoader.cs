@@ -6,17 +6,13 @@ namespace Apteka.Helpers
 {
     public class DataLoader<TResult>
     {
-        #region Private fields
-        private BackgroundWorker _bgwDataLoader;
+        private readonly BackgroundWorker _bgwDataLoader;
         private bool _needRequery;
-        private Func<TResult> _dataSource;
-        private readonly object _syncRoot = new object();
-        private int _timeoutInMilliseconds;
-        private SynchronizationContext _syncContext;
+        private readonly Func<TResult> _dataSource;
+        private readonly int _timeoutInMilliseconds;
+        private readonly SynchronizationContext _syncContext;
         private TimeSpan _previousRequestTime = TimeSpan.MaxValue;
-        #endregion
 
-        #region Constructor
         public DataLoader(Func<TResult> dataSource, int timeoutInMilliseconds)
         {
             _syncContext = SynchronizationContext.Current;
@@ -27,15 +23,13 @@ namespace Apteka.Helpers
                 WorkerSupportsCancellation = true
             };
 
-            _bgwDataLoader.DoWork += new DoWorkEventHandler(_bgwDataLoader_DoWork);
-            _bgwDataLoader.RunWorkerCompleted += new RunWorkerCompletedEventHandler(_bgwDataLoader_RunWorkerCompleted);
+            _bgwDataLoader.DoWork += _bgwDataLoader_DoWork;
+            _bgwDataLoader.RunWorkerCompleted += _bgwDataLoader_RunWorkerCompleted;
         }
-        #endregion
 
-        #region Backgroundworker handlers
-        void _bgwDataLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        private void _bgwDataLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            BackgroundWorker worker = sender as BackgroundWorker;
+            var worker = (BackgroundWorker)sender;
             if (e.Cancelled || worker.CancellationPending)// we only cancel when we need to start another search 
             {
                 MakeRequest();
@@ -46,7 +40,6 @@ namespace Apteka.Helpers
             }
             else // we are finished 
             {
-
                 OnRequestCompleted((TResult)e.Result);
 
                 if (_needRequery)
@@ -57,10 +50,10 @@ namespace Apteka.Helpers
             }
         }
 
-        void _bgwDataLoader_DoWork(object sender, DoWorkEventArgs e)
+        private void _bgwDataLoader_DoWork(object sender, DoWorkEventArgs e)
         {
             var startTime = DateTime.Now;
-            BackgroundWorker worker = sender as BackgroundWorker;
+            var worker = (BackgroundWorker)sender;
 
             var asyncResult = _dataSource.BeginInvoke(null, null);
             if (_previousRequestTime.TotalMilliseconds > _timeoutInMilliseconds)
@@ -82,33 +75,22 @@ namespace Apteka.Helpers
                 e.Cancel = true;
             }
         }
-        #endregion
 
-        #region Public methods
         public void MakeRequest()
         {
             if (_bgwDataLoader.IsBusy)
             {
                 _needRequery = true;
                 _bgwDataLoader.CancelAsync();
-
             }
             else
             {
                 _bgwDataLoader.RunWorkerAsync();
             }
         }
-        #endregion
 
-        #region Public properties
-        public object SyncRoot
-        {
-            get { return _syncRoot; }
-        }
-        #endregion
+        public object SyncRoot { get; } = new object();
 
-        #region Events
-        #region RequestCompleted
         public event EventHandler<RequestCompletedEventArgs> RequestCompleted;
 
         protected virtual void OnRequestCompleted(TResult liResults)
@@ -123,11 +105,9 @@ namespace Apteka.Helpers
                 Results = results;
             }
 
-            public TResult Results { get; private set; }
+            public TResult Results { get; }
         }
-        #endregion
 
-        #region ErrorGenerated
         public event EventHandler<ErrorGeneratedEventArgs> ErrorGenerated;
 
         protected virtual void OnErrorGenerated(Exception exc)
@@ -141,11 +121,10 @@ namespace Apteka.Helpers
             {
                 Exception = exc;
             }
-            public Exception Exception { get; private set; }
-        }
-        #endregion
 
-        #region It's gonna take a while event
+            public Exception Exception { get; }
+        }
+
         public event EventHandler<ItsGonnaTakeAWhileEventArgs> ItsGonnaTakeAWhile;
 
         protected virtual void OnItsGonnaTakeAWhile()
@@ -161,8 +140,5 @@ namespace Apteka.Helpers
         }
 
         public class ItsGonnaTakeAWhileEventArgs : EventArgs { }
-        #endregion
-
-        #endregion
     }
 }

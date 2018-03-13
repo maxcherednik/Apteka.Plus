@@ -29,7 +29,7 @@ namespace Apteka.Plus.UserControls
                 _liLocalBillsTransferRows = lbta.GetRows(startDate, endDate);
                 _rowCount = _liLocalBillsTransferRows.Count;
 
-                this.InvokeInGUIThread(() =>
+                this.InvokeInGuiThread(() =>
                 {
                     OnRowCountChanged(_liLocalBillsTransferRows.Count);
                     localBillsTransferRowBindingSource.DataSource = _liLocalBillsTransferRows;

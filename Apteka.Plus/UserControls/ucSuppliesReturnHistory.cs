@@ -52,7 +52,7 @@ namespace Apteka.Plus.UserControls
 
                 _rowCount = _liSuppliesReturnHistoryRows.Count;
 
-                this.InvokeInGUIThread(() =>
+                this.InvokeInGuiThread(() =>
                 {
                     OnRowCountChanged(_liSuppliesReturnHistoryRows.Count);
                     suppliesReturnHistoryRowBindingSource.DataSource = _liSuppliesReturnHistoryRows;

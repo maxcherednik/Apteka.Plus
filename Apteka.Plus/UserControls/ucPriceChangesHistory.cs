@@ -38,7 +38,7 @@ namespace Apteka.Plus.UserControls
                 DiffSum = dSum;
 
 
-                this.InvokeInGUIThread(() =>
+                this.InvokeInGuiThread(() =>
                     {
                         OnRowCountChanged(_liPriceChangeRows.Count);
                         priceChangeRowBindingSource.DataSource = _liPriceChangeRows;

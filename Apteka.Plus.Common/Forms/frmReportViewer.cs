@@ -1,7 +1,7 @@
-﻿using Microsoft.Reporting.WinForms;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
+using Microsoft.Reporting.WinForms;
 
-namespace Apteka.Plus.Forms
+namespace Apteka.Plus.Common.Forms
 {
     public partial class frmReportViewer : Form
     {
@@ -24,7 +24,7 @@ namespace Apteka.Plus.Forms
         public void SetDataSource(string name, object dataSource)
         {
             reportViewer1.LocalReport.DataSources.Clear();
-            ReportDataSource rds = new ReportDataSource(name, dataSource);
+            var rds = new ReportDataSource(name, dataSource);
             reportViewer1.LocalReport.DataSources.Add(rds);
             reportViewer1.RefreshReport();
         }

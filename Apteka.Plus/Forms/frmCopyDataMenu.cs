@@ -147,7 +147,7 @@ namespace Apteka.Plus.Forms
             var overridedIp = UserSettings.GetOverridedIpById(seletedMyStore.ID);
             var resultIp = string.IsNullOrEmpty(overridedIp) ? seletedMyStore.IP : overridedIp;
 
-            this.InvokeInGUIThread(() =>
+            this.InvokeInGuiThread(() =>
             {
                 ChangeStyleMarquee();
                 tbProcessInfo.Text = @"1. Подготовка данных для копирования в пункт" + Environment.NewLine +
@@ -165,7 +165,7 @@ namespace Apteka.Plus.Forms
             }
 
             var size1 = size;
-            this.InvokeInGUIThread(() =>
+            this.InvokeInGuiThread(() =>
             {
                 tbProcessInfo.Text = tbProcessInfo.Text + Environment.NewLine + @"2. Копирование данных в пункт. Размер архива " + size1.ToString("0.0 kb");
                 ChangeStyleBlocks();
@@ -177,7 +177,7 @@ namespace Apteka.Plus.Forms
                 return;
             }
 
-            this.InvokeInGUIThread(() =>
+            this.InvokeInGuiThread(() =>
             {
                 ChangeStyleMarquee();
                 tbProcessInfo.Text = tbProcessInfo.Text + Environment.NewLine + @"3. Обработка данных в пункте";
@@ -210,7 +210,7 @@ namespace Apteka.Plus.Forms
 
             size = fsSateliteData.Length / 1024.0;
 
-            this.InvokeInGUIThread(() =>
+            this.InvokeInGuiThread(() =>
             {
                 ChangeStyleBlocks();
                 tbProcessInfo.Text = tbProcessInfo.Text + Environment.NewLine + @"4. Копирование данных из пункта. Размер архива " + size.ToString("0.0 kb");
@@ -222,7 +222,7 @@ namespace Apteka.Plus.Forms
                 return;
             }
 
-            this.InvokeInGUIThread(() =>
+            this.InvokeInGuiThread(() =>
             {
                 ChangeStyleMarquee();
                 tbProcessInfo.Text = tbProcessInfo.Text + Environment.NewLine + @"5. Обработка данных из пункта";
@@ -230,7 +230,7 @@ namespace Apteka.Plus.Forms
 
             SateliteDataHelper.ProcessNewDataFromSatelite(seletedMyStore, fsSateliteData);
 
-            this.InvokeInGUIThread(ChangeStyleBlocks);
+            this.InvokeInGuiThread(ChangeStyleBlocks);
         }
 
         private void bgwSyncData_ProgressChanged(object sender, ProgressChangedEventArgs e)

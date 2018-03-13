@@ -30,7 +30,7 @@ namespace Apteka.Plus
         {
             var connectionString = string.Format(Settings.Default.ConnectionStringTemplate, Settings.Default.DbHost, Settings.Default.DbUser, Settings.Default.DbPassword);
 
-            while (!DAL.IsConnectionFine(connectionString))
+            while (!Dal.IsConnectionFine(connectionString))
             {
                 using (var dlg = new frmDBConnectionFailure(Settings.Default.DbHost, Settings.Default.DbUser, Settings.Default.DbPassword))
                 {
@@ -50,8 +50,8 @@ namespace Apteka.Plus
                 }
             }
 
-            DAL.InitConnectionString(connectionString);
-            DAL.InitStoresConnectionStrings(Settings.Default.ConnectionStringStoreTemplate, Settings.Default.DbHost, Settings.Default.DbUser, Settings.Default.DbPassword);
+            Dal.InitConnectionString(connectionString);
+            Dal.InitStoresConnectionStrings(Settings.Default.ConnectionStringStoreTemplate, Settings.Default.DbHost, Settings.Default.DbUser, Settings.Default.DbPassword);
         }
 
         static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)

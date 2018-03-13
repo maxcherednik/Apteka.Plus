@@ -57,7 +57,7 @@ namespace Apteka.Plus.UserControls
 
         private void SetResultsToGrid()
         {
-            this.InvokeInGUIThread(() => salesRowBindingSource.DataSource = _liSaleRows);
+            this.InvokeInGuiThread(() => salesRowBindingSource.DataSource = _liSaleRows);
         }
 
         public int NumberOfCustomers { get; private set; }

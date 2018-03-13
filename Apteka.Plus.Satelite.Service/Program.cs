@@ -6,11 +6,9 @@ namespace Satelite.Service
     {
         static void Main()
         {
-            ServiceBase[] ServicesToRun;
+            var servicesToRun = new ServiceBase[] { new SateliteService() };
 
-            ServicesToRun = new ServiceBase[] { new SateliteService() };
-
-            ServiceBase.Run(ServicesToRun);
+            ServiceBase.Run(servicesToRun);
         }
     }
 }

@@ -105,7 +105,7 @@ namespace Apteka.Plus.Satelite.Forms
                 _liLocalBillRowsList = lba.GetRowsByStartLetter(letter);
             }
 
-            this.InvokeInGUIThread(() =>
+            this.InvokeInGuiThread(() =>
             {
                 PerformSearch(tbSearch.Text);
                 localBillsRowExBindingSource.ResetBindings(false);

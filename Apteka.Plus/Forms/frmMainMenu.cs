@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using Apteka.Helpers;
+using Apteka.Plus.Common.Forms;
 using Apteka.Plus.Logic.BLL;
 using Apteka.Plus.Logic.BLL.Collections;
 using Apteka.Plus.Logic.DAL.Accessors;
@@ -165,7 +166,7 @@ namespace Apteka.Plus.Forms
                 }
             }
 
-            this.InvokeInGUIThread(() =>
+            this.InvokeInGuiThread(() =>
             {
                 if (counter > 0)
                 {

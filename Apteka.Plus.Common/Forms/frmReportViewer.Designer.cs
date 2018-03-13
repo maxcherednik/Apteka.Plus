@@ -1,4 +1,4 @@
-﻿namespace Apteka.Plus.Forms
+﻿namespace Apteka.Plus.Common.Forms
 {
     partial class frmReportViewer
     {

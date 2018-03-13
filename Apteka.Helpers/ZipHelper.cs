@@ -13,7 +13,7 @@ namespace Apteka.Helpers
 
         public static void Unzip(FileInfo file)
         {
-            DirectoryInfo diDestination = Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + "Temp\\" + Guid.NewGuid().ToString() + ".ext");
+            var diDestination = Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + "Temp\\" + Guid.NewGuid() + ".ext");
             Unzip(file, diDestination);
         }
 
@@ -27,21 +27,19 @@ namespace Apteka.Helpers
 
         public static void Unzip(Stream stream)
         {
-            DirectoryInfo diDestination = Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + "Temp\\" + Guid.NewGuid().ToString() + ".ext");
+            var diDestination = Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + "Temp\\" + Guid.NewGuid() + ".ext");
             Unzip(stream, diDestination);
         }
 
         public static void Unzip(Stream stream, DirectoryInfo destDirectory)
         {
-            using (ZipInputStream s = new ZipInputStream(stream))
+            using (var s = new ZipInputStream(stream))
             {
-
                 ZipEntry theEntry;
                 while ((theEntry = s.GetNextEntry()) != null)
                 {
-
-                    string directoryName = Path.GetDirectoryName(theEntry.Name);
-                    string fileName = Path.GetFileName(theEntry.Name);
+                    var directoryName = Path.GetDirectoryName(theEntry.Name);
+                    var fileName = Path.GetFileName(theEntry.Name);
 
                     // create directory
                     if (directoryName.Length > 0)
@@ -49,16 +47,14 @@ namespace Apteka.Helpers
                         Directory.CreateDirectory(directoryName);
                     }
 
-                    if (fileName != String.Empty)
+                    if (fileName != string.Empty)
                     {
-                        using (FileStream streamWriter = File.Create(destDirectory.FullName + "\\" + theEntry.Name))
+                        using (var streamWriter = File.Create(destDirectory.FullName + "\\" + theEntry.Name))
                         {
-
-                            int size = 2048;
-                            byte[] data = new byte[2048];
+                            var data = new byte[2048];
                             while (true)
                             {
-                                size = s.Read(data, 0, data.Length);
+                                var size = s.Read(data, 0, data.Length);
                                 if (size > 0)
                                 {
                                     streamWriter.Write(data, 0, size);
@@ -76,17 +72,16 @@ namespace Apteka.Helpers
 
         public static void ZipFile(string filePath, string zipFileName)
         {
-            string[] filenames = Directory.GetFiles(filePath);
+            var filenames = Directory.GetFiles(filePath);
 
-            using (ZipOutputStream s = new ZipOutputStream(File.Create(zipFileName)))
+            using (var s = new ZipOutputStream(File.Create(zipFileName)))
             {
                 s.SetLevel(9); // 0 - store only to 9 - means best compression
 
-                byte[] buffer = new byte[4096];
+                var buffer = new byte[4096];
 
-                foreach (string file in filenames)
+                foreach (var file in filenames)
                 {
-
                     // Using GetFileName makes the result compatible with XP
                     // as the resulting path is not absolute.
                     var entry = new ZipEntry(Path.GetFileName(file))

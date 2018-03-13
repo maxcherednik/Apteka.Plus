@@ -8,7 +8,7 @@ namespace Satelite.Service
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private WCFServer<SateliteServer> wcfServer = new WCFServer<SateliteServer>();
+        private readonly WCFServer<SateliteServer> _wcfServer = new WCFServer<SateliteServer>();
 
         public SateliteService()
         {
@@ -20,7 +20,7 @@ namespace Satelite.Service
         {
             Log.InfoFormat("Service is starting. Store id={0}", SateliteServer.SateliteID);
 
-            wcfServer.Start();
+            _wcfServer.Start();
 
             Log.Info("Service successfully started");
         }
@@ -29,7 +29,7 @@ namespace Satelite.Service
         {
             Log.Info("Service is stopping");
 
-            wcfServer.Stop();
+            _wcfServer.Stop();
 
             Log.Info("Service stopped");
         }

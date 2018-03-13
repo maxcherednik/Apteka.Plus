@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 using Apteka.Helpers;
+using Apteka.Plus.Common.Forms;
 using Apteka.Plus.Logic.BLL;
 using Apteka.Plus.Logic.BLL.Collections;
 using Apteka.Plus.Logic.BLL.Entities;
@@ -63,7 +64,7 @@ namespace Apteka.Plus.Forms
 
         private void PerformLoadData()
         {
-            this.InvokeInGUIThread(() =>
+            this.InvokeInGuiThread(() =>
             {
                 progressIndicator1.Visible = true;
                 progressIndicator1.Start();
@@ -98,7 +99,7 @@ namespace Apteka.Plus.Forms
 
                 var dt = sa.GetSummary(dtpDate.Value.Date);
 
-                this.InvokeInGUIThread(() =>
+                this.InvokeInGuiThread(() =>
                 {
                     mdgvSummary.DataSource = dt;
                     mdgvSummary.AutoGenerateColumns = false;
@@ -117,7 +118,7 @@ namespace Apteka.Plus.Forms
                 ucSuppliesReturnHistory1.LoadData(_mystoreSelected, dtpDate.Value.Date, dtpDate.Value.Date);
             }
 
-            this.InvokeInGUIThread(() =>
+            this.InvokeInGuiThread(() =>
             {
                 progressIndicator1.Stop();
                 progressIndicator1.Visible = false;

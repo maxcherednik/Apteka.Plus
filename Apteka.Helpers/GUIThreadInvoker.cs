@@ -3,9 +3,9 @@ using System.Windows.Forms;
 
 namespace Apteka.Helpers
 {
-    public static class GUIThreadInvoker
+    public static class GuiThreadInvoker
     {
-        public static void InvokeInGUIThread(this Control control, Action action)
+        public static void InvokeInGuiThread(this Control control, Action action)
         {
             if (control.InvokeRequired)
             {

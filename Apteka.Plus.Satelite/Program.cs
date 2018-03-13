@@ -32,7 +32,7 @@ namespace Apteka.Plus.Satelite
         {
             var connectionString = string.Format(Settings.Default.ConnectionStringTemplate, Settings.Default.DbHost, Settings.Default.DbUser, Settings.Default.DbPassword);
 
-            while (!DAL.IsConnectionFine(connectionString))
+            while (!Dal.IsConnectionFine(connectionString))
             {
                 using (var dlg = new frmDBConnectionFailure(Settings.Default.DbHost, Settings.Default.DbUser, Settings.Default.DbPassword))
                 {
@@ -52,7 +52,7 @@ namespace Apteka.Plus.Satelite
                 }
             }
 
-            DAL.InitConnectionString(connectionString);
+            Dal.InitConnectionString(connectionString);
         }
 
         static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)

@@ -6,7 +6,7 @@ namespace Apteka.Plus.Satelite.Logic
     public class WCFServer<T>
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private static ServiceHost _customerServiceHost;
+        private ServiceHost _customerServiceHost;
 
         public void Start()
         {

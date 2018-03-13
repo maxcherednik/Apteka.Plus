@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Apteka.Helpers;
+using Apteka.Plus.Common.Forms;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.BLL.Enums;
 using Apteka.Plus.Logic.DAL.Accessors;
@@ -123,7 +124,7 @@ namespace Apteka.Plus.Forms
 
             SeparateLists();
 
-            this.InvokeInGUIThread(PrepareTabs);
+            this.InvokeInGuiThread(PrepareTabs);
 
             ProcessExcludeDefectList("");
             ProcessDefectList("");
@@ -197,7 +198,7 @@ namespace Apteka.Plus.Forms
 
             if (InvokeRequired)
             {
-                this.InvokeInGUIThread(() => tab.Text = tabtext);
+                this.InvokeInGuiThread(() => tab.Text = tabtext);
             }
             else
             {

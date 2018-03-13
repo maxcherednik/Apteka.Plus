@@ -21,11 +21,11 @@ namespace Apteka.Plus.Logic.BLL
         {
             Log.Info("Подготовка данных для отправки в пункт");
             Log.InfoFormat("Пункт id: {0} name: {1} ip: {2}", myStore.ID, myStore.Name, myStore.IP);
-            DirectoryInfo di = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + "DataTransfer");
+            var di = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + "DataTransfer");
             if (!di.Exists)
                 di.Create();
 
-            DirectoryInfo diDate = new DirectoryInfo(di.FullName + "\\" + DateTime.Now.ToShortDateString());
+            var diDate = new DirectoryInfo(di.FullName + "\\" + DateTime.Now.ToShortDateString());
             if (!diDate.Exists)
                 diDate.Create();
 

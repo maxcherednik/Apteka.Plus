@@ -9,11 +9,12 @@ using Apteka.Plus.Satelite.Properties;
 using BLToolkit.Data;
 using log4net;
 using Microsoft.Reporting.WinForms;
-using RSDN;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using Apteka.Helpers;
+using Apteka.Plus.Common.Forms;
 using BLToolkit.DataAccess;
 
 namespace Apteka.Plus.Satelite.Forms

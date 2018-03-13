@@ -81,7 +81,7 @@ namespace Apteka.Plus.UserControls
 
             #endregion
 
-            this.InvokeInGUIThread(() =>
+            this.InvokeInGuiThread(() =>
             {
                 cbDateDefect.Items.Clear();
                 cbDateDefect.Items.Add("Без фильтра");

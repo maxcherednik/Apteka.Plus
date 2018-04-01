@@ -6,8 +6,6 @@ namespace Apteka.Plus.Logic.BLL.Entities
     [TableName("PriceChanges")]
     public class PriceChangeRow
     {
-        private LocalBillsRowEx _LocalBillsRow = new LocalBillsRowEx();
-
         [PrimaryKey, NonUpdatable]
         public long ID { get; set; }
 
@@ -23,14 +21,10 @@ namespace Apteka.Plus.Logic.BLL.Entities
 
         public bool IsSynced { get; set; }
 
-        public LocalBillsRowEx LocalBillsRow
-        {
-            get { return _LocalBillsRow; }
-            set { _LocalBillsRow = value; }
-        }
+        public LocalBillsRowEx LocalBillsRow { get; set; } = new LocalBillsRowEx();
 
-        public string ProductName => _LocalBillsRow.ProductName;
+        public string ProductName => LocalBillsRow.ProductName;
 
-        public string PackageName => _LocalBillsRow.PackageName;
+        public string PackageName => LocalBillsRow.PackageName;
     }
 }

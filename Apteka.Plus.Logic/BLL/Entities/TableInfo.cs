@@ -7,10 +7,10 @@
 
         }
 
-        public TableInfo(string name, long maxID)
+        public TableInfo(string name, long maxId)
         {
             Name = name;
-            MaxID = maxID;
+            MaxID = maxId;
         }
 
         public string Name;
@@ -19,10 +19,10 @@
 
         public override bool Equals(object obj)
         {
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
 
-            TableInfo other = (TableInfo)obj;
-            return (Name == other.Name);
+            var other = (TableInfo)obj;
+            return Name == other.Name;
 
         }
         public override int GetHashCode()

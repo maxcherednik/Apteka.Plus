@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Apteka.Plus.Logic.BLL.Entities;
-using BLToolkit.Data;
 using BLToolkit.DataAccess;
 
 namespace Apteka.Plus.Logic.DAL.Accessors

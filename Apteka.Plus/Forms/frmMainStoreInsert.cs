@@ -119,7 +119,7 @@ namespace Apteka.Plus.Forms
         {
             Log.Info("Пользователь нажал кнопку меню \"Сохранить накладную\"");
 
-            if (ucNewBillPage1.IsEverythingOK())
+            if (ucNewBillPage1.IsEverythingOk())
             {
                 var frmMainStoreInsertSaveConfirmation = new frmMainStoreInsertSaveConfirmation(ucNewBillPage1.Supplier, ucNewBillPage1.BillDate, ucNewBillPage1.BillNumber, ucNewBillPage1.BillSum);
                 if (frmMainStoreInsertSaveConfirmation.ShowDialog(this) == DialogResult.OK)

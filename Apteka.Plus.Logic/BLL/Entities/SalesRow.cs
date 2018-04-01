@@ -9,12 +9,6 @@ namespace Apteka.Plus.Logic.BLL.Entities
     [MapField("LocalBillsRowID", "LocalBillsRow.ID")]
     public class SalesRow
     {
-        private Employee _employee = new Employee();
-
-        private LocalBillsRowEx _localBillsRow = new LocalBillsRowEx();
-
-        private MyStore _myStore = new MyStore();
-
         [PrimaryKey, NonUpdatable]
         public long ID { get; set; }
 
@@ -26,35 +20,23 @@ namespace Apteka.Plus.Logic.BLL.Entities
 
         public Double Price { get; set; }
 
-        public Double PriceWithDiscount { get; set; }
+        public double PriceWithDiscount { get; set; }
 
-        public Double Discount { get; set; }
+        public double Discount { get; set; }
 
-        public Employee Employee
-        {
-            get { return _employee; }
-            set { _employee = value; }
-        }
+        public Employee Employee { get; set; } = new Employee();
 
-        public MyStore MyStore
-        {
-            get { return _myStore; }
-            set { _myStore = value; }
-        }
+        public MyStore MyStore { get; set; } = new MyStore();
 
-        public string MyStoreName => _myStore.Name;
+        public string MyStoreName => MyStore.Name;
 
-        public LocalBillsRowEx LocalBillsRow
-        {
-            get { return _localBillsRow; }
-            set { _localBillsRow = value; }
-        }
+        public LocalBillsRowEx LocalBillsRow { get; set; } = new LocalBillsRowEx();
 
-        public string ProductName => _localBillsRow.ProductName;
+        public string ProductName => LocalBillsRow.ProductName;
 
-        public string PackageName => _localBillsRow.PackageName;
+        public string PackageName => LocalBillsRow.PackageName;
 
-        public string EmployeeName => _employee.FullName;
+        public string EmployeeName => Employee.FullName;
 
         [Nullable]
         public string ClientID { get; set; }

@@ -8,8 +8,6 @@ namespace Apteka.Plus.Logic.BLL.Entities
     {
         double _supplierPrice;
 
-        double _prevLocalPrice;
-
         public LocalOrder EOrderRow;
 
         public FullProductInfo FullProductInfo = new FullProductInfo();
@@ -20,38 +18,34 @@ namespace Apteka.Plus.Logic.BLL.Entities
 
         public MainStoreRow MainStoreRow { get; set; }
 
-        public double PrevLocalPrice
-        {
-            get { return _prevLocalPrice; }
-            set { _prevLocalPrice = value; }
-        }
+        public double PrevLocalPrice { get; set; }
 
-        public bool IsSomethingWrongWithLocalPrice => _prevLocalPrice != 0 && _prevLocalPrice != _localPrice;
+        public bool IsSomethingWrongWithLocalPrice => PrevLocalPrice != 0 && PrevLocalPrice != _localPrice;
 
-        public bool IsLocalPriceGrows => _prevLocalPrice <= double.Parse(_localPrice.ToString("0.00"));
+        public bool IsLocalPriceGrows => PrevLocalPrice <= double.Parse(_localPrice.ToString("0.00"));
 
         public double VendorPriceWithoutNDS { get; set; }
 
         public double SupplierPrice
         {
-            get { return double.Parse(_supplierPrice.ToString("0.00")); }
-            set { _supplierPrice = value; }
+            get => double.Parse(_supplierPrice.ToString("0.00"));
+            set => _supplierPrice = value;
         }
 
         double _extra;
 
         public double Extra
         {
-            get { return double.Parse(_extra.ToString("0.00")); }
-            set { _extra = value; }
+            get => double.Parse(_extra.ToString("0.00"));
+            set => _extra = value;
         }
 
         double _localPrice;
 
         public double LocalPrice
         {
-            get { return double.Parse(_localPrice.ToString("0.00")); }
-            set { _localPrice = value; }
+            get => double.Parse(_localPrice.ToString("0.00"));
+            set => _localPrice = value;
         }
 
         public DateTime? ExpirationDate { get; set; }

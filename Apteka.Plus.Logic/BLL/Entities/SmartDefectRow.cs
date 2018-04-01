@@ -9,32 +9,20 @@ namespace Apteka.Plus.Logic.BLL.Entities
     [MapField("SupplierID", "Supplier.ID")]
     public class SmartDefectRow
     {
-        private FullProductInfo _FullProductInfo = new FullProductInfo();
-
-        private LocalBillsRowEx _LocalBillsRow = new LocalBillsRowEx();
-
         [PrimaryKey, NonUpdatable]
         public long ID { get; set; }
 
-        public string SupplierName => _LocalBillsRow.MainStoreRow.Supplier.Name;
+        public string SupplierName => LocalBillsRow.MainStoreRow.Supplier.Name;
 
-        public FullProductInfo FullProductInfo
-        {
-            get { return _FullProductInfo; }
-            set { _FullProductInfo = value; }
-        }
+        public FullProductInfo FullProductInfo { get; set; } = new FullProductInfo();
 
-        public string ProductName => _FullProductInfo.ProductName;
+        public string ProductName => FullProductInfo.ProductName;
 
-        public string PackageName => _FullProductInfo.PackageName;
+        public string PackageName => FullProductInfo.PackageName;
 
-        public Supplier Supplier => _LocalBillsRow.MainStoreRow.Supplier;
+        public Supplier Supplier => LocalBillsRow.MainStoreRow.Supplier;
 
-        public LocalBillsRowEx LocalBillsRow
-        {
-            get => _LocalBillsRow;
-            set => _LocalBillsRow = value;
-        }
+        public LocalBillsRowEx LocalBillsRow { get; set; } = new LocalBillsRowEx();
 
         public int OrderedAmount;
 

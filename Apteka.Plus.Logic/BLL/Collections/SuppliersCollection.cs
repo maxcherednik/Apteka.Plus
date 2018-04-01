@@ -16,7 +16,7 @@ namespace Apteka.Plus.Logic.BLL.Collections
                 if (_liSuppliers == null)
                 {
                     var sa = DataAccessor.CreateInstance<SuppliersAccessor>();
-                    _liSuppliers = sa.SelectAllActive(); ;
+                    _liSuppliers = sa.SelectAllActive();
                 }
                 return new List<Supplier>(_liSuppliers);
             }

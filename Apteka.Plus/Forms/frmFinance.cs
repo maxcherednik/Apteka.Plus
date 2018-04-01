@@ -508,23 +508,9 @@ namespace Apteka.Plus.Forms
         {
             var financeRow = (FinanceRow)dgvFinanceDaily.CurrentRow.DataBoundItem;
 
-            if (financeRow.LocalTransferSum == 0)
-            {
-                cmsFinance.Items["transfers"].Enabled = false;
-            }
-            else
-            {
-                cmsFinance.Items["transfers"].Enabled = true;
-            }
+            cmsFinance.Items["transfers"].Enabled = financeRow.LocalTransferSum != 0;
 
-            if (financeRow.PriceChangesSum == 0)
-            {
-                cmsFinance.Items["price_changes"].Enabled = false;
-            }
-            else
-            {
-                cmsFinance.Items["price_changes"].Enabled = true;
-            }
+            cmsFinance.Items["price_changes"].Enabled = financeRow.PriceChangesSum != 0;
 
             cmsFinance.Items["supplies"].Enabled = false;
         }

@@ -8,6 +8,7 @@ using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.BLL.Enums;
 using Apteka.Plus.Logic.DAL.Accessors;
 using BLToolkit.Data;
+using BLToolkit.DataAccess;
 using log4net;
 
 namespace Apteka.Plus.UserControls
@@ -17,7 +18,6 @@ namespace Apteka.Plus.UserControls
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private MyStore _myStore;
-        private int _rowCount;
         private List<LocalBillsRowEx> _liLocalBillsRows;
 
         public ucProductSuppliesHistory()
@@ -29,13 +29,13 @@ namespace Apteka.Plus.UserControls
         {
             _myStore = myStore;
 
-            using (DbManager dbSatelite = new DbManager(myStore.Name))
+            using (var dbSatelite = new DbManager(myStore.Name))
             {
-                var lba = LocalBillsAccessor.CreateInstance<LocalBillsAccessor>(dbSatelite);
+                var lba = DataAccessor.CreateInstance<LocalBillsAccessor>(dbSatelite);
 
                 _liLocalBillsRows = lba.GetRows(startDate, endDate);
 
-                _rowCount = _liLocalBillsRows.Count;
+                RowCount = _liLocalBillsRows.Count;
 
                 this.InvokeInGuiThread(() =>
                 {
@@ -45,13 +45,7 @@ namespace Apteka.Plus.UserControls
             }
         }
 
-        public int RowCount
-        {
-            get
-            {
-                return _rowCount;
-            }
-        }
+        public int RowCount { get; private set; }
 
         public class RowCountChangedEventArgs : EventArgs
         {
@@ -60,7 +54,7 @@ namespace Apteka.Plus.UserControls
                 RowCount = rowCount;
             }
 
-            public int RowCount { get; private set; }
+            public int RowCount { get; }
         }
 
         public event EventHandler<RowCountChangedEventArgs> RowCountChanged;
@@ -72,8 +66,8 @@ namespace Apteka.Plus.UserControls
 
         private void dgvProductSuppliesHistory_KeyDown(object sender, KeyEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
-            LocalBillsRowEx row = dgv.CurrentRow.DataBoundItem as LocalBillsRowEx;
+            var dgv = (DataGridView)sender;
+            var row = (LocalBillsRowEx)dgv.CurrentRow.DataBoundItem;
 
             Log.InfoFormat("Пользователь нажал клавишу {0}", e.KeyCode);
             switch (e.KeyCode)
@@ -103,42 +97,35 @@ namespace Apteka.Plus.UserControls
                 case Keys.Delete:
                     {
                         e.Handled = true;
-                        if (MessageBox.Show("Вы уверены, что хотите осуществить возврат?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+                        if (MessageBox.Show(@"Вы уверены, что хотите осуществить возврат?", @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
                         {
-
-                            frmSuppliesReturnConfirmation frmSuppliesReturnConfirmation = new frmSuppliesReturnConfirmation();
+                            var frmSuppliesReturnConfirmation = new frmSuppliesReturnConfirmation();
                             if (frmSuppliesReturnConfirmation.ShowDialog(this) == DialogResult.OK)
                             {
                                 using (var dbSatelite = new DbManager(_myStore.Name))
                                 {
-                                    var raa = RemoteActionAccessor.CreateInstance<RemoteActionAccessor>(dbSatelite);
+                                    var raa = DataAccessor.CreateInstance<RemoteActionAccessor>(dbSatelite);
                                     var remoteAction = new RemoteAction
                                     {
                                         LocalBillsRowID = row.ID,
                                         Comment = frmSuppliesReturnConfirmation.Comment,
                                         Employee = Session.User,
-                                        TypeOfAction = RemoteActionEnum.SuppliesReturn
+                                        TypeOfAction = RemoteActionEnum.SuppliesReturn,
+                                        AmountToReturn = frmSuppliesReturnConfirmation.IsDeleteAll
+                                            ? 0
+                                            : frmSuppliesReturnConfirmation.Amount
                                     };
 
-                                    if (frmSuppliesReturnConfirmation.IsDeleteAll)
-                                    {
-                                        remoteAction.AmountToReturn = 0;
-                                    }
-                                    else
-                                    {
-                                        remoteAction.AmountToReturn = frmSuppliesReturnConfirmation.Amount;
-                                    }
 
                                     raa.Insert(remoteAction);
                                 }
 
-                                MessageBox.Show("Задание на удаление было успешно добавлено. Фактическое удаление произодет после обмена информации.", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                MessageBox.Show(@"Задание на удаление было успешно добавлено. Фактическое удаление произодет после обмена информации.", @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             }
                         }
                         break;
                     }
             }
         }
-
     }
 }

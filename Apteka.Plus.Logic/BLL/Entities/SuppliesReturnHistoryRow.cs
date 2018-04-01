@@ -11,10 +11,6 @@ namespace Apteka.Plus.Logic.BLL.Entities
 
     public class SuppliesReturnHistoryRow
     {
-        private LocalBillsRowEx _localBillsRowEx = new LocalBillsRowEx();
-
-        private Employee _employee = new Employee();
-
         [PrimaryKey, NonUpdatable]
         public long ID { get; set; }
 
@@ -28,11 +24,7 @@ namespace Apteka.Plus.Logic.BLL.Entities
 
         public SuppliesReturnReasonEnum Reason { get; set; }
 
-        public Employee Employee
-        {
-            get { return _employee; }
-            set { _employee = value; }
-        }
+        public Employee Employee { get; set; } = new Employee();
 
         public string ProductName => LocalBillsRow.ProductName;
 
@@ -44,10 +36,6 @@ namespace Apteka.Plus.Logic.BLL.Entities
 
         public DateTime SupplierDateSupply => LocalBillsRow.DateSupply;
 
-        public LocalBillsRowEx LocalBillsRow
-        {
-            get { return _localBillsRowEx; }
-            set { _localBillsRowEx = value; }
-        }
+        public LocalBillsRowEx LocalBillsRow { get; set; } = new LocalBillsRowEx();
     }
 }

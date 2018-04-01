@@ -5,34 +5,29 @@ using Apteka.Helpers;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
 using BLToolkit.Data;
+using BLToolkit.DataAccess;
 
 namespace Apteka.Plus.UserControls
 {
     public partial class ucSalesReturnHistory : UserControl
     {
         private List<SalesReturnHistoryRow> _liSalesReturnHistoryRows;
-        private bool _isInitialized = false;
-        private int _rowCount;
 
         public ucSalesReturnHistory()
         {
             InitializeComponent();
         }
 
-        public bool IsInitialized
-        {
-            get { return _isInitialized; }
-        }
+        public bool IsInitialized { get; private set; }
 
         public void LoadData(MyStore myStore, DateTime startDate, DateTime endDate)
         {
-            using (DbManager dbSatelite = new DbManager(myStore.Name))
+            using (var dbSatelite = new DbManager(myStore.Name))
             {
-                SalesReturnHistoryAccessor srha =
-                    SalesReturnHistoryAccessor.CreateInstance<SalesReturnHistoryAccessor>(dbSatelite);
+                var srha = DataAccessor.CreateInstance<SalesReturnHistoryAccessor>(dbSatelite);
 
                 _liSalesReturnHistoryRows = srha.GetRows(startDate, endDate);
-                _rowCount = _liSalesReturnHistoryRows.Count;
+                RowCount = _liSalesReturnHistoryRows.Count;
 
                 this.InvokeInGuiThread(() =>
                 {
@@ -41,17 +36,10 @@ namespace Apteka.Plus.UserControls
                 });
             }
 
-            _isInitialized = true;
-
+            IsInitialized = true;
         }
 
-        public int RowCount
-        {
-            get
-            {
-                return _rowCount;
-            }
-        }
+        public int RowCount { get; private set; }
 
         public class RowCountChangedEventArgs : EventArgs
         {
@@ -60,7 +48,7 @@ namespace Apteka.Plus.UserControls
                 RowCount = rowCount;
             }
 
-            public int RowCount { get; private set; }
+            public int RowCount { get; }
         }
 
         public event EventHandler<RowCountChangedEventArgs> RowCountChanged;
@@ -69,6 +57,5 @@ namespace Apteka.Plus.UserControls
         {
             RowCountChanged?.Invoke(this, new RowCountChangedEventArgs(rowCount));
         }
-
     }
 }

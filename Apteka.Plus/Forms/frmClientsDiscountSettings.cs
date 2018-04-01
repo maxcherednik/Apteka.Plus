@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Windows.Forms;
 using Apteka.Plus.Logic.BLL.Collections;
-using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
 using BLToolkit.Data;
 using BLToolkit.DataAccess;

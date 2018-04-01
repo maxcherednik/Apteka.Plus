@@ -8,8 +8,6 @@ namespace Apteka.Plus.Logic.BLL.Entities
     [MapField("EmployeeID", "Employee.ID")]
     public class RemoteAction
     {
-        private Employee _employee = new Employee();
-
         [PrimaryKey, NonUpdatable]
         public long ID;
 
@@ -31,10 +29,6 @@ namespace Apteka.Plus.Logic.BLL.Entities
 
         public SuppliesReturnReasonEnum Reason { get; set; }
 
-        public Employee Employee
-        {
-            get { return _employee; }
-            set { _employee = value; }
-        }
+        public Employee Employee { get; set; } = new Employee();
     }
 }

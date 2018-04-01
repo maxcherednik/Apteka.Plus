@@ -9,10 +9,6 @@ namespace Apteka.Plus.Logic.BLL.Entities
     [MapField("MyStoreID", "MyStore.ID")]
     public class LocalBillsRowEx
     {
-        private MyStore _myStore = new MyStore();
-
-        private MainStoreRow _mainStoreRow = new MainStoreRow();
-
         [PrimaryKey, NonUpdatable]
         public int ID { get; set; }
 
@@ -28,27 +24,23 @@ namespace Apteka.Plus.Logic.BLL.Entities
 
         public int Amount { get; set; }
 
-        public string Country => _mainStoreRow.FullProductInfo.CountryProducer;
+        public string Country => MainStoreRow.FullProductInfo.CountryProducer;
 
-        public string SupplierBillNumber => _mainStoreRow.SupplierBillNumber;
+        public string SupplierBillNumber => MainStoreRow.SupplierBillNumber;
 
-        public string ProductName => _mainStoreRow.FullProductInfo.ProductName;
+        public string ProductName => MainStoreRow.FullProductInfo.ProductName;
 
-        public string PackageName => _mainStoreRow.FullProductInfo.PackageName;
+        public string PackageName => MainStoreRow.FullProductInfo.PackageName;
 
-        public double SupplierPrice => _mainStoreRow.SupplierPrice;
+        public double SupplierPrice => MainStoreRow.SupplierPrice;
 
-        public string SupplierName => _mainStoreRow.Supplier.Name;
+        public string SupplierName => MainStoreRow.Supplier.Name;
 
-        public DateTime DateSupply => _mainStoreRow.DateSupply;
+        public DateTime DateSupply => MainStoreRow.DateSupply;
 
-        public DateTime? ExpirationDate => _mainStoreRow.ExpirationDate;
+        public DateTime? ExpirationDate => MainStoreRow.ExpirationDate;
 
-        public MyStore MyStore
-        {
-            get { return _myStore; }
-            set { _myStore = value; }
-        }
+        public MyStore MyStore { get; set; } = new MyStore();
 
         public DateTime? DateDisposal { get; set; }
 
@@ -59,18 +51,14 @@ namespace Apteka.Plus.Logic.BLL.Entities
             {
                 if (DateDisposal.HasValue)
                 {
-                    TimeSpan ts = DateDisposal.Value - _mainStoreRow.DateSupply;
+                    var ts = DateDisposal.Value - MainStoreRow.DateSupply;
                     return ts.Days;
                 }
                 return null;
             }
         }
 
-        public MainStoreRow MainStoreRow
-        {
-            get { return _mainStoreRow; }
-            set { _mainStoreRow = value; }
-        }
+        public MainStoreRow MainStoreRow { get; set; } = new MainStoreRow();
 
         public bool IsDelayed { get; set; }
 

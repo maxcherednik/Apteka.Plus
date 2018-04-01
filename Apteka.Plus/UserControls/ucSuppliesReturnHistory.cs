@@ -5,23 +5,20 @@ using Apteka.Helpers;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
 using BLToolkit.Data;
+using BLToolkit.DataAccess;
 
 namespace Apteka.Plus.UserControls
 {
     public partial class ucSuppliesReturnHistory : UserControl
     {
-        private List<SuppliesReturnHistoryRow> _liSuppliesReturnHistoryRows = null;
-        private int _rowCount;
+        private List<SuppliesReturnHistoryRow> _liSuppliesReturnHistoryRows;
 
         public ucSuppliesReturnHistory()
         {
             InitializeComponent();
         }
 
-        public int RowCount
-        {
-            get { return _rowCount; }
-        }
+        public int RowCount { get; private set; }
 
         public class RowCountChangedEventArgs : EventArgs
         {
@@ -30,7 +27,7 @@ namespace Apteka.Plus.UserControls
                 RowCount = rowCount;
             }
 
-            public int RowCount { get; private set; }
+            public int RowCount { get; }
         }
 
         public event EventHandler<RowCountChangedEventArgs> RowCountChanged;
@@ -42,15 +39,13 @@ namespace Apteka.Plus.UserControls
 
         public void LoadData(MyStore myStore, DateTime startDate, DateTime endDate)
         {
-
-            using (DbManager dbSatelite = new DbManager(myStore.Name))
+            using (var dbSatelite = new DbManager(myStore.Name))
             {
-                SuppliesReturnHistoryAccessor srha =
-                    SuppliesReturnHistoryAccessor.CreateInstance<SuppliesReturnHistoryAccessor>(dbSatelite);
+                var srha = DataAccessor.CreateInstance<SuppliesReturnHistoryAccessor>(dbSatelite);
 
                 _liSuppliesReturnHistoryRows = srha.GetRows(startDate, endDate);
 
-                _rowCount = _liSuppliesReturnHistoryRows.Count;
+                RowCount = _liSuppliesReturnHistoryRows.Count;
 
                 this.InvokeInGuiThread(() =>
                 {

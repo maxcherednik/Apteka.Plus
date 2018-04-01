@@ -15,11 +15,11 @@ namespace Apteka.Plus.Logic.BLL.Entities
         public override bool Equals(object obj)
         {
             // If this and obj do not refer to the same type, then they are not equal.
-            if (obj.GetType() != this.GetType()) return false;
+            if (obj.GetType() != GetType()) return false;
 
             // Return true if  x and y fields match.
-            Supplier other = (Supplier)obj;
-            return (ID == other.ID) && (Name == other.Name);
+            var other = (Supplier)obj;
+            return ID == other.ID && Name == other.Name;
         }
 
         public override int GetHashCode()

@@ -123,14 +123,7 @@ namespace Apteka.Plus.Satelite.Forms
                 var ts = DateTime.Now - row.MainStoreRow.DateSupply;
 
                 //TODO плохо так делать  :) 
-                if (ts.Days > 25)
-                {
-                    e.Value = ts.Days.ToString();
-                }
-                else
-                {
-                    e.Value = "";
-                }
+                e.Value = ts.Days > 25 ? ts.Days.ToString() : "";
 
                 e.FormattingApplied = true;
             }

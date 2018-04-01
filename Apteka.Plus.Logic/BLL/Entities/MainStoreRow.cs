@@ -10,10 +10,6 @@ namespace Apteka.Plus.Logic.BLL.Entities
     [MapField("SupplierID", "Supplier.ID")]
     public class MainStoreRow
     {
-        private Supplier _Supplier = new Supplier();
-
-        private FullProductInfo _FullProductInfo = new FullProductInfo();
-
         [PrimaryKey, NonUpdatable]
         public long ID { get; set; }
 
@@ -31,17 +27,9 @@ namespace Apteka.Plus.Logic.BLL.Entities
 
         public string SupplierBillNumber { get; set; }
 
-        public Supplier Supplier
-        {
-            get { return _Supplier; }
-            set { _Supplier = value; }
-        }
+        public Supplier Supplier { get; set; } = new Supplier();
 
-        public FullProductInfo FullProductInfo
-        {
-            get { return _FullProductInfo; }
-            set { _FullProductInfo = value; }
-        }
+        public FullProductInfo FullProductInfo { get; set; } = new FullProductInfo();
 
         public DateTime? ExpirationDate { get; set; }
 
@@ -50,10 +38,10 @@ namespace Apteka.Plus.Logic.BLL.Entities
         [Nullable]
         public string EAN13 { get; set; }
 
-        public string ProductName => _FullProductInfo.ProductName;
+        public string ProductName => FullProductInfo.ProductName;
 
-        public string PackageName => _FullProductInfo.PackageName;
+        public string PackageName => FullProductInfo.PackageName;
 
-        public string SupplierName => _Supplier.Name;
+        public string SupplierName => Supplier.Name;
     }
 }

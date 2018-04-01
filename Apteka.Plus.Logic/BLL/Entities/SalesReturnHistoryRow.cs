@@ -10,10 +10,6 @@ namespace Apteka.Plus.Logic.BLL.Entities
     [MapField("LocalBillsRowID", "LocalBillsRow.ID")]
     public class SalesReturnHistoryRow
     {
-        private Employee _employee = new Employee();
-
-        private LocalBillsRowEx _localBillsRow = new LocalBillsRowEx();
-
         [PrimaryKey, NonUpdatable]
         public long ID { get; set; }
 
@@ -27,27 +23,19 @@ namespace Apteka.Plus.Logic.BLL.Entities
 
         public Double Price { get; set; }
 
-        public Double PriceWithDiscount { get; set; }
+        public double PriceWithDiscount { get; set; }
 
-        public Double Discount { get; set; }
+        public double Discount { get; set; }
 
-        public Employee Employee
-        {
-            get { return _employee; }
-            set { _employee = value; }
-        }
+        public Employee Employee { get; set; } = new Employee();
 
-        public LocalBillsRowEx LocalBillsRow
-        {
-            get { return _localBillsRow; }
-            set { _localBillsRow = value; }
-        }
+        public LocalBillsRowEx LocalBillsRow { get; set; } = new LocalBillsRowEx();
 
-        public string ProductName => _localBillsRow.ProductName;
+        public string ProductName => LocalBillsRow.ProductName;
 
-        public string PackageName => _localBillsRow.PackageName;
+        public string PackageName => LocalBillsRow.PackageName;
 
-        public string EmployeeName => _employee.FullName;
+        public string EmployeeName => Employee.FullName;
 
         [Nullable]
         public string ClientID { get; set; }

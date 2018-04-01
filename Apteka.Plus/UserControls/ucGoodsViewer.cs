@@ -9,6 +9,7 @@ using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.BLL.Enums;
 using Apteka.Plus.Logic.DAL.Accessors;
 using BLToolkit.Data;
+using BLToolkit.DataAccess;
 
 namespace Apteka.Plus.UserControls
 {
@@ -19,14 +20,11 @@ namespace Apteka.Plus.UserControls
         private DataLoader<List<LocalBillsRowEx>> _dataLoader;
         private List<LocalBillsRowEx> _liPrevRows;
 
-        #region Constructor
         public ucGoodsViewer()
         {
             InitializeComponent();
         }
-        #endregion
 
-        #region Public methods
         public void LoadByLetter(MyStore store, string letter)
         {
             lock (_dataLoader.SyncRoot)
@@ -36,23 +34,22 @@ namespace Apteka.Plus.UserControls
             }
             _dataLoader.MakeRequest();
         }
-        #endregion
 
         private void dgvLocalBills_CurrentRowChanged(object sender, MyDataGridView.CurrentRowChangedEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
-            LocalBillsRowEx row = dgv.Rows[e.RowIndex].DataBoundItem as LocalBillsRowEx;
+            var dgv = (DataGridView)sender;
+            var row = (LocalBillsRowEx)dgv.Rows[e.RowIndex].DataBoundItem;
             OnCurrentRowChanged(row);
         }
 
-        #region CurrentRowChanged Event
         public class RowChangedEventArgs : EventArgs
         {
             public RowChangedEventArgs(LocalBillsRowEx row)
             {
                 Row = row;
             }
-            public LocalBillsRowEx Row { get; private set; }
+
+            public LocalBillsRowEx Row { get; }
         }
 
         public event EventHandler<RowChangedEventArgs> CurrentRowChanged;
@@ -61,16 +58,14 @@ namespace Apteka.Plus.UserControls
         {
             CurrentRowChanged?.Invoke(this, new RowChangedEventArgs(row));
         }
-        #endregion
 
-        #region RowCountChanged Event
         public class RowCountChangedEventArgs : EventArgs
         {
             public RowCountChangedEventArgs(int rowCount)
             {
                 RowCount = rowCount;
             }
-            public int RowCount { get; private set; }
+            public int RowCount { get; }
         }
 
         public event EventHandler<RowCountChangedEventArgs> RowCountChanged;
@@ -79,88 +74,71 @@ namespace Apteka.Plus.UserControls
         {
             RowCountChanged?.Invoke(this, new RowCountChangedEventArgs(rowCount));
         }
-        #endregion
-
 
         private void dgvLocalBills_KeyDown(object sender, KeyEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
+            var dgv = (DataGridView)sender;
 
-            switch (e.KeyCode)
+            if (e.KeyCode == Keys.Escape)
             {
+                e.SuppressKeyPress = true;
+            }
+            else if (e.KeyCode == Keys.Delete)
+            {
+                var row = (LocalBillsRowEx)dgv.CurrentRow.DataBoundItem;
+                e.Handled = true;
 
-                case Keys.Escape:
+                var res = MessageBox.Show(@"Вы уверены, что хотите осуществить возврат?", @"Внимание",
+                    MessageBoxButtons.YesNo, MessageBoxIcon.Question,
+                    MessageBoxDefaultButton.Button2);
+                if (res == DialogResult.Yes)
+                {
+                    var frmSuppliesReturnConfirmation = new frmSuppliesReturnConfirmation();
+                    if (frmSuppliesReturnConfirmation.ShowDialog(this) == DialogResult.OK)
                     {
-                        e.SuppressKeyPress = true;
-                    }
-                    break;
-
-                case Keys.Delete:
-                    {
-                        LocalBillsRowEx row = dgv.CurrentRow.DataBoundItem as LocalBillsRowEx;
-                        e.Handled = true;
-                        if (
-                            MessageBox.Show("Вы уверены, что хотите осуществить возврат?", "Внимание",
-                                            MessageBoxButtons.YesNo, MessageBoxIcon.Question,
-                                            MessageBoxDefaultButton.Button2) == DialogResult.Yes)
+                        using (var dbSatelite = new DbManager(_currentStore.Name))
                         {
-
-                            frmSuppliesReturnConfirmation frmSuppliesReturnConfirmation = new frmSuppliesReturnConfirmation();
-                            if (frmSuppliesReturnConfirmation.ShowDialog(this) == DialogResult.OK)
+                            var raa = DataAccessor.CreateInstance<RemoteActionAccessor>(dbSatelite);
+                            var remoteAction = new RemoteAction
                             {
-                                using (DbManager dbSatelite = new DbManager(_currentStore.Name))
-                                {
+                                LocalBillsRowID = row.ID,
+                                Comment = frmSuppliesReturnConfirmation.Comment,
+                                Employee = Session.User,
+                                TypeOfAction = RemoteActionEnum.SuppliesReturn,
+                                AmountToReturn =
+                                    frmSuppliesReturnConfirmation.IsDeleteAll
+                                        ? 0
+                                        : frmSuppliesReturnConfirmation.Amount
+                            };
 
-                                    RemoteActionAccessor raa = RemoteActionAccessor.CreateInstance<RemoteActionAccessor>(dbSatelite);
-                                    var remoteAction = new RemoteAction
-                                    {
-                                        LocalBillsRowID = row.ID,
-                                        Comment = frmSuppliesReturnConfirmation.Comment,
-                                        Employee = Session.User,
-                                        TypeOfAction = RemoteActionEnum.SuppliesReturn
-                                    };
-
-                                    if (frmSuppliesReturnConfirmation.IsDeleteAll)
-                                    {
-                                        remoteAction.AmountToReturn = 0;
-                                    }
-                                    else
-                                    {
-                                        remoteAction.AmountToReturn = frmSuppliesReturnConfirmation.Amount;
-                                    }
-
-                                    raa.Insert(remoteAction);
-                                }
-
-                                MessageBox.Show(
-                                    "Задание на удаление было успешно добавлено. Фактическое удаление произодет после обмена информации.",
-                                    "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                            }
+                            raa.Insert(remoteAction);
                         }
-                        break;
-                    }
 
+                        MessageBox.Show(
+                            @"Задание на удаление было успешно добавлено. Фактическое удаление произодет после обмена информации.",
+                            @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
             }
         }
 
         private void ucGoodsViewer_Load(object sender, EventArgs e)
         {
             if (DesignMode) return;
-            dgvLocalBills.SetStateSourceAndLoadState(Session.User, DataGridViewColumnSettingsAccessor.CreateInstance<DataGridViewColumnSettingsAccessor>());
+            dgvLocalBills.SetStateSourceAndLoadState(Session.User, DataAccessor.CreateInstance<DataGridViewColumnSettingsAccessor>());
             _dataLoader = new DataLoader<List<LocalBillsRowEx>>(MakeRequest, 3000);
-            _dataLoader.ItsGonnaTakeAWhile += new EventHandler<DataLoader<List<LocalBillsRowEx>>.ItsGonnaTakeAWhileEventArgs>(_dataLoader_ItsGonnaTakeAWhile);
-            _dataLoader.RequestCompleted += new EventHandler<DataLoader<List<LocalBillsRowEx>>.RequestCompletedEventArgs>(_dataLoader_RequestCompleted);
+            _dataLoader.ItsGonnaTakeAWhile += _dataLoader_ItsGonnaTakeAWhile;
+            _dataLoader.RequestCompleted += _dataLoader_RequestCompleted;
         }
 
-        void _dataLoader_RequestCompleted(object sender, DataLoader<List<LocalBillsRowEx>>.RequestCompletedEventArgs e)
+        private void _dataLoader_RequestCompleted(object sender, DataLoader<List<LocalBillsRowEx>>.RequestCompletedEventArgs e)
         {
             localBillsRowExBindingSource.DataSource = e.Results;
             _liPrevRows = e.Results;
             progressIndicatorEx1.Hide();
         }
 
-        void _dataLoader_ItsGonnaTakeAWhile(object sender, DataLoader<List<LocalBillsRowEx>>.ItsGonnaTakeAWhileEventArgs e)
+        private void _dataLoader_ItsGonnaTakeAWhile(object sender, DataLoader<List<LocalBillsRowEx>>.ItsGonnaTakeAWhileEventArgs e)
         {
             progressIndicatorEx1.Show();
         }
@@ -177,21 +155,16 @@ namespace Apteka.Plus.UserControls
 
             using (var db = new DbManager(store.Name))
             {
-                LocalBillsAccessor lba = LocalBillsAccessor.CreateInstance<LocalBillsAccessor>(db);
+                var lba = DataAccessor.CreateInstance<LocalBillsAccessor>(db);
                 return lba.GetRowsByStartLetter(letter);
             }
         }
 
         public void FilterByName(string name)
         {
-            if (!string.IsNullOrEmpty(name))
-            {
-                localBillsRowExBindingSource.DataSource = _liPrevRows.FindAll(row => row.ProductName.StartsWith(name, StringComparison.CurrentCultureIgnoreCase));
-            }
-            else
-            {
-                localBillsRowExBindingSource.DataSource = _liPrevRows;
-            }
+            localBillsRowExBindingSource.DataSource = !string.IsNullOrEmpty(name) 
+                ? _liPrevRows.FindAll(row => row.ProductName.StartsWith(name, StringComparison.CurrentCultureIgnoreCase)) 
+                : _liPrevRows;
         }
 
         public void FilterByDate(DateTime dateTime)
@@ -209,12 +182,6 @@ namespace Apteka.Plus.UserControls
             OnRowCountChanged(localBillsRowExBindingSource.Count);
         }
 
-        public List<LocalBillsRowEx> List
-        {
-            get
-            {
-                return (List<LocalBillsRowEx>)localBillsRowExBindingSource.List;
-            }
-        }
+        public List<LocalBillsRowEx> List => (List<LocalBillsRowEx>)localBillsRowExBindingSource.List;
     }
 }

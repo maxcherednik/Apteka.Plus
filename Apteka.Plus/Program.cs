@@ -16,8 +16,8 @@ namespace Apteka.Plus
         static void Main()
         {
             Log.Info("Старт приложения!");
-            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
-            Application.ThreadException += new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            Application.ThreadException += Application_ThreadException;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
@@ -36,7 +36,7 @@ namespace Apteka.Plus
                 {
                     if (DialogResult.Retry == dlg.ShowDialog())
                     {
-                        Settings.Default.DbHost = dlg.DbHost; 
+                        Settings.Default.DbHost = dlg.DbHost;
                         Settings.Default.DbUser = dlg.DbUser;
                         Settings.Default.DbPassword = dlg.DbPassword;
                         Settings.Default.Save();
@@ -54,20 +54,20 @@ namespace Apteka.Plus
             Dal.InitStoresConnectionStrings(Settings.Default.ConnectionStringStoreTemplate, Settings.Default.DbHost, Settings.Default.DbUser, Settings.Default.DbPassword);
         }
 
-        static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
+        private static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
         {
             Log.Error("Произошла ошибка!", e.Exception);
 
-            MessageBox.Show("Произошла ошибка: " + e.Exception.Message, "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show($@"Произошла ошибка: {e.Exception.Message}", @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        private static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            Exception exc = (Exception)e.ExceptionObject;
+            var exc = (Exception)e.ExceptionObject;
 
             Log.Error("Произошла ошибка!", exc);
 
-            MessageBox.Show("Произошла ошибка: " + exc.Message, "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show($@"Произошла ошибка: {exc.Message}", @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace Apteka.Plus.UserControls
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private bool _isInited;
-        private int _DaysOfStockRotation;
+        private int _daysOfStockRotation;
         private FullProductInfo _selectedProduct;
         private int _topRows;
 
@@ -23,9 +23,9 @@ namespace Apteka.Plus.UserControls
             Log.DebugFormat("Init controls");
             tabControl1.TabPages.Clear();
 
-            foreach (MyStore myStore in MyStoresCollection.AllStores)
+            foreach (var myStore in MyStoresCollection.AllStores)
             {
-                ucProductSuppliesTable ucProductSuppliesTable = new ucProductSuppliesTable(myStore)
+                var ucProductSuppliesTable = new ucProductSuppliesTable(myStore)
                 {
                     Dock = DockStyle.Fill
                 };
@@ -45,7 +45,7 @@ namespace Apteka.Plus.UserControls
 
             if (!_isInited)
                 Init();
-            _DaysOfStockRotation = daysOfStockRotation;
+            _daysOfStockRotation = daysOfStockRotation;
 
             _selectedProduct = fullProductInfo;
 
@@ -56,8 +56,8 @@ namespace Apteka.Plus.UserControls
 
         private void LoadProductSupplesForSelectedTab()
         {
-            ucProductSuppliesTable productSuppliesTable = tabControl1.SelectedTab.Tag as ucProductSuppliesTable;
-            productSuppliesTable.LoadProductSupples(_selectedProduct, _topRows, _DaysOfStockRotation);
+            var productSuppliesTable = (ucProductSuppliesTable) tabControl1.SelectedTab.Tag;
+            productSuppliesTable.LoadProductSupples(_selectedProduct, _topRows, _daysOfStockRotation);
         }
 
         private void tabControl1_Selecting(object sender, TabControlCancelEventArgs e)

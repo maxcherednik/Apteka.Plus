@@ -2,28 +2,27 @@
 using System.IO;
 using BLToolkit.Data;
 
-namespace OrderConverter.DAL
+namespace Apteka.Plus.Logic.OrderConverter.DAL
 {
-    public class DBFFileReader
+    public class DbfFileReader
     {
-        public DBFFileReader(string fileName)
+        public DbfFileReader(string fileName)
         {
-            _fi = new FileInfo(fileName);
+            var fi = new FileInfo(fileName);
 
-            _fiShortFileName = _fi.CopyTo(_fi.DirectoryName + "//temp" + _fi.Extension, true);
+            _fiShortFileName = fi.CopyTo(fi.DirectoryName + "//temp" + fi.Extension, true);
 
-            string _connectionString = _connectionStringWithoutFilename + _fi.DirectoryName;
-            DbManager.AddConnectionString("OleDb", _fiShortFileName.Name, _connectionString);
+            var connectionString = _connectionStringWithoutFilename + fi.DirectoryName;
+            DbManager.AddConnectionString("OleDb", _fiShortFileName.Name, connectionString);
         }
 
-        private FileInfo _fi;
-        private FileInfo _fiShortFileName;
+        private readonly FileInfo _fiShortFileName;
 
-        private string _connectionStringWithoutFilename = @"Provider=Microsoft.Jet.OLEDB.4.0;Extended Properties=dBASE IV;User ID=Admin;Password=;Data Source=";
+        private readonly string _connectionStringWithoutFilename = @"Provider=Microsoft.Jet.OLEDB.4.0;Extended Properties=dBASE IV;User ID=Admin;Password=;Data Source=";
 
         public IList<T> GetOrderRows<T>()
         {
-            using (DbManager db = new DbManager("OleDb", _fiShortFileName.Name))
+            using (var db = new DbManager("OleDb", _fiShortFileName.Name))
             {
                 return db.SetCommand(@"select * from [" + _fiShortFileName.Name + "]").ExecuteList<T>();
             }

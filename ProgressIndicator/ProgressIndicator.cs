@@ -54,7 +54,7 @@ namespace ProgressControls
         [Category("Appearance")]
         public Color CircleColor
         {
-            get { return _circleColor; }
+            get => _circleColor;
             set
             {
                 _circleColor = value;
@@ -70,7 +70,7 @@ namespace ProgressControls
         [Category("Behavior")]
         public bool AutoStart
         {
-            get { return _autoStart; }
+            get => _autoStart;
             set
             {
                 _autoStart = value;
@@ -90,7 +90,7 @@ namespace ProgressControls
         [Category("Appearance")]
         public float CircleSize
         {
-            get { return _circleSize; }
+            get => _circleSize;
             set
             {
                 if (value <= 0.0F)
@@ -110,7 +110,7 @@ namespace ProgressControls
         [Category("Behavior")]
         public int AnimationSpeed
         {
-            get { return (-_interval + 400) / 4; }
+            get => (-_interval + 400) / 4;
             set
             {
                 checked

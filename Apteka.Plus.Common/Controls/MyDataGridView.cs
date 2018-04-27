@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using Apteka.Helpers;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
 
@@ -10,15 +9,12 @@ namespace Apteka.Plus.Common.Controls
 {
     public class MyDataGridView : DataGridView
     {
-        private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
         private List<DataGridViewColumnSettingsRow> _liDataGridViewColumnSettingsLoaded;
         private DataGridViewColumnSettingsAccessor _stateDataSource;
         private Employee _employee;
-        private bool _currentlyLoading = false;
+        private bool _currentlyLoading;
 
         private bool _onRowChangedBlocked;
-        private int _previousRowIndex = -1;
 
         protected override void OnRowPostPaint(DataGridViewRowPostPaintEventArgs e)
         { //this method overrides the DataGridView's RowPostPaint event 
@@ -28,37 +24,31 @@ namespace Apteka.Plus.Common.Controls
             //numbers,
 
             //store a string representation of the row number in 'strRowNumber'
-            string strRowNumber = (e.RowIndex + 1).ToString();
+            var strRowNumber = (e.RowIndex + 1).ToString();
 
             //prepend leading zeros to the string if necessary to improve
             //appearance. For example, if there are ten rows in the grid,
             //row seven will be numbered as "07" instead of "7". Similarly, if 
             //there are 100 rows in the grid, row seven will be numbered as "007".
-            while (strRowNumber.Length < this.RowCount.ToString().Length) strRowNumber = "0" + strRowNumber;
+            while (strRowNumber.Length < RowCount.ToString().Length) strRowNumber = "0" + strRowNumber;
 
             //determine the display size of the row number string using
             //the DataGridView's current font.
-            SizeF size = e.Graphics.MeasureString(strRowNumber, this.Font);
+            var size = e.Graphics.MeasureString(strRowNumber, Font);
 
             //adjust the width of the column that contains the row header cells 
             //if necessary
-            if (this.RowHeadersWidth < (int)(size.Width + 20)) this.RowHeadersWidth = (int)(size.Width + 20);
+            if (RowHeadersWidth < (int)(size.Width + 20)) RowHeadersWidth = (int)(size.Width + 20);
 
             //this brush will be used to draw the row number string on the
             //row header cell using the system's current ControlText color
-            Brush b;
-            if ((e.State & DataGridViewElementStates.Selected) != DataGridViewElementStates.Selected)
-            {
-                b = SystemBrushes.ControlText;
-            }
-            else
-            {
-                b = SystemBrushes.ActiveCaptionText;
-            }
+            var b = (e.State & DataGridViewElementStates.Selected) != DataGridViewElementStates.Selected 
+                ? SystemBrushes.ControlText 
+                : SystemBrushes.ActiveCaptionText;
 
             //draw the row number string on the current row header cell using
             //the brush defined above and the DataGridView's default font
-            e.Graphics.DrawString(strRowNumber, this.Font, b, e.RowBounds.Location.X + 15, e.RowBounds.Location.Y + ((e.RowBounds.Height - size.Height) / 2));
+            e.Graphics.DrawString(strRowNumber, Font, b, e.RowBounds.Location.X + 15, e.RowBounds.Location.Y + (e.RowBounds.Height - size.Height) / 2);
 
             //call the base object's OnRowPostPaint method
             base.OnRowPostPaint(e);
@@ -66,27 +56,26 @@ namespace Apteka.Plus.Common.Controls
 
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            ((System.ComponentModel.ISupportInitialize)(this)).BeginInit();
-            this.SuspendLayout();
+            var dataGridViewCellStyle1 = new DataGridViewCellStyle();
+            ((System.ComponentModel.ISupportInitialize)this).BeginInit();
+            SuspendLayout();
             // 
             // MyDataGridView
             // 
-            this.AllowUserToAddRows = false;
-            this.AllowUserToDeleteRows = false;
-            this.AllowUserToResizeRows = false;
-            dataGridViewCellStyle1.BackColor = System.Drawing.Color.AliceBlue;
-            this.AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
-            ((System.ComponentModel.ISupportInitialize)(this)).EndInit();
-            this.ResumeLayout(false);
-
+            AllowUserToAddRows = false;
+            AllowUserToDeleteRows = false;
+            AllowUserToResizeRows = false;
+            dataGridViewCellStyle1.BackColor = Color.AliceBlue;
+            AlternatingRowsDefaultCellStyle = dataGridViewCellStyle1;
+            ((System.ComponentModel.ISupportInitialize)this).EndInit();
+            ResumeLayout(false);
         }
 
         protected override void OnColumnWidthChanged(DataGridViewColumnEventArgs e)
         {
-            if (!_currentlyLoading && _stateDataSource != null && this.IsColumnWidthChanged)
+            if (!_currentlyLoading && _stateDataSource != null && IsColumnWidthChanged)
             {
-                List<DataGridViewColumnSettingsRow> liSettingsRow = this.GetColumnsSizeExt();
+                var liSettingsRow = GetColumnsSizeExt();
                 _stateDataSource.SaveSettings(liSettingsRow);
             }
 
@@ -98,12 +87,12 @@ namespace Apteka.Plus.Common.Controls
             _employee = employee;
             _stateDataSource = dataSource;
 
-            List<DataGridViewColumnSettingsRow> liColumnSettings = _stateDataSource.GetSettings(employee.ID, this.Parent.Name + "_" + this.Name);
+            var liColumnSettings = _stateDataSource.GetSettings(employee.ID, Parent.Name + "_" + Name);
 
             _currentlyLoading = true;
             try
             {
-                this.LoadColumnsSize(liColumnSettings);
+                LoadColumnsSize(liColumnSettings);
             }
             finally
             {
@@ -111,50 +100,38 @@ namespace Apteka.Plus.Common.Controls
             }
         }
 
-        private DataGridViewCell m_Cell;
+        private DataGridViewCell _mCell;
+
         protected override void OnGotFocus(EventArgs e)
         {
-            if (this.m_Cell != null)
+            if (_mCell?.RowIndex >= 0)
             {
-                if (m_Cell.RowIndex >= 0)
-                {
-                    this.CurrentCell = this.m_Cell;
-                }
+                CurrentCell = _mCell;
             }
 
-            if (this.CurrentCell != null)
+            if (CurrentCell != null)
             {
-                this.CurrentCell.Selected = true;
+                CurrentCell.Selected = true;
             }
 
             base.OnGotFocus(e);
         }
         protected override void OnLostFocus(EventArgs e)
         {
-            this.m_Cell = this.CurrentCell;
-            if (this.CurrentCell != null)
+            _mCell = CurrentCell;
+            if (CurrentCell != null)
             {
-                this.CurrentCell.Selected = false;
+                CurrentCell.Selected = false;
             }
             base.OnLostFocus(e);
         }
 
         protected override void OnKeyDown(KeyEventArgs e)
         {
-            switch (e.KeyCode)
+            if (e.KeyCode == Keys.PageUp || e.KeyCode == Keys.PageDown || e.KeyCode == Keys.Up ||
+                e.KeyCode == Keys.Down)
             {
-
-                case Keys.PageUp:
-                case Keys.PageDown:
-                case Keys.Up:
-                case Keys.Down:
-                    {
-                        _onRowChangedBlocked = true;
-                    }
-                    break;
-
-                default:
-                    break;
+                _onRowChangedBlocked = true;
             }
 
             base.OnKeyDown(e);
@@ -162,23 +139,13 @@ namespace Apteka.Plus.Common.Controls
 
         protected override void OnKeyUp(KeyEventArgs e)
         {
-
-            switch (e.KeyCode)
+            if (e.KeyCode == Keys.PageUp || e.KeyCode == Keys.PageDown || e.KeyCode == Keys.Up ||
+                e.KeyCode == Keys.Down)
             {
-                case Keys.PageUp:
-                case Keys.PageDown:
-                case Keys.Up:
-                case Keys.Down:
-                    {
-                        _onRowChangedBlocked = false;
+                _onRowChangedBlocked = false;
 
-                        if (CurrentRow != null)
-                            OnCurrentRowChange(CurrentRow.Index);
-                    }
-                    break;
-
-                default:
-                    break;
+                if (CurrentRow != null)
+                    OnCurrentRowChange(CurrentRow.Index);
             }
 
             base.OnKeyUp(e);
@@ -193,62 +160,55 @@ namespace Apteka.Plus.Common.Controls
             base.OnRowEnter(e);
         }
 
-        #region CurrentRowChanged
         public event EventHandler<CurrentRowChangedEventArgs> CurrentRowChanged;
 
-        private void OnCurrentRowChange(int RowIndex)
+        private void OnCurrentRowChange(int rowIndex)
         {
             if (CurrentRowChanged != null)
             {
-                _previousRowIndex = RowIndex;
-                CurrentRowChangedEventArgs e = new CurrentRowChangedEventArgs(RowIndex);
+                var e = new CurrentRowChangedEventArgs(rowIndex);
                 CurrentRowChanged.Invoke(this, e);
             }
-
         }
+
         public class CurrentRowChangedEventArgs : EventArgs
         {
-            public CurrentRowChangedEventArgs(int RowIndex)
+            public CurrentRowChangedEventArgs(int rowIndex)
             {
-                _RowIndex = RowIndex;
+                RowIndex = rowIndex;
             }
 
-            private int _RowIndex;
-
-            public int RowIndex
-            {
-                get { return _RowIndex; }
-                set { _RowIndex = value; }
-            }
+            public int RowIndex { get; set; }
         }
-        #endregion
-
-        #region ColumnSizeLogic
         public void LoadColumnsSize(List<DataGridViewColumnSettingsRow> liDataGridViewColumnSettingsRow)
         {
             _liDataGridViewColumnSettingsLoaded = liDataGridViewColumnSettingsRow;
-            foreach (DataGridViewColumnSettingsRow settingsRow in liDataGridViewColumnSettingsRow)
+            foreach (var settingsRow in liDataGridViewColumnSettingsRow)
             {
-                if (settingsRow.ColumnIndex < this.Columns.Count)
+                if (settingsRow.ColumnIndex < Columns.Count)
                 {
-                    this.Columns[settingsRow.ColumnIndex].Width = settingsRow.ColumnSize;
+                    Columns[settingsRow.ColumnIndex].Width = settingsRow.ColumnSize;
                 }
             }
         }
 
         public List<DataGridViewColumnSettingsRow> GetColumnsSizeExt()
         {
-            List<DataGridViewColumnSettingsRow> liDataGridViewColumnSettingsRows = new List<DataGridViewColumnSettingsRow>(this.Columns.Count);
+            var liDataGridViewColumnSettingsRows = new List<DataGridViewColumnSettingsRow>(Columns.Count);
 
-            for (int i = 0; i < this.Columns.Count; i++)
+            for (var i = 0; i < Columns.Count; i++)
             {
-                DataGridViewColumnSettingsRow settingsRow = new DataGridViewColumnSettingsRow();
-                settingsRow.ColumnIndex = i;
-                settingsRow.ColumnSize = this.Columns[i].Width;
-                settingsRow.GridName = this.Parent.Name + "_" + this.Name;
-                settingsRow.Employee = _employee;
+                var settingsRow = new DataGridViewColumnSettingsRow
+                {
+                    ColumnIndex = i,
+                    ColumnSize = Columns[i].Width,
+                    GridName = Parent.Name + "_" + Name,
+                    Employee = _employee
+                };
+
                 liDataGridViewColumnSettingsRows.Add(settingsRow);
             }
+
             return liDataGridViewColumnSettingsRows;
         }
 
@@ -256,14 +216,14 @@ namespace Apteka.Plus.Common.Controls
         {
             get
             {
-                if (this.Columns.Count > _liDataGridViewColumnSettingsLoaded.Count)
+                if (Columns.Count > _liDataGridViewColumnSettingsLoaded.Count)
                 {
                     return true;
                 }
 
-                for (int i = 0; i < this.Columns.Count; i++)
+                for (var i = 0; i < Columns.Count; i++)
                 {
-                    if (_liDataGridViewColumnSettingsLoaded[i].ColumnSize != this.Columns[i].Width)
+                    if (_liDataGridViewColumnSettingsLoaded[i].ColumnSize != Columns[i].Width)
                     {
                         return true;
                     }
@@ -272,7 +232,5 @@ namespace Apteka.Plus.Common.Controls
                 return false;
             }
         }
-
-        #endregion
     }
 }

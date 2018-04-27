@@ -8,7 +8,6 @@ namespace Apteka.Plus.Logic.DAL.Accessors
 
     public abstract class FinanceAccessor : DataAccessor<FinanceRow>
     {
-
         [SprocName("Finance_GetFinanceDaily")]
         public abstract List<FinanceRow> GetFinanceDaily(DateTime Date);
 
@@ -19,6 +18,5 @@ namespace Apteka.Plus.Logic.DAL.Accessors
         public abstract List<FinanceRow> GetFinanceMonthlyPeriod(DateTime DateStart, DateTime DateEnd);
 
         public abstract List<FinanceRow> GetFinanceMonthly();
-
     }
 }

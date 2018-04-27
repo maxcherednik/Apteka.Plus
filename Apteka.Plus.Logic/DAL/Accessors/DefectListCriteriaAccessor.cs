@@ -8,19 +8,8 @@ namespace Apteka.Plus.Logic.DAL.Accessors
     {
         [SqlQuery("select * from DefectListCriteria where DefectListID=@defectListID")]
         public abstract List<DefectListCriteria> SelectByKey(long @defectListID);
-        
 
         private SqlQuery<DefectListCriteria> _query;
-        public SqlQuery<DefectListCriteria> Query
-        {
-            get
-            {
-                if (_query == null)
-                    _query = new SqlQuery<DefectListCriteria>(DbManager);
-                return _query;
-            }
-        }
-
-        
+        public SqlQuery<DefectListCriteria> Query => _query ?? (_query = new SqlQuery<DefectListCriteria>(DbManager));
     }
 }

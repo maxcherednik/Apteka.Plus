@@ -1,6 +1,6 @@
-using System;
+﻿using System;
 
-namespace OrderConverter.BLL
+namespace Apteka.Plus.Logic.OrderConverter.BLL
 {
     public class LocalOrder
     {

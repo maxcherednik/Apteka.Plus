@@ -1,46 +1,44 @@
-﻿using Apteka.Helpers;
+﻿using log4net;
 using System.Collections.Generic;
 
 namespace Apteka.Plus.CashRegister.FP5200
 {
     public class FPrint5200 : ICashRegister
     {
-        private readonly static Logger _logger = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Logger = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private FprnM1C.IFprnM45 ECR = new FprnM1C.FprnM45();
-
-        #region ICashRegister Members
+        private readonly FprnM1C.IFprnM45 _ecr = new FprnM1C.FprnM45();
 
         public void PerformXReport()
         {
             try
             {
-                _logger.Info("Taking device under control");
+                Logger.Info("Taking device under control");
                 // занимаем порт
-                ECR.DeviceEnabled = true;
-                if (ECR.ResultCode != 0)
+                _ecr.DeviceEnabled = true;
+                if (_ecr.ResultCode != 0)
                 {
-                    _logger.Error("Error during taking device unfer control");
+                    Logger.Error("Error during taking device under control");
                     return;
                 }
 
-                _logger.Info("Getting device status");
+                Logger.Info("Getting device status");
                 // получаем состояние ККМ
-                int status = ECR.GetStatus();
+                int status = _ecr.GetStatus();
                 if (status != 0)
                 {
-                    _logger.ErrorFormat("Smth wrong with device. Status {0}", status);
+                    Logger.ErrorFormat("Smth wrong with device. Status {0}", status);
                     return;
                 }
 
-                _logger.Info("Checking if there is open reciept");
+                Logger.Info("Checking if there is open reciept");
                 // если есть открытый чек, то отменяем его
-                if (ECR.CheckState != 0)
+                if (_ecr.CheckState != 0)
                 {
-                    _logger.Info("Closing open reciept");
-                    if (ECR.CancelCheck() != 0)
+                    Logger.Info("Closing open reciept");
+                    if (_ecr.CancelCheck() != 0)
                     {
-                        _logger.Error("Error during closing open reciept");
+                        Logger.Error("Error during closing open reciept");
                         return;
                     }
                 }
@@ -48,67 +46,69 @@ namespace Apteka.Plus.CashRegister.FP5200
                 ////////////////////////////
                 // X - отчет
                 // устанавливаем пароль администратора ККМ
-                ECR.Password = "29";
+                _ecr.Password = "29";
                 // входим в режим отчетов без гашения
-                ECR.Mode = 2;
-                if (ECR.SetMode() != 0)
+                _ecr.Mode = 2;
+                if (_ecr.SetMode() != 0)
+                {
                     return;
+                }
+
                 // снимаем отчет
-                ECR.ReportType = 2;
-                if (ECR.Report() != 0)
+                _ecr.ReportType = 2;
+                if (_ecr.Report() != 0)
+                {
                     return;
+                }
 
                 // выходим в режим выбора, чтобы кто-то под введенными паролями не сделал что нибуть нехорошее
-                if (ECR.ResetMode() != 0)
+                if (_ecr.ResetMode() != 0)
+                {
                     return;
-
+                }
             }
             finally
             {
                 // освобождаем порт
-                ECR.DeviceEnabled = false;
-
+                _ecr.DeviceEnabled = false;
             }
 
-            if (ECR.ResultCode != 0)
+            if (_ecr.ResultCode != 0)
             {
-                _logger.Error("Error during device release");
-                return;
+                Logger.Error("Error during device release");
             }
-
-
         }
 
         public void PerformZReport()
         {
             try
             {
-                _logger.Info("Taking device under control");
+                Logger.Info("Taking device under control");
                 // занимаем порт
-                ECR.DeviceEnabled = true;
-                if (ECR.ResultCode != 0)
+                _ecr.DeviceEnabled = true;
+                if (_ecr.ResultCode != 0)
                 {
-                    _logger.Error("Error during taking device unfer control");
+                    Logger.Error("Error during taking device under control");
                     return;
                 }
 
-                _logger.Info("Getting device status");
+                Logger.Info("Getting device status");
                 // получаем состояние ККМ
-                int status = ECR.GetStatus();
+                var status = _ecr.GetStatus();
                 if (status != 0)
                 {
-                    _logger.ErrorFormat("Smth wrong with device. Status {0}", status);
+                    Logger.ErrorFormat("Smth wrong with device. Status {0}", status);
                     return;
                 }
 
-                _logger.Info("Checking if there is open reciept");
+                Logger.Info("Checking if there is open reciept");
                 // если есть открытый чек, то отменяем его
-                if (ECR.CheckState != 0)
+                if (_ecr.CheckState != 0)
                 {
-                    _logger.Info("Closing open reciept");
-                    if (ECR.CancelCheck() != 0)
+                    Logger.Info("Closing open reciept");
+                    if (_ecr.CancelCheck() != 0)
                     {
-                        _logger.Error("Error during closing open reciept");
+                        Logger.Error("Error during closing open reciept");
                         return;
                     }
                 }
@@ -116,32 +116,36 @@ namespace Apteka.Plus.CashRegister.FP5200
                 ///////////////////////////
                 // Z - отчет
                 // устанавливаем пароль системного администратора ККМ
-                ECR.Password = "30";
+                _ecr.Password = "30";
                 // входим в режим отчетов с гашением
-                ECR.Mode = 3;
-                if (ECR.SetMode() != 0)
+                _ecr.Mode = 3;
+                if (_ecr.SetMode() != 0)
+                {
                     return;
+                }
+
                 // снимаем отчет
-                ECR.ReportType = 1;
-                if (ECR.Report() != 0)
+                _ecr.ReportType = 1;
+                if (_ecr.Report() != 0)
+                {
                     return;
+                }
 
                 // выходим в режим выбора, чтобы кто-то под введенными паролями не сделал что нибуть нехорошее
-                if (ECR.ResetMode() != 0)
+                if (_ecr.ResetMode() != 0)
+                {
                     return;
-
+                }
             }
             finally
             {
                 // освобождаем порт
-                ECR.DeviceEnabled = false;
-
+                _ecr.DeviceEnabled = false;
             }
 
-            if (ECR.ResultCode != 0)
+            if (_ecr.ResultCode != 0)
             {
-                _logger.Error("Error during device release");
-                return;
+                Logger.Error("Error during device release");
             }
         }
 
@@ -149,32 +153,32 @@ namespace Apteka.Plus.CashRegister.FP5200
         {
             try
             {
-                _logger.Info("Taking device under control");
+                Logger.Info("Taking device under control");
                 // занимаем порт
-                ECR.DeviceEnabled = true;
-                if (ECR.ResultCode != 0)
+                _ecr.DeviceEnabled = true;
+                if (_ecr.ResultCode != 0)
                 {
-                    _logger.Error("Error during taking device unfer control");
+                    Logger.Error("Error during taking device unfer control");
                     return;
                 }
 
-                _logger.Info("Getting device status");
+                Logger.Info("Getting device status");
                 // получаем состояние ККМ
-                int status = ECR.GetStatus();
+                var status = _ecr.GetStatus();
                 if (status != 0)
                 {
-                    _logger.ErrorFormat("Smth wrong with device. Status {0}", status);
+                    Logger.ErrorFormat("Smth wrong with device. Status {0}", status);
                     return;
                 }
 
-                _logger.Info("Checking if there is open reciept");
+                Logger.Info("Checking if there is open reciept");
                 // если есть открытый чек, то отменяем его
-                if (ECR.CheckState != 0)
+                if (_ecr.CheckState != 0)
                 {
-                    _logger.Info("Closing open reciept");
-                    if (ECR.CancelCheck() != 0)
+                    Logger.Info("Closing open reciept");
+                    if (_ecr.CancelCheck() != 0)
                     {
-                        _logger.Error("Error during closing open reciept");
+                        Logger.Error("Error during closing open reciept");
                         return;
                     }
                 }
@@ -182,63 +186,68 @@ namespace Apteka.Plus.CashRegister.FP5200
 
                 // входим в режим регистрации
                 // устанавливаем пароль кассира
-                ECR.Password = cashOperator.Password;
+                _ecr.Password = cashOperator.Password;
                 // входим в режим регистрации
-                ECR.Mode = 1;
-                if (ECR.SetMode() != 0)
+                _ecr.Mode = 1;
+                if (_ecr.SetMode() != 0)
+                {
                     return;
+                }
 
                 foreach (var item in liGoods)
                 {
                     // регистрация продажи
-                    ECR.Name = item.Name;
-                    ECR.Price = item.Price;
-                    ECR.Quantity = item.Amount;
-                    ECR.Department = 2;
-                    if (ECR.Registration() != 0)
+                    _ecr.Name = item.Name;
+                    _ecr.Price = item.Price;
+                    _ecr.Quantity = item.Amount;
+                    _ecr.Department = 2;
+                    if (_ecr.Registration() != 0)
+                    {
                         return;
+                    }
 
                     if (item.Discount != 0)
                     {
                         // скидка суммой на предыдущую позицию
-                        ECR.Percents = item.Discount;
-                        ECR.Destination = 1;
-                        if (ECR.PercentsDiscount() != 0)
+                        _ecr.Percents = item.Discount;
+                        _ecr.Destination = 1;
+                        if (_ecr.PercentsDiscount() != 0)
+                        {
                             return;
+                        }
                     }
                 }
 
                 // закрытие чека наличными с вводом полученной от клиента суммы
                 if (givenCash != 0)
                 {
-                    ECR.Summ = givenCash;
-                    ECR.TypeClose = 0;
-                    if (ECR.Delivery() != 0)
+                    _ecr.Summ = givenCash;
+                    _ecr.TypeClose = 0;
+                    if (_ecr.Delivery() != 0)
+                    {
                         return;
+                    }
                 }
                 else
                 {
                     // закрытие чека наличными без ввода полученной от клиента суммы
-                    ECR.TypeClose = 0;
-                    if (ECR.CloseCheck() != 0)
+                    _ecr.TypeClose = 0;
+                    if (_ecr.CloseCheck() != 0)
+                    {
                         return;
+                    }
                 }
-
             }
             finally
             {
                 // освобождаем порт
-                ECR.DeviceEnabled = false;
-
+                _ecr.DeviceEnabled = false;
             }
 
-            if (ECR.ResultCode != 0)
+            if (_ecr.ResultCode != 0)
             {
-                _logger.Error("Error during device release");
-                return;
+                Logger.Error("Error during device release");
             }
         }
-
-        #endregion
     }
 }

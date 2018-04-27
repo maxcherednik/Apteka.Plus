@@ -1,4 +1,4 @@
-namespace Apteka.Plus.UserControls
+п»їnamespace Apteka.Plus.UserControls
 {
     partial class UcNewBillPage
     {
@@ -69,7 +69,7 @@ namespace Apteka.Plus.UserControls
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
             this.tabPage1.Size = new System.Drawing.Size(769, 409);
             this.tabPage1.TabIndex = 0;
-            this.tabPage1.Text = "Накладная";
+            this.tabPage1.Text = "РќР°РєР»Р°РґРЅР°СЏ";
             this.tabPage1.UseVisualStyleBackColor = true;
             // 
             // dgvBill
@@ -108,13 +108,13 @@ namespace Apteka.Plus.UserControls
             // ProductName
             // 
             this.ProductName.DataPropertyName = "ProductName";
-            this.ProductName.HeaderText = "Название";
+            this.ProductName.HeaderText = "РќР°Р·РІР°РЅРёРµ";
             this.ProductName.Name = "ProductName";
             // 
             // PackageName
             // 
             this.PackageName.DataPropertyName = "PackageName";
-            this.PackageName.HeaderText = "Фасовка";
+            this.PackageName.HeaderText = "Р¤Р°СЃРѕРІРєР°";
             this.PackageName.Name = "PackageName";
             // 
             // Amount
@@ -124,7 +124,7 @@ namespace Apteka.Plus.UserControls
             dataGridViewCellStyle2.Format = "N0";
             dataGridViewCellStyle2.NullValue = null;
             this.Amount.DefaultCellStyle = dataGridViewCellStyle2;
-            this.Amount.HeaderText = "Кол-во";
+            this.Amount.HeaderText = "РљРѕР»-РІРѕ";
             this.Amount.Name = "Amount";
             // 
             // SupplierPrice
@@ -134,7 +134,7 @@ namespace Apteka.Plus.UserControls
             dataGridViewCellStyle3.Format = "N2";
             dataGridViewCellStyle3.NullValue = null;
             this.SupplierPrice.DefaultCellStyle = dataGridViewCellStyle3;
-            this.SupplierPrice.HeaderText = "Цена";
+            this.SupplierPrice.HeaderText = "Р¦РµРЅР°";
             this.SupplierPrice.Name = "SupplierPrice";
             // 
             // Extra
@@ -144,7 +144,7 @@ namespace Apteka.Plus.UserControls
             dataGridViewCellStyle4.Format = "N2";
             dataGridViewCellStyle4.NullValue = null;
             this.Extra.DefaultCellStyle = dataGridViewCellStyle4;
-            this.Extra.HeaderText = "Наценка";
+            this.Extra.HeaderText = "РќР°С†РµРЅРєР°";
             this.Extra.Name = "Extra";
             // 
             // LocalPrice
@@ -154,7 +154,7 @@ namespace Apteka.Plus.UserControls
             dataGridViewCellStyle5.Format = "N2";
             dataGridViewCellStyle5.NullValue = null;
             this.LocalPrice.DefaultCellStyle = dataGridViewCellStyle5;
-            this.LocalPrice.HeaderText = "Наша цена";
+            this.LocalPrice.HeaderText = "РќР°С€Р° С†РµРЅР°";
             this.LocalPrice.Name = "LocalPrice";
             // 
             // UcNewBillPage

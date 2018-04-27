@@ -18,7 +18,7 @@ namespace Apteka.Plus.Common.Forms
 
         private void btnRetry_Click(object sender, System.EventArgs e)
         {
-            this.DialogResult = DialogResult.Retry;
+            DialogResult = DialogResult.Retry;
             DbHost = tbDbHost.Text;
             DbUser = tbDbUserName.Text;
             DbPassword = tbDbPassword.Text;

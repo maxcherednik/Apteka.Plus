@@ -1,14 +1,14 @@
 ﻿using System.ServiceProcess;
-using Apteka.Helpers;
 using Apteka.Plus.Satelite.Logic;
+using log4net;
 
 namespace Satelite.Service
 {
     public partial class SateliteService : ServiceBase
     {
-        private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private WCFServer<SateliteServer> wcfServer = new WCFServer<SateliteServer>();
+        private readonly WCFServer<SateliteServer> _wcfServer = new WCFServer<SateliteServer>();
 
         public SateliteService()
         {
@@ -18,20 +18,20 @@ namespace Satelite.Service
 
         protected override void OnStart(string[] args)
         {
-            log.InfoFormat("Service is starting. Store id={0}", SateliteServer.SateliteID);
+            Log.InfoFormat("Service is starting. Store id={0}", SateliteServer.SateliteID);
 
-            wcfServer.Start();
+            _wcfServer.Start();
 
-            log.Info("Service successfully started");
+            Log.Info("Service successfully started");
         }
 
         protected override void OnStop()
         {
-            log.Info("Service is stopping");
+            Log.Info("Service is stopping");
 
-            wcfServer.Stop();
+            _wcfServer.Stop();
 
-            log.Info("Service stopped");
+            Log.Info("Service stopped");
         }
     }
 }

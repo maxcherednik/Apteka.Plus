@@ -9,92 +9,46 @@ namespace Apteka.Plus.Logic.BLL.Entities
     [MapField("LocalBillsRowID", "LocalBillsRow.ID")]
     public class SalesRow
     {
-        #region Private fields
-        private Employee _employee = new Employee();
-        private LocalBillsRowEx _localBillsRow = new LocalBillsRowEx();
-        private MyStore _myStore = new MyStore();
-       
-        #endregion
-        
         [PrimaryKey, NonUpdatable]
         public long ID { get; set; }
 
         public DateTime DateAccepted { get; set; }
+
         public int CustomerNumber { get; set; }
-        
-        
+
         public int Count { get; set; }
+
         public Double Price { get; set; }
-        
-        public Double PriceWithDiscount { get; set; }
-        public Double Discount { get; set; }
 
-       
-        public Employee Employee
-        {
-            get { return _employee; }
-            set { _employee = value; }
-        }
+        public double PriceWithDiscount { get; set; }
 
-        public MyStore MyStore
-        {
-            get { return _myStore; }
-            set { _myStore = value; }
-        }
+        public double Discount { get; set; }
 
-        public string MyStoreName
-        {
-            get { return _myStore.Name; }
-        }
+        public Employee Employee { get; set; } = new Employee();
 
-        public LocalBillsRowEx LocalBillsRow
-        {
-            get { return _localBillsRow; }
-            set { _localBillsRow = value; }
-        }
+        public MyStore MyStore { get; set; } = new MyStore();
 
-        public string ProductName
-        {
-            get { return _localBillsRow.ProductName; }            
-        }
+        public string MyStoreName => MyStore.Name;
 
-        public string PackageName
-        {
-            get { return _localBillsRow.PackageName; }
-        }
+        public LocalBillsRowEx LocalBillsRow { get; set; } = new LocalBillsRowEx();
 
-        public string EmployeeName
-        {
-            get { return _employee.FullName; }
-        }
+        public string ProductName => LocalBillsRow.ProductName;
+
+        public string PackageName => LocalBillsRow.PackageName;
+
+        public string EmployeeName => Employee.FullName;
 
         [Nullable]
         public string ClientID { get; set; }
 
-        public static Comparison<SalesRow> DateComparison = delegate(SalesRow p1, SalesRow p2)
-        {
-            return p1.DateAccepted.CompareTo(p2.DateAccepted);
-        };
+        public static Comparison<SalesRow> DateComparison = (p1, p2) => p1.DateAccepted.CompareTo(p2.DateAccepted);
 
-        public static Comparison<SalesRow> CustomerNumberComparison = delegate(SalesRow p1, SalesRow p2)
-        {
-            return p1.CustomerNumber.CompareTo(p2.CustomerNumber);
-        };
+        public static Comparison<SalesRow> CustomerNumberComparison = (p1, p2) => p1.CustomerNumber.CompareTo(p2.CustomerNumber);
 
-        public static Comparison<SalesRow> ProductNameComparison = delegate(SalesRow p1, SalesRow p2)
-        {
-            return p1.ProductName.CompareTo(p2.ProductName);
-        };
+        public static Comparison<SalesRow> ProductNameComparison = (p1, p2) => p1.ProductName.CompareTo(p2.ProductName);
 
-        public static Comparison<SalesRow> EmployeeComparison = delegate(SalesRow p1, SalesRow p2)
-        {
-            return p1.EmployeeName.CompareTo(p2.EmployeeName);
-        };
+        public static Comparison<SalesRow> EmployeeComparison = (p1, p2) => p1.EmployeeName.CompareTo(p2.EmployeeName);
 
-        public static Comparison<SalesRow> ClientIDComparison = delegate(SalesRow p1, SalesRow p2)
-        {
-            return p1.ClientID.CompareTo(p2.ClientID);
-        };
+        public static Comparison<SalesRow> ClientIDComparison = (p1, p2) => p1.ClientID.CompareTo(p2.ClientID);
     }
 }
-

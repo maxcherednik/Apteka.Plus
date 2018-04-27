@@ -4,67 +4,62 @@ using System.Windows.Forms;
 using Apteka.Plus.Logic.BLL.Collections;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
+using BLToolkit.DataAccess;
 
 namespace Apteka.Plus.Forms
 {
     public partial class frmFullProductInfoEdit : Form
     {
-        private FullProductInfo _FullProductInfo;
-        private FullProductInfo _FullProductInfoJustAdded;
+        private readonly FullProductInfo _fullProductInfo;
         private List<ProductIntegrationInfo> _liProductIntegrationInfos;
 
-        public FullProductInfo NewFullProductInfo
-        {
-            get { return _FullProductInfoJustAdded; }
-        }
+        public FullProductInfo NewFullProductInfo { get; private set; }
 
-        public frmFullProductInfoEdit(FullProductInfo FullProductInfo)
+        public frmFullProductInfoEdit(FullProductInfo fullProductInfo)
         {
             InitializeComponent();
-            _FullProductInfo = FullProductInfo;
-            fullProductInfoBindingSource.DataSource = _FullProductInfo;
+            _fullProductInfo = fullProductInfo;
+            fullProductInfoBindingSource.DataSource = _fullProductInfo;
         }
 
         public frmFullProductInfoEdit()
         {
             InitializeComponent();
-            _FullProductInfo = new FullProductInfo();
-            fullProductInfoBindingSource.DataSource = _FullProductInfo;
+            _fullProductInfo = new FullProductInfo();
+            fullProductInfoBindingSource.DataSource = _fullProductInfo;
         }
 
         private void btnSave_Click(object sender, EventArgs e)
         {
-            FullProductInfoAccessor fpia = FullProductInfoAccessor.CreateInstance<FullProductInfoAccessor>();
-            if (_FullProductInfo.ID != 0)
+            var fpia = DataAccessor.CreateInstance<FullProductInfoAccessor>();
+            if (_fullProductInfo.ID != 0)
             {
-
-                int i = fpia.Query.Update(_FullProductInfo);
+                fpia.Query.Update(_fullProductInfo);
             }
             else
             {
-                long i = fpia.Insert(_FullProductInfo);
-                _FullProductInfo.ID = i;
-                _FullProductInfoJustAdded = _FullProductInfo;
+                var i = fpia.Insert(_fullProductInfo);
+                _fullProductInfo.ID = i;
+                NewFullProductInfo = _fullProductInfo;
             }
-            this.Close();
+
+            Close();
         }
 
         private void tabControl1_Selecting(object sender, TabControlCancelEventArgs e)
         {
             if (e.TabPage.Name == "tpIntegration")
             {
-
                 if (cboSuppliers.Items.Count == 0)
                 {
                     supplierBindingSource.DataSource = SuppliersCollection.AllSuppliers;
                 }
 
-                ProductIntegrationInfoAccessor piia = ProductIntegrationInfoAccessor.CreateInstance<ProductIntegrationInfoAccessor>();
+                var piia = DataAccessor.CreateInstance<ProductIntegrationInfoAccessor>();
 
-                _liProductIntegrationInfos = piia.SelectByFullProductInfoID(_FullProductInfo.ID);
+                _liProductIntegrationInfos = piia.SelectByFullProductInfoID(_fullProductInfo.ID);
 
                 productIntegrationInfoBindingSource.DataSource = _liProductIntegrationInfos;
-
             }
         }
 
@@ -72,25 +67,20 @@ namespace Apteka.Plus.Forms
         {
             if (e.ColumnIndex >= 0 && e.RowIndex >= 0)
             {
-                DataGridView dgv = sender as DataGridView;
+                var dgv = (DataGridView)sender;
 
-                string value = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
+                var value = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex].Value.ToString();
+
                 if (value == "Удалить")
                 {
-                    ProductIntegrationInfo pii = dgv.Rows[e.RowIndex].DataBoundItem as ProductIntegrationInfo;
-                    DialogResult res = MessageBox.Show("Вы уверены, что хотите удалить соответствие для поставщика " + pii.Supplier + "?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                    var pii = (ProductIntegrationInfo)dgv.Rows[e.RowIndex].DataBoundItem;
+                    var res = MessageBox.Show($@"Вы уверены, что хотите удалить соответствие для поставщика {pii.Supplier}?", @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                     if (res == DialogResult.Yes)
                     {
-                        //if (_newDefectList != null)
-                        //{
-
-                        ProductIntegrationInfoAccessor piia = ProductIntegrationInfoAccessor.CreateInstance<ProductIntegrationInfoAccessor>();
+                        var piia = DataAccessor.CreateInstance<ProductIntegrationInfoAccessor>();
 
                         piia.DeleteByKey(pii.ID);
-
-                        ////}
-
                         dgv.Rows.RemoveAt(e.RowIndex);
                     }
                 }
@@ -99,15 +89,17 @@ namespace Apteka.Plus.Forms
 
         private void btnAddIntegrationInfo_Click(object sender, EventArgs e)
         {
-            ProductIntegrationInfoAccessor piia = ProductIntegrationInfoAccessor.CreateInstance<ProductIntegrationInfoAccessor>();
-            ProductIntegrationInfo pii = new ProductIntegrationInfo();
-            pii.SupplierProductID = Convert.ToInt32(tbID.Text);
-            pii.Supplier = cboSuppliers.SelectedItem as Supplier;
-            pii.ParentFullProductInfo = _FullProductInfo;
+            var piia = DataAccessor.CreateInstance<ProductIntegrationInfoAccessor>();
+            var pii = new ProductIntegrationInfo
+            {
+                SupplierProductID = Convert.ToInt32(tbID.Text),
+                Supplier = cboSuppliers.SelectedItem as Supplier,
+                ParentFullProductInfo = _fullProductInfo
+            };
+
             pii.ID = piia.Insert(pii);
             _liProductIntegrationInfos.Add(pii);
             productIntegrationInfoBindingSource.ResetBindings(false);
-
         }
     }
 }

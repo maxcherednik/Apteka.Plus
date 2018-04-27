@@ -14,15 +14,6 @@ namespace Apteka.Plus.Logic.DAL.Accessors
         public abstract void DeletebyProduct(long @ProductID);
         
         private SqlQuery<DefectExceptionRow> _query;
-        public SqlQuery<DefectExceptionRow> Query
-        {
-            get
-            {
-                if (_query == null)
-                    _query = new SqlQuery<DefectExceptionRow>(DbManager);
-                return _query;
-            }
-        }
-
+        public SqlQuery<DefectExceptionRow> Query => _query ?? (_query = new SqlQuery<DefectExceptionRow>(DbManager));
     }
 }

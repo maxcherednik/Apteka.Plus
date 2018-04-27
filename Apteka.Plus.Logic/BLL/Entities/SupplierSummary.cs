@@ -4,23 +4,14 @@ namespace Apteka.Plus.Logic.BLL.Entities
 {
     public class SupplierSummary
     {
-        private Supplier _Supplier = new Supplier();
+        public Supplier Supplier { get; set; } = new Supplier();
 
-        public Supplier Supplier
-        {
-          get { return _Supplier; }
-          set { _Supplier = value; }
-        }
-
-        
         public DateTime DateSupply { get; set; }
+
         public string SupplierBillNumber { get; set; }
+
         public double Sum { get; set; }
 
-        public string SupplierName
-        {
-            get { return _Supplier.Name; }            
-        }
-        
+        public string SupplierName => Supplier.Name;
     }
 }

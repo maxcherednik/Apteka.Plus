@@ -1,27 +1,24 @@
 ﻿using System;
 using System.Threading;
 using System.Windows.Forms;
-using Apteka.Helpers;
 using Apteka.Plus.Common.Forms;
 using Apteka.Plus.Logic.DAL;
 using Apteka.Plus.Satelite.Forms;
 using Apteka.Plus.Satelite.Properties;
+using log4net;
 
 namespace Apteka.Plus.Satelite
 {
     static class Program
     {
-        private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        /// <summary>
-        /// The main entry point for the application.
-        /// </summary>
         [STAThread]
         static void Main()
         {
-            log.Info("Старт приложения!");
-            AppDomain.CurrentDomain.UnhandledException += new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
-            Application.ThreadException += new ThreadExceptionEventHandler(Application_ThreadException);
+            Log.Info("Старт приложения!");
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            Application.ThreadException += Application_ThreadException;
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
@@ -35,7 +32,7 @@ namespace Apteka.Plus.Satelite
         {
             var connectionString = string.Format(Settings.Default.ConnectionStringTemplate, Settings.Default.DbHost, Settings.Default.DbUser, Settings.Default.DbPassword);
 
-            while (!DAL.IsConnectionFine(connectionString))
+            while (!Dal.IsConnectionFine(connectionString))
             {
                 using (var dlg = new frmDBConnectionFailure(Settings.Default.DbHost, Settings.Default.DbUser, Settings.Default.DbPassword))
                 {
@@ -54,20 +51,21 @@ namespace Apteka.Plus.Satelite
                     }
                 }
             }
-            DAL.InitConnectionString(connectionString);
+
+            Dal.InitConnectionString(connectionString);
         }
 
-        static void Application_ThreadException(object sender, System.Threading.ThreadExceptionEventArgs e)
+        static void Application_ThreadException(object sender, ThreadExceptionEventArgs e)
         {
-            log.Error("Произошла ошибка!", e.Exception);
-            MessageBox.Show("Произошла ошибка: " + e.Exception.Message, "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            Log.Error("Произошла ошибка!", e.Exception);
+            MessageBox.Show(@"Произошла ошибка: " + e.Exception.Message, @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             Exception exc = (Exception)e.ExceptionObject;
-            log.Error("Произошла ошибка!", exc);
-            MessageBox.Show("Произошла ошибка: " + exc.Message, "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            Log.Error("Произошла ошибка!", exc);
+            MessageBox.Show(@"Произошла ошибка: " + exc.Message, @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

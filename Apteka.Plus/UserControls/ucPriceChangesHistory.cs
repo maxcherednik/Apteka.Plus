@@ -7,12 +7,12 @@ using Apteka.Plus.Logic.BLL;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
 using BLToolkit.Data;
+using BLToolkit.DataAccess;
 
 namespace Apteka.Plus.UserControls
 {
     public partial class ucPriceChangesHistory : UserControl
     {
-        private int _rowCount;
         private List<PriceChangeRow> _liPriceChangeRows;
 
         public ucPriceChangesHistory()
@@ -22,15 +22,15 @@ namespace Apteka.Plus.UserControls
 
         public void LoadData(MyStore myStore, DateTime startDate, DateTime endDate)
         {
-            using (DbManager dbSatelite = new DbManager(myStore.Name))
+            using (var dbSatelite = new DbManager(myStore.Name))
             {
-                PriceChangesAccessor pca = PriceChangesAccessor.CreateInstance<PriceChangesAccessor>(dbSatelite);
+                var pca = DataAccessor.CreateInstance<PriceChangesAccessor>(dbSatelite);
 
                 _liPriceChangeRows = pca.GetRows(startDate, endDate);
-                _rowCount = _liPriceChangeRows.Count;
+                RowCount = _liPriceChangeRows.Count;
 
                 double dSum = 0;
-                foreach (PriceChangeRow row in _liPriceChangeRows)
+                foreach (var row in _liPriceChangeRows)
                 {
                     dSum += row.Difference;
                 }
@@ -38,7 +38,7 @@ namespace Apteka.Plus.UserControls
                 DiffSum = dSum;
 
 
-                this.InvokeInGUIThread(() =>
+                this.InvokeInGuiThread(() =>
                     {
                         OnRowCountChanged(_liPriceChangeRows.Count);
                         priceChangeRowBindingSource.DataSource = _liPriceChangeRows;
@@ -47,13 +47,8 @@ namespace Apteka.Plus.UserControls
 
         }
 
-        public int RowCount
-        {
-            get
-            {
-                return _rowCount;
-            }
-        }
+        public int RowCount { get; private set; }
+
         public double DiffSum { get; private set; }
 
         public class RowCountChangedEventArgs : EventArgs
@@ -63,49 +58,38 @@ namespace Apteka.Plus.UserControls
                 RowCount = rowCount;
             }
 
-            public int RowCount { get; private set; }
+            public int RowCount { get; }
         }
 
         public event EventHandler<RowCountChangedEventArgs> RowCountChanged;
 
         protected virtual void OnRowCountChanged(int rowCount)
         {
-            var eventHandler = RowCountChanged;
-            if (eventHandler != null)
-                eventHandler(this, new RowCountChangedEventArgs(rowCount));
+            RowCountChanged?.Invoke(this, new RowCountChangedEventArgs(rowCount));
         }
 
         private void ucPriceChangesHistory_Load(object sender, EventArgs e)
         {
             if (DesignMode) return;
-            dgvPriceChanges.SetStateSourceAndLoadState(Session.User, DataGridViewColumnSettingsAccessor.CreateInstance<DataGridViewColumnSettingsAccessor>());
+            dgvPriceChanges.SetStateSourceAndLoadState(Session.User, DataAccessor.CreateInstance<DataGridViewColumnSettingsAccessor>());
         }
 
         private void dgvPriceChanges_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
-            PriceChangeRow row = dgv.Rows[e.RowIndex].DataBoundItem as PriceChangeRow;
+            var dgv = (DataGridView)sender;
+            var row = (PriceChangeRow)dgv.Rows[e.RowIndex].DataBoundItem;
 
-            switch (dgv[e.ColumnIndex, e.RowIndex].OwningColumn.Name)
+            if (dgv[e.ColumnIndex, e.RowIndex].OwningColumn.Name == "OldPrice")
             {
-                case "OldPrice":
-                    {
-                        double oldPrice;
-                        oldPrice = row.NewPrice - row.Difference / row.Count;
+                var oldPrice = row.NewPrice - row.Difference / row.Count;
 
-                        e.Value = oldPrice;
-
-                    }
-                    break;
-
-                case "Difference":
-                    {
-                        if (row.Difference < 0)
-                            e.CellStyle.BackColor = Color.Salmon;
-                    }
-                    break;
+                e.Value = oldPrice;
+            }
+            else if (dgv[e.ColumnIndex, e.RowIndex].OwningColumn.Name == "Difference")
+            {
+                if (row.Difference < 0)
+                    e.CellStyle.BackColor = Color.Salmon;
             }
         }
-
     }
 }

@@ -8,8 +8,11 @@ namespace Apteka.Plus.Logic.BLL.Entities
     public class DataGridViewColumnSettingsRow
     {
         public Employee Employee { get; set; }
+
         public string GridName { get; set; }
+
         public int ColumnIndex { get; set; }
+
         public int ColumnSize { get; set; }
     }
 }

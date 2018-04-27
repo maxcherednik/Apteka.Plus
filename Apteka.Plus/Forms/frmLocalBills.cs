@@ -1,6 +1,6 @@
-using System;
+﻿using System;
 using System.Windows.Forms;
-using Apteka.Helpers;
+using Apteka.Plus.Common.Forms;
 using Apteka.Plus.Logic.BLL.Collections;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Properties;
@@ -11,22 +11,14 @@ namespace Apteka.Plus.Forms
 {
     public partial class frmLocalBills : Form
     {
-        #region Private fields
-        private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-        #endregion
-
-        #region Constructor
         public frmLocalBills()
         {
             InitializeComponent();
         }
-        #endregion
 
         private void frmLocalBills_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (this.Owner != null)
-                this.Owner.Show();
+            Owner?.Show();
         }
 
         private void frmLocalBills_Load(object sender, EventArgs e)
@@ -36,21 +28,19 @@ namespace Apteka.Plus.Forms
 
         private void tbSearch_TextChanged(object sender, EventArgs e)
         {
-            ucGoodsViewer1.FilterByName( tbSearch.Text);
+            ucGoodsViewer1.FilterByName(tbSearch.Text);
         }
-
 
         private void ucGoodsViewer1_CurrentRowChanged(object sender, ucGoodsViewer.RowChangedEventArgs e)
         {
-            int DaysForAnalysis = Convert.ToInt16(Settings.Default.DaysForAnalysis);
-            int DaysOfStockRotation = Convert.ToInt16(Settings.Default.DaysOfStockRotation);
-            int ProductSuppliesTopRows = Convert.ToInt16(Settings.Default.ProductSuppliesTopRows);
-            ucProductSupplies1.GetInfo(e.Row.MainStoreRow.FullProductInfo, ProductSuppliesTopRows, DaysOfStockRotation);
+            int daysOfStockRotation = Convert.ToInt16(Settings.Default.DaysOfStockRotation);
+            int productSuppliesTopRows = Convert.ToInt16(Settings.Default.ProductSuppliesTopRows);
+            ucProductSupplies1.GetInfo(e.Row.MainStoreRow.FullProductInfo, productSuppliesTopRows, daysOfStockRotation);
         }
 
         private void myStoreBindingSource_CurrentChanged(object sender, EventArgs e)
         {
-            MyStore myStore = myStoreBindingSource.Current as MyStore;
+            var myStore = (MyStore)myStoreBindingSource.Current;
             ucGoodsViewer1.LoadByLetter(myStore, tbSearch.Text);
         }
 
@@ -81,15 +71,15 @@ namespace Apteka.Plus.Forms
 
         private void btnPrint_Click(object sender, EventArgs e)
         {
-            frmReportViewer frmReportViewer = new frmReportViewer("Apteka.Plus.Common.Reports.DefectListBySupplier.rdlc");
+            var frmReportViewer = new frmReportViewer("Apteka.Plus.Common.Reports.DefectListBySupplier.rdlc");
 
-            MyStore store = myStoreBindingSource.Current as MyStore;
+            var store = (MyStore)myStoreBindingSource.Current;
 
-            ReportParameter Date = new ReportParameter("Date", DateTime.Now.ToString());
-            ReportParameter MyStore = new ReportParameter("MyStore", store.Name);
-            
+            var date = new ReportParameter("Date", DateTime.Now.ToString());
+            var myStore = new ReportParameter("MyStore", store.Name);
 
-            frmReportViewer.SetParameters(Date, MyStore);
+
+            frmReportViewer.SetParameters(date, myStore);
 
             frmReportViewer.SetDataSource("SmartDefectRow", ucGoodsViewer1.List);
             frmReportViewer.ShowDialog();

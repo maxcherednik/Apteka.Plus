@@ -1,24 +1,24 @@
-﻿using Apteka.Helpers;
+﻿using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
 using Apteka.Plus.Logic.BLL;
 using Apteka.Plus.Logic.BLL.Collections;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
 using BLToolkit.Data;
+using BLToolkit.DataAccess;
+using log4net;
 using Microsoft.Reporting.WinForms;
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Windows.Forms;
 
-namespace Apteka.Plus.Forms
+namespace Apteka.Plus.Common.Forms
 {
     public partial class frmPrintBills : Form
     {
-        private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private const string BaseDirectory = "Apteka.Plus.Common.Reports.";
 
-        private MyStore store;
+        private readonly MyStore _store;
 
         public frmPrintBills()
         {
@@ -27,33 +27,32 @@ namespace Apteka.Plus.Forms
 
         public frmPrintBills(MyStore store)
         {
-            this.store = store;
+            _store = store;
             store.Name = "";
             InitializeComponent();
         }
 
         private void frmPrintBills_Load(object sender, EventArgs e)
         {
-            dgvLocalBill.SetStateSourceAndLoadState(Session.User, DataGridViewColumnSettingsAccessor.CreateInstance<DataGridViewColumnSettingsAccessor>());
+            dgvLocalBill.SetStateSourceAndLoadState(Session.User, DataAccessor.CreateInstance<DataGridViewColumnSettingsAccessor>());
 
-            if (store == null)
+            if (_store == null)
             {
-                foreach (MyStore myStore in MyStoresCollection.AllStores)
+                foreach (var myStore in MyStoresCollection.AllStores)
                 {
                     tscbMyStores.Items.Add(myStore);
                 }
             }
             else
             {
-                tscbMyStores.Items.Add(store);
-                tscbMyStores.SelectedItem = store;
+                tscbMyStores.Items.Add(_store);
+                tscbMyStores.SelectedItem = _store;
             }
         }
 
         private void frmPrintBills_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (this.Owner != null)
-                this.Owner.Show();
+            Owner?.Show();
         }
 
         private void накладнаяФармацевтаToolStripMenuItem_Click(object sender, EventArgs e)
@@ -70,27 +69,28 @@ namespace Apteka.Plus.Forms
         {
             if (tscbMyStores.SelectedItem == null)
             {
-                MessageBox.Show("Вы не выбрали пункт!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(@"Вы не выбрали пункт!", @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
             if (tstbLocalBillNumber.Text.Trim() == "")
             {
-                MessageBox.Show("Вы не ввели номер накладной!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(@"Вы не ввели номер накладной!", @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
-            MyStore myStore = tscbMyStores.SelectedItem as MyStore;
-            long localBillNumber = Convert.ToInt64(tstbLocalBillNumber.Text);
+
+            var myStore = (MyStore)tscbMyStores.SelectedItem;
+            var localBillNumber = Convert.ToInt64(tstbLocalBillNumber.Text);
             LoadLocalBill(myStore, localBillNumber);
         }
 
         private void LoadLocalBill(MyStore myStore, long localBillNumber)
         {
-            using (DbManager db = new DbManager(myStore.Name))
+            using (var db = new DbManager(myStore.Name))
             {
-                LocalBillsAccessor lba = LocalBillsAccessor.CreateInstance<LocalBillsAccessor>(db);
+                var lba = DataAccessor.CreateInstance<LocalBillsAccessor>(db);
 
-                List<LocalBillsRowEx> liLocalBillsRowEx = lba.GetLocalBillByNumber(localBillNumber);
+                var liLocalBillsRowEx = lba.GetLocalBillByNumber(localBillNumber);
                 localBillsRowExBindingSource.DataSource = liLocalBillsRowEx;
             }
 
@@ -104,48 +104,41 @@ namespace Apteka.Plus.Forms
         {
             if (tscbMyStores.SelectedItem == null)
             {
-                MessageBox.Show("Вы не выбрали пункт!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(@"Вы не выбрали пункт!", @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
 
-            MyStore myStore = tscbMyStores.SelectedItem as MyStore;
-            using (DbManager db = new DbManager(myStore.Name))
+            var myStore = (MyStore)tscbMyStores.SelectedItem;
+            using (var db = new DbManager(myStore.Name))
             {
-                LocalBillsAccessor lba = LocalBillsAccessor.CreateInstance<LocalBillsAccessor>(db);
+                var lba = DataAccessor.CreateInstance<LocalBillsAccessor>(db);
 
-                DataTable dt = lba.GetRecentLocalBills(20);
+                var dt = lba.GetRecentLocalBills(20);
                 dgvRecentLocalBills.DataSource = dt;
             }
         }
 
         private void dgvRecentLocalBills_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
-            LoadLocalBill(tscbMyStores.SelectedItem as MyStore, Convert.ToUInt32(dgv[1, e.RowIndex].Value.ToString()));
+            var dgv = (DataGridView)sender;
+            LoadLocalBill((MyStore)tscbMyStores.SelectedItem, Convert.ToUInt32(dgv[1, e.RowIndex].Value.ToString()));
             dgvLocalBill.Select();
-
         }
 
         private void dgvLocalBill_KeyDown(object sender, KeyEventArgs e)
         {
-            log.DebugFormat("Key down:{0}", e.KeyCode.ToString());
-            DataGridView dgv = sender as DataGridView;
+            Log.DebugFormat("Key down:{0}", e.KeyCode.ToString());
+            var dgv = (DataGridView)sender;
 
-            switch (e.KeyCode)
+            if (e.KeyCode == Keys.Delete)
             {
-                case Keys.Delete:
-                    {
-                        dgv.CurrentRow.Cells["LabelsCount"].Value = null;
-                    }
-                    break;
-
-                case Keys.Enter:
-                    {
-                        dgv.CurrentCell = dgv.CurrentRow.Cells["LabelsCount"];
-                        dgv.BeginEdit(true);
-                        e.Handled = true;
-                    }
-                    break;
+                dgv.CurrentRow.Cells["LabelsCount"].Value = null;
+            }
+            else if (e.KeyCode == Keys.Enter)
+            {
+                dgv.CurrentCell = dgv.CurrentRow.Cells["LabelsCount"];
+                dgv.BeginEdit(true);
+                e.Handled = true;
             }
         }
 
@@ -166,30 +159,30 @@ namespace Apteka.Plus.Forms
 
         private void PrintLabels(string reportName)
         {
-            List<LocalBillsRowEx> liLocalBillsRowEx = new List<LocalBillsRowEx>();
+            var liLocalBillsRowEx = new List<LocalBillsRowEx>();
             foreach (DataGridViewRow row in dgvLocalBill.Rows)
             {
-                LocalBillsRowEx dataRow = row.DataBoundItem as LocalBillsRowEx;
+                var dataRow = (LocalBillsRowEx)row.DataBoundItem;
                 if (row.Cells["LabelsCount"].Value != null)
                 {
                     int labelCount = Convert.ToInt16(row.Cells["LabelsCount"].Value);
-                    for (int i = 0; i < labelCount; i++)
+                    for (var i = 0; i < labelCount; i++)
                     {
                         liLocalBillsRowEx.Add(dataRow);
                     }
                 }
             }
 
-            frmReportViewer frmReportViewer = new frmReportViewer(BaseDirectory + reportName);
+            var frmReportViewer = new frmReportViewer(BaseDirectory + reportName);
             frmReportViewer.SetDataSource("Apteka_Plus_Logic_BLL_Entities_LocalBillsRowEx", liLocalBillsRowEx);
             frmReportViewer.ShowDialog();
         }
 
         private void PrintOrder(string reportName)
         {
-            frmReportViewer frmReportViewer = new frmReportViewer(BaseDirectory + reportName);
+            var frmReportViewer = new frmReportViewer(BaseDirectory + reportName);
 
-            ReportParameter myStore = new ReportParameter("MyStore", tscbMyStores.SelectedItem.ToString());
+            var myStore = new ReportParameter("MyStore", tscbMyStores.SelectedItem.ToString());
 
             frmReportViewer.SetParameters(myStore);
             frmReportViewer.SetDataSource("LocalBillsRowEx", localBillsRowExBindingSource);

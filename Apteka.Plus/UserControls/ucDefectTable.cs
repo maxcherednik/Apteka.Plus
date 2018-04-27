@@ -5,29 +5,38 @@ using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.BLL.Enums;
 using Apteka.Plus.Logic.DAL.Accessors;
 using BLToolkit.Data;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using BLToolkit.DataAccess;
 
 namespace Apteka.Plus.UserControls
 {
     public partial class ucDefectTable : UserControl
     {
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
-        private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private string _defectListName;
+
+        private DefectList _defectList;
+
+        private int _unprocessedRows;
+
+        private MyStore _selectedStore;
 
         public ucDefectTable()
         {
             InitializeComponent();
-            dgvDefecturaList.SetStateSourceAndLoadState(Session.User, DataGridViewColumnSettingsAccessor.CreateInstance<DataGridViewColumnSettingsAccessor>());
-            dgvDefecturaList.CurrentRowChanged += new EventHandler<MyDataGridView.CurrentRowChangedEventArgs>(dgvDefecturaList_CurrentRowChanged);
+            dgvDefecturaList.SetStateSourceAndLoadState(Session.User, DataAccessor.CreateInstance<DataGridViewColumnSettingsAccessor>());
+            dgvDefecturaList.CurrentRowChanged += dgvDefecturaList_CurrentRowChanged;
         }
 
-        void dgvDefecturaList_CurrentRowChanged(object sender, MyDataGridView.CurrentRowChangedEventArgs e)
+        private void dgvDefecturaList_CurrentRowChanged(object sender, MyDataGridView.CurrentRowChangedEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
-            SmartDefectRow smartDefectRow = dgv.Rows[e.RowIndex].DataBoundItem as SmartDefectRow;
+            var dgv = (DataGridView)sender;
+            var smartDefectRow = (SmartDefectRow)dgv.Rows[e.RowIndex].DataBoundItem;
             OnCurrentRowChange(smartDefectRow);
         }
 
@@ -36,67 +45,37 @@ namespace Apteka.Plus.UserControls
             dgvDefecturaList.Select();
         }
 
-        List<SmartDefectRow> _liSmartDefectRows;
-        string _defectListName;
-        DefectList _DefectList;
+        public List<SmartDefectRow> SmartDefectRows { get; private set; }
 
-        int _unprocessedRows = 0;
-
-        MyStore _selectedStore;
-
-        #region Public
-
-        #region Properties
-        public List<SmartDefectRow> SmartDefectRows
+        public void SetDefectList(MyStore selectedStore, string defectListName, DefectList defectList, List<SmartDefectRow> liSmartDefectRows, List<DefectList> liExcludeLists)
         {
-            get { return _liSmartDefectRows; }
-
-        }
-        #endregion
-
-        #region Methods
-
-        public void SetDefectList(MyStore selectedStore, string DefectListName, DefectList DefectList, List<SmartDefectRow> liSmartDefectRows, List<DefectList> liExcludeLists)
-        {
-            List<SmartDefectRow> liUnprocessedRows = liSmartDefectRows.FindAll(delegate(SmartDefectRow p) { return p.Status == SmartDefectRowStatusEnum.NotProcessed && !p.RemindAt.HasValue; });
+            var liUnprocessedRows = liSmartDefectRows.FindAll(p => p.Status == SmartDefectRowStatusEnum.NotProcessed && !p.RemindAt.HasValue);
             _unprocessedRows = liUnprocessedRows.Count;
             _selectedStore = selectedStore;
 
-            _DefectList = DefectList;
-            _defectListName = DefectListName;
-            _liSmartDefectRows = liSmartDefectRows;
+            _defectList = defectList;
+            _defectListName = defectListName;
+            SmartDefectRows = liSmartDefectRows;
 
-            #region Fill Defect Dates ComboBox
-            //List<DateTime> liDefectDates = new List<DateTime>();
-            //foreach (SmartDefectRow row in liSmartDefectRows)
-            //{
-            //    if (!liDefectDates.Contains(row.DateAccepted.Date))
-            //    {
-            //        liDefectDates.Add(row.DateAccepted.Date);
-            //    }
-            //}
-            //liDefectDates.Sort();
-
-            List<DateTime> liDefectDates = new List<DateTime>();
-            foreach (SmartDefectRow row in liSmartDefectRows)
+            var liDefectDates = new List<DateTime>();
+            foreach (var row in liSmartDefectRows)
             {
                 if (!liDefectDates.Contains(row.DateLastSale.Date) && !row.RemindAt.HasValue && row.Status == SmartDefectRowStatusEnum.NotProcessed)
                 {
                     liDefectDates.Add(row.DateLastSale.Date);
                 }
             }
+
             liDefectDates.Sort();
 
-            #endregion
-
-            this.InvokeInGUIThread(() =>
+            this.InvokeInGuiThread(() =>
             {
                 cbDateDefect.Items.Clear();
                 cbDateDefect.Items.Add("Без фильтра");
 
-                foreach (DateTime Date in liDefectDates)
+                foreach (var date in liDefectDates)
                 {
-                    cbDateDefect.Items.Insert(0, Date);
+                    cbDateDefect.Items.Insert(0, date);
                 }
 
                 smartDefectRowBindingSource.DataSource = liSmartDefectRows;
@@ -104,24 +83,23 @@ namespace Apteka.Plus.UserControls
 
                 cmsDefectlistMenu.Items.Clear();
 
-                if (_DefectList != null)
+                if (_defectList != null)
                 {
-                    if (!_DefectList.IsSmartList)
+                    if (!_defectList.IsSmartList)
                     {
                         cmsDefectlistMenu.Items.Add("Удалить из списка");
                         cmsDefectlistMenu.Items[cmsDefectlistMenu.Items.Count - 1].Name = "del";
-                        Font font = cmsDefectlistMenu.Items[cmsDefectlistMenu.Items.Count - 1].Font;
-                        Font f = new Font(font, FontStyle.Bold);
-                        cmsDefectlistMenu.Items[cmsDefectlistMenu.Items.Count - 1].Font = f;
+                        var font = cmsDefectlistMenu.Items[cmsDefectlistMenu.Items.Count - 1].Font;
+                        cmsDefectlistMenu.Items[cmsDefectlistMenu.Items.Count - 1].Font = new Font(font, FontStyle.Bold);
                     }
                 }
 
-                foreach (DefectList defectList in liExcludeLists)
+                foreach (var excludeDefectList in liExcludeLists)
                 {
-                    if (_defectListName != defectList.ID.ToString())
+                    if (_defectListName != excludeDefectList.ID.ToString())
                     {
-                        cmsDefectlistMenu.Items.Add(defectList.Name);
-                        cmsDefectlistMenu.Items[cmsDefectlistMenu.Items.Count - 1].Tag = defectList;
+                        cmsDefectlistMenu.Items.Add(excludeDefectList.Name);
+                        cmsDefectlistMenu.Items[cmsDefectlistMenu.Items.Count - 1].Tag = excludeDefectList;
                     }
                 }
 
@@ -130,9 +108,7 @@ namespace Apteka.Plus.UserControls
             });
 
             OnProcessedRowsCountChange();
-
         }
-        #endregion
 
         #region Events
 
@@ -141,27 +117,18 @@ namespace Apteka.Plus.UserControls
 
         private void OnCurrentRowChange(SmartDefectRow smartDefectRow)
         {
-            if (CurrentRowChanged != null)
-            {
-                CurrentRowChangedEventArgs e = new CurrentRowChangedEventArgs(smartDefectRow);
-                CurrentRowChanged.Invoke(dgvDefecturaList, e);
-            }
+            CurrentRowChanged?.Invoke(dgvDefecturaList, new CurrentRowChangedEventArgs(smartDefectRow));
 
         }
+
         public class CurrentRowChangedEventArgs : EventArgs
         {
             public CurrentRowChangedEventArgs(SmartDefectRow smartDefectRow)
             {
-                _SmartDefectRow = smartDefectRow;
+                SmartDefectRow = smartDefectRow;
             }
 
-            private SmartDefectRow _SmartDefectRow;
-
-            public SmartDefectRow SmartDefectRow
-            {
-                get { return _SmartDefectRow; }
-                set { _SmartDefectRow = value; }
-            }
+            public SmartDefectRow SmartDefectRow { get; set; }
         }
         #endregion
 
@@ -171,39 +138,27 @@ namespace Apteka.Plus.UserControls
 
         private void OnProcessedRowsCountChange()
         {
-
             if (ProcessedRowsCountChanged != null)
             {
-                List<SmartDefectRow> liDefectRows = smartDefectRowBindingSource.List as List<SmartDefectRow>;
+                var liDefectRows = (List<SmartDefectRow>)smartDefectRowBindingSource.List;
 
-                ProcessedRowsCountChangedEventArgs e = new ProcessedRowsCountChangedEventArgs(liDefectRows.Count, _unprocessedRows);
+                var e = new ProcessedRowsCountChangedEventArgs(liDefectRows.Count, _unprocessedRows);
 
                 ProcessedRowsCountChanged.Invoke(this, e);
             }
-
         }
+
         public class ProcessedRowsCountChangedEventArgs : EventArgs
         {
-            public ProcessedRowsCountChangedEventArgs(int RowCount, int UnprocessedRowCount)
+            public ProcessedRowsCountChangedEventArgs(int rowCount, int unprocessedRowCount)
             {
-                _RowCount = RowCount;
-                _UnprocessedRowCount = UnprocessedRowCount;
+                RowCount = rowCount;
+                UnprocessedRowCount = unprocessedRowCount;
             }
 
-            int _RowCount;
-            int _UnprocessedRowCount;
+            public int RowCount { get; set; }
 
-            public int RowCount
-            {
-                get { return _RowCount; }
-                set { _RowCount = value; }
-            }
-
-            public int UnprocessedRowCount
-            {
-                get { return _UnprocessedRowCount; }
-                set { _UnprocessedRowCount = value; }
-            }
+            public int UnprocessedRowCount { get; set; }
         }
         #endregion
 
@@ -214,58 +169,47 @@ namespace Apteka.Plus.UserControls
         {
             if (RowAddedToExcludeList != null)
             {
-                RowAddedToExcludeListEventArgs e = new RowAddedToExcludeListEventArgs(defectListName);
+                var e = new RowAddedToExcludeListEventArgs(defectListName);
                 RowAddedToExcludeList.Invoke(this, e);
             }
 
         }
         public class RowAddedToExcludeListEventArgs : EventArgs
         {
-            string _defectListName;
+            public string DefectListName { get; set; }
 
-            public string DefectListName
-            {
-                get { return _defectListName; }
-                set { _defectListName = value; }
-            }
             public RowAddedToExcludeListEventArgs(string defectListName)
             {
-                _defectListName = defectListName;
+                DefectListName = defectListName;
             }
 
         }
-        #endregion
-
         #endregion
 
         #endregion
 
         private void tbSearch_TextChanged(object sender, EventArgs e)
         {
-
             if (tbSearch.Text.Length > 2)
             {
-                List<SmartDefectRow> liFiltered = _liSmartDefectRows.FindAll(delegate(SmartDefectRow p) { return p.FullProductInfo.ProductName.Contains(tbSearch.Text); });
+                var liFiltered = SmartDefectRows.FindAll(p => p.FullProductInfo.ProductName.Contains(tbSearch.Text));
 
                 smartDefectRowBindingSource.DataSource = liFiltered;
-
             }
             else
             {
-                smartDefectRowBindingSource.DataSource = _liSmartDefectRows;
+                smartDefectRowBindingSource.DataSource = SmartDefectRows;
             }
         }
 
         private void dgvDefecturaList_MouseDown(object sender, MouseEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
+            var dgv = (DataGridView)sender;
 
             // Load context menu on right mouse click
-            DataGridView.HitTestInfo hitTestInfo;
             if (e.Button == MouseButtons.Right)
             {
-
-                hitTestInfo = dgv.HitTest(e.X, e.Y);
+                var hitTestInfo = dgv.HitTest(e.X, e.Y);
                 // If column is first column
                 if (hitTestInfo.Type == DataGridViewHitTestType.Cell && hitTestInfo.RowIndex >= 0)
                 {
@@ -280,43 +224,32 @@ namespace Apteka.Plus.UserControls
 
         private void dgvDefecturaList_MouseUp(object sender, MouseEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
+            var dgv = (DataGridView)sender;
             // Load context menu on right mouse click
-            DataGridView.HitTestInfo hitTestInfo;
             if (e.Button == MouseButtons.Right)
             {
-
-                hitTestInfo = dgv.HitTest(e.X, e.Y);
+                var hitTestInfo = dgv.HitTest(e.X, e.Y);
                 // If column is first column
                 if (hitTestInfo.Type == DataGridViewHitTestType.Cell
                     && hitTestInfo.RowIndex >= 0)
                 {
                     cmsDefectlistMenu.Show(dgv, e.Location);
                 }
-
             }
-        }
-
-        private void dgvDefecturaList_KeyUp(object sender, KeyEventArgs e)
-        {
-
         }
 
         private void dgvDefecturaList_KeyPress(object sender, KeyPressEventArgs e)
         {
-
             tbSearch.Text = tbSearch.Text + e.KeyChar;
-
         }
 
         private void dgvDefecturaList_KeyDown(object sender, KeyEventArgs e)
         {
-            log.DebugFormat("Key down:{0}", e.KeyCode.ToString());
-            DataGridView dgv = sender as DataGridView;
+            Log.DebugFormat("Key down:{0}", e.KeyCode.ToString());
+            var dgv = (DataGridView)sender;
 
             switch (e.KeyCode)
             {
-
                 case Keys.Back:
                     {
                         if (tbSearch.Text.Length != 0)
@@ -326,52 +259,38 @@ namespace Apteka.Plus.UserControls
 
                         e.SuppressKeyPress = true;
                     }
-
                     break;
-
                 case Keys.Delete:
                     {
-
                         dgv.CurrentRow.Cells["ManualAmountToOrder"].Value = null;
-                        SmartDefectRow row = dgv.CurrentRow.DataBoundItem as SmartDefectRow;
+                        var row = (SmartDefectRow)dgv.CurrentRow.DataBoundItem;
                         row.Status = SmartDefectRowStatusEnum.NotProcessed;
 
-                        using (DbManager dbSatelite = new DbManager(_selectedStore.Name))
+                        using (var dbSatelite = new DbManager(_selectedStore.Name))
                         {
-                            SmartDefectRowsAccessor SmartDefectRowsAccessor = SmartDefectRowsAccessor.CreateInstance<SmartDefectRowsAccessor>(dbSatelite);
+                            var smartDefectRowsAccessor = DataAccessor.CreateInstance<SmartDefectRowsAccessor>(dbSatelite);
 
                             _unprocessedRows = _unprocessedRows - 1;
-                            SmartDefectRowsAccessor.UpdateManualAmountToOrderAndStatus(row);
-
+                            smartDefectRowsAccessor.UpdateManualAmountToOrderAndStatus(row);
                         }
-
-                        //dgv.EndEdit();
-
                     }
                     break;
 
                 case Keys.Enter:
                     {
-
                         dgv.CurrentCell = dgv.CurrentRow.Cells["ManualAmountToOrder"];
                         dgv.BeginEdit(true);
                         e.Handled = true;
                         e.SuppressKeyPress = true;
-
                     }
                     break;
-
                 case Keys.Escape:
                     {
                         tbSearch.Text = "";
                         e.SuppressKeyPress = true;
                     }
                     break;
-
-                default:
-                    break;
             }
-
         }
 
         private void tbSearch_KeyDown(object sender, KeyEventArgs e)
@@ -380,14 +299,13 @@ namespace Apteka.Plus.UserControls
             {
                 tbSearch.Text = "";
                 e.SuppressKeyPress = true;
-
             }
         }
 
         private void dgvDefecturaList_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
-            SmartDefectRow row = dgv.Rows[e.RowIndex].DataBoundItem as SmartDefectRow;
+            var dgv = (DataGridView)sender;
+            var row = (SmartDefectRow)dgv.Rows[e.RowIndex].DataBoundItem;
 
             switch (dgv[e.ColumnIndex, e.RowIndex].OwningColumn.Name)
             {
@@ -395,13 +313,12 @@ namespace Apteka.Plus.UserControls
                     {
                         if (e.Value != null)
                         {
-                            int val = (int)e.Value;
+                            var val = (int)e.Value;
 
                             if (val > 0)
                             {
                                 e.CellStyle.BackColor = Color.LightGreen;
-                                Font f = new Font(e.CellStyle.Font, FontStyle.Bold);
-                                e.CellStyle.Font = f;
+                                e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);
                                 e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                             }
                             else
@@ -410,7 +327,6 @@ namespace Apteka.Plus.UserControls
                                 e.FormattingApplied = true;
                             }
                         }
-
                     }
                     break;
 
@@ -421,15 +337,13 @@ namespace Apteka.Plus.UserControls
                             if (row.RemindAt.Value >= 0 && row.CurrentAmount > row.RemindAt.Value)
                             {
                                 e.CellStyle.BackColor = Color.Orange;
-                                Font f = new Font(e.CellStyle.Font, FontStyle.Bold);
-                                e.CellStyle.Font = f;
+                                e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);
                                 e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                             }
                             else if (row.CurrentAmount <= row.RemindAt.Value)
                             {
                                 e.CellStyle.BackColor = Color.Red;
-                                Font f = new Font(e.CellStyle.Font, FontStyle.Bold);
-                                e.CellStyle.Font = f;
+                                e.CellStyle.Font = new Font(e.CellStyle.Font, FontStyle.Bold);
                                 e.CellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                             }
                             else
@@ -438,73 +352,62 @@ namespace Apteka.Plus.UserControls
                                 e.FormattingApplied = true;
                             }
                         }
-
                     }
                     break;
-
-                default:
-                    break;
             }
-
         }
 
         private void cmsDefectlistMenu_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            SmartDefectRow defectRow = dgvDefecturaList.CurrentRow.DataBoundItem as SmartDefectRow;
-            DialogResult res;
-
+            var defectRow = (SmartDefectRow) dgvDefecturaList.CurrentRow.DataBoundItem;
             cmsDefectlistMenu.Close();
 
             if (e.ClickedItem.Name == "del")
             {
-
-                res = MessageBox.Show("Вы уверены, что хотите удалить " + defectRow.ProductName + " " + defectRow.PackageName + " из " + _DefectList.Name + "?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                var res = MessageBox.Show($@"Вы уверены, что хотите удалить {defectRow.ProductName} {defectRow.PackageName}  из {_defectList.Name}?", @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                 if (res == DialogResult.Yes)
                 {
-
-                    using (DbManager db = new DbManager())
+                    using (var db = new DbManager())
                     {
-                        DefectExceptionsAccessor DefectExceptionsAccessor = DefectExceptionsAccessor.CreateInstance<DefectExceptionsAccessor>(db);
+                        var defectExceptionsAccessor = DataAccessor.CreateInstance<DefectExceptionsAccessor>(db);
 
-                        DefectExceptionsAccessor.DeletebyProduct(defectRow.FullProductInfo.ID);
+                        defectExceptionsAccessor.DeletebyProduct(defectRow.FullProductInfo.ID);
                     }
 
                     dgvDefecturaList.Rows.Remove(dgvDefecturaList.CurrentRow);
 
-                    //event Subscribers notify
                     OnRowAddToExcludeList(_defectListName);
                 }
             }
             else
             {
+                var defectList = (DefectList) e.ClickedItem.Tag;
 
-                DefectList DefectList = e.ClickedItem.Tag as DefectList;
-
-                res = MessageBox.Show("Вы уверены, что хотите добавить " + defectRow.ProductName + " " + defectRow.PackageName + " в " + DefectList.Name + "?", "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+                var res = MessageBox.Show($@"Вы уверены, что хотите добавить {defectRow.ProductName} {defectRow.PackageName} в {defectList.Name}?", @"Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
 
                 if (res == DialogResult.Yes)
                 {
-
-                    DefectExceptionRow defectExceptions = new DefectExceptionRow();
-
-                    defectExceptions.FullProductInfoID = defectRow.FullProductInfo.ID;
-                    defectExceptions.DefectListID = DefectList.ID;
-
-                    using (DbManager db = new DbManager())
+                    var defectExceptions = new DefectExceptionRow
                     {
-                        DefectExceptionsAccessor DefectExceptionsAccessor = DefectExceptionsAccessor.CreateInstance<DefectExceptionsAccessor>(db);
+                        FullProductInfoID = defectRow.FullProductInfo.ID,
+                        DefectListID = defectList.ID
+                    };
 
-                        if (_DefectList != null && !_DefectList.IsSmartList)
+                    using (var db = new DbManager())
+                    {
+                        var defectExceptionsAccessor = DataAccessor.CreateInstance<DefectExceptionsAccessor>(db);
+
+                        if (_defectList != null && !_defectList.IsSmartList)
                         {
-                            DefectExceptionsAccessor.DeletebyProduct(defectExceptions.FullProductInfoID);
+                            defectExceptionsAccessor.DeletebyProduct(defectExceptions.FullProductInfoID);
                         }
-                        DefectExceptionsAccessor.Query.Insert(defectExceptions);
+
+                        defectExceptionsAccessor.Query.Insert(defectExceptions);
                     }
 
                     dgvDefecturaList.Rows.Remove(dgvDefecturaList.CurrentRow);
 
-                    //event Subscribers notify
                     OnRowAddToExcludeList(_defectListName);
                 }
             }
@@ -512,18 +415,17 @@ namespace Apteka.Plus.UserControls
 
         private void dgvDefecturaList_CellParsing(object sender, DataGridViewCellParsingEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
-            DataGridViewCell cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            var dgv = (DataGridView) sender;
+            var cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
 
             switch (cell.OwningColumn.Name)
             {
                 case "ManualAmountToOrder":
                     {
-                        SmartDefectRow row = dgv.Rows[e.RowIndex].DataBoundItem as SmartDefectRow;
+                        var row = (SmartDefectRow) dgv.Rows[e.RowIndex].DataBoundItem;
 
                         if (cell.EditedFormattedValue.ToString().Trim() == "" || cell.EditedFormattedValue.ToString().Trim() == "0")
                         {
-
                             e.Value = null;
                             e.ParsingApplied = true;
                             row.Status = SmartDefectRowStatusEnum.NotProcessed;
@@ -536,9 +438,9 @@ namespace Apteka.Plus.UserControls
                             _unprocessedRows--;
                         }
 
-                        log.Debug("Оповещаем подписчиков об изменении количества обаботанных строк");
+                        Log.Debug("Оповещаем подписчиков об изменении количества обаботанных строк");
                         OnProcessedRowsCountChange();
-                        log.Debug("Оповестили всех подписчиков");
+                        Log.Debug("Оповестили всех подписчиков");
 
                     }
                     break;
@@ -547,43 +449,37 @@ namespace Apteka.Plus.UserControls
                     {
                         if (cell.EditedFormattedValue.ToString().Trim() == "")
                         {
-
                             e.ParsingApplied = true;
 
                             _unprocessedRows++;
                         }
                         else
                         {
-
                             e.ParsingApplied = true;
                             _unprocessedRows--;
                         }
                         e.ParsingApplied = false;
 
-                        log.Debug("Оповещаем подписчиков об изменении количества обаботанных строк");
+                        Log.Debug("Оповещаем подписчиков об изменении количества обаботанных строк");
                         OnProcessedRowsCountChange();
-                        log.Debug("Оповестили всех подписчиков");
+                        Log.Debug("Оповестили всех подписчиков");
                     }
                     break;
-
-                default:
-                    break;
             }
-
         }
 
         private void cbDateDefect_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ComboBox cb = sender as ComboBox;
-            DateTime? dt = cb.SelectedItem as DateTime?;
+            var cb = (ComboBox) sender;
+            var dt = cb.SelectedItem as DateTime?;
             if (dt.HasValue)
             {
-                List<SmartDefectRow> liFilteredRows = _liSmartDefectRows.FindAll(delegate(SmartDefectRow p) { return p.DateLastSale.Date == (DateTime)cb.SelectedItem; });
+                var liFilteredRows = SmartDefectRows.FindAll(p => p.DateLastSale.Date == (DateTime)cb.SelectedItem);
                 smartDefectRowBindingSource.DataSource = liFilteredRows;
             }
             else
             {
-                smartDefectRowBindingSource.DataSource = _liSmartDefectRows;
+                smartDefectRowBindingSource.DataSource = SmartDefectRows;
             }
 
             dgvDefecturaList.Select();
@@ -593,130 +489,105 @@ namespace Apteka.Plus.UserControls
         {
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
             {
-                DataGridView dgv = sender as DataGridView;
-                DataGridViewCell cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                var dgv = (DataGridView) sender;
+                var cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
                 if (cell.OwningColumn.Name == "RemindAt")
                 {
                     dgv.CurrentCell = cell;
                     dgv.BeginEdit(true);
                 }
             }
-
         }
 
         private void dgvDefecturaList_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
-            DataGridViewCell cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            var dgv = (DataGridView) sender;
+            var cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
 
-            SmartDefectRow defectRow = dgv.CurrentRow.DataBoundItem as SmartDefectRow;
+            var defectRow = (SmartDefectRow) dgv.CurrentRow.DataBoundItem;
 
             switch (cell.OwningColumn.Name)
             {
-                case "ManualAmountToOrder":
-                    {
-
-                    }
-                    break;
-
                 case "RemindAt":
                     {
                         if (cell.IsInEditMode)
                         {
-                            int remindAt;
-
                             if (cell.EditedFormattedValue.ToString().Trim() == "")
                             {
 
                             }
-                            else if (int.TryParse(cell.EditedFormattedValue.ToString(), out remindAt))
+                            else if (int.TryParse(cell.EditedFormattedValue.ToString(), out var remindAt))
                             {
                                 if (remindAt >= defectRow.CurrentAmount)
                                 {
-                                    MessageBox.Show("Вы не можете ввести число большее чем текущий остаток", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                    MessageBox.Show(@"Вы не можете ввести число большее чем текущий остаток", @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                     e.Cancel = true;
                                 }
-
                             }
                             else
                             {
-                                MessageBox.Show("Вы ввели некорректное значение! Допускаются только числа.", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                MessageBox.Show(@"Вы ввели некорректное значение! Допускаются только числа.", @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                 e.Cancel = true;
                             }
-
                         }
-
                     }
                     break;
-
-                default:
-                    break;
             }
-
         }
 
         private void dgvDefecturaList_CellEndEdit(object sender, DataGridViewCellEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
-            DataGridViewCell cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            var dgv = (DataGridView) sender;
+            var cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
 
-            SmartDefectRow defectRow = dgv.Rows[e.RowIndex].DataBoundItem as SmartDefectRow;
+            var defectRow = (SmartDefectRow) dgv.Rows[e.RowIndex].DataBoundItem;
 
             switch (cell.OwningColumn.Name)
             {
                 case "ManualAmountToOrder":
                     {
-
-                        log.Debug("Пишем в базу");
-
-                        using (DbManager dbSatelite = new DbManager(_selectedStore.Name))
+                        using (var dbSatelite = new DbManager(_selectedStore.Name))
                         {
-                            SmartDefectRowsAccessor SmartDefectRowsAccessor = SmartDefectRowsAccessor.CreateInstance<SmartDefectRowsAccessor>(dbSatelite);
+                            var smartDefectRowsAccessor = DataAccessor.CreateInstance<SmartDefectRowsAccessor>(dbSatelite);
 
-                            SmartDefectRowsAccessor.UpdateManualAmountToOrderAndStatus(defectRow);
-
+                            smartDefectRowsAccessor.UpdateManualAmountToOrderAndStatus(defectRow);
                         }
-                        log.Debug("Запись в базу совершена");
                     }
                     break;
 
                 case "RemindAt":
                     {
-                        using (DbManager dbSatelite = new DbManager(_selectedStore.Name))
+                        using (var dbSatelite = new DbManager(_selectedStore.Name))
                         {
-                            SmartDefectRowsAccessor sdra = SmartDefectRowsAccessor.CreateInstance<SmartDefectRowsAccessor>(dbSatelite);
+                            var sdra = DataAccessor.CreateInstance<SmartDefectRowsAccessor>(dbSatelite);
 
                             sdra.UpdateReminder(defectRow);
                         }
-
                     }
                     break;
-
             }
-
         }
 
         private void cbDelayedFilter_SelectedIndexChanged(object sender, EventArgs e)
         {
-
-            ComboBox cb = sender as ComboBox;
+            var cb = (ComboBox) sender;
 
             if (cb.SelectedItem.ToString() == "Без отложенных")
             {
-                List<SmartDefectRow> liFilteredRows = _liSmartDefectRows.FindAll(delegate(SmartDefectRow p) { return !p.RemindAt.HasValue || p.CurrentAmount <= p.RemindAt.Value; });
+                var liFilteredRows = SmartDefectRows.FindAll(p => !p.RemindAt.HasValue || p.CurrentAmount <= p.RemindAt.Value);
                 smartDefectRowBindingSource.DataSource = liFilteredRows;
             }
             else if (cb.SelectedItem.ToString() == "Все")
             {
-                smartDefectRowBindingSource.DataSource = _liSmartDefectRows;
+                smartDefectRowBindingSource.DataSource = SmartDefectRows;
             }
             else if (cb.SelectedItem.ToString() == "Отложенные")
             {
-                List<SmartDefectRow> liFilteredRows = _liSmartDefectRows.FindAll(delegate(SmartDefectRow p) { return p.RemindAt.HasValue; });
+                var liFilteredRows = SmartDefectRows.FindAll(p => p.RemindAt.HasValue);
                 smartDefectRowBindingSource.DataSource = liFilteredRows;
             }
+
             dgvDefecturaList.Select();
         }
-
     }
 }

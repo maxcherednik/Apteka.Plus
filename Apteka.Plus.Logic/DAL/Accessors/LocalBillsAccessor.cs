@@ -8,14 +8,14 @@ using BLToolkit.DataAccess;
 
 namespace Apteka.Plus.Logic.DAL.Accessors
 {
-    
-    public abstract class LocalBillsAccessor: DataAccessor<LocalBillsRowEx>
+
+    public abstract class LocalBillsAccessor : DataAccessor<LocalBillsRowEx>
     {
         [SprocName("GetLocalBillByNumber")]
-        public abstract List<LocalBillsRowEx> GetLocalBillByNumber(long  @localBillNumber);
+        public abstract List<LocalBillsRowEx> GetLocalBillByNumber(long @localBillNumber);
 
         [SprocName("GetProductSupplies")]
-        public abstract List<LocalBillsRowEx> GetProductSupplies(long @ProductID,DateTime @fromDate);
+        public abstract List<LocalBillsRowEx> GetProductSupplies(long @ProductID, DateTime @fromDate);
 
         [SprocName("GetProductSuppliesAccuracy")]
         public abstract List<LocalBillsRowEx> GetProductSupplies(long @ProductID, int @TopRows, DateTime @fromDate);
@@ -65,7 +65,7 @@ namespace Apteka.Plus.Logic.DAL.Accessors
         [SprocName("LocalBills_GetRowByID")]
         public abstract LocalBillsRowEx GetRowByID(long id);
 
-        
+
         [SprocName("LocalBills_GetMaxRowID")]
         public abstract long GetMaxRowID();
 
@@ -74,46 +74,48 @@ namespace Apteka.Plus.Logic.DAL.Accessors
 
         public void InsertList(List<LocalBillsRowEx> lilocalBillsRows)
         {
-            foreach (LocalBillsRowEx localBillsRow in lilocalBillsRows)
+            foreach (var localBillsRow in lilocalBillsRows)
             {
                 Insert(localBillsRow);
             }
-
         }
 
         public void ProcessRemoteActions(DbManager db, List<RemoteAction> liRemoteActions)
         {
-            RemoteActionAccessor raa = RemoteActionAccessor.CreateInstance<RemoteActionAccessor>(db);
-            long lastActionID = raa.GetMaxRowID();
-            long newLastActionID = lastActionID;
+            var raa = CreateInstance<RemoteActionAccessor>(db);
+            var lastActionId = raa.GetMaxRowID();
+            var newLastActionId = lastActionId;
 
-            foreach (RemoteAction remoteAction in liRemoteActions)
+            foreach (var remoteAction in liRemoteActions)
             {
-                if (remoteAction.ID <= lastActionID) continue;
+                if (remoteAction.ID <= lastActionId) continue;
 
-                if (remoteAction.ID > newLastActionID)
-                    newLastActionID = remoteAction.ID;
+                if (remoteAction.ID > newLastActionId)
+                    newLastActionId = remoteAction.ID;
 
                 switch (remoteAction.TypeOfAction)
                 {
                     case RemoteActionEnum.SuppliesReturn:
                         {
-                            LocalBillsRowEx localBillsRow = GetRowByID(remoteAction.LocalBillsRowID);
+                            var localBillsRow = GetRowByID(remoteAction.LocalBillsRowID);
 
-                            SuppliesReturnHistoryRow suppliesReturnHistoryRow = new SuppliesReturnHistoryRow();
-                            suppliesReturnHistoryRow.Comment = remoteAction.Comment;
-                            suppliesReturnHistoryRow.Reason = remoteAction.Reason;
-                            suppliesReturnHistoryRow.Price = localBillsRow.CurrentPrice;
-                            suppliesReturnHistoryRow.Employee = remoteAction.Employee;
-                            suppliesReturnHistoryRow.LocalBillsRow = localBillsRow;
-                            
-                            
-                            
-                            if (remoteAction.AmountToReturn ==0) // вернуть все что осталось
+                            var suppliesReturnHistoryRow =
+                                new SuppliesReturnHistoryRow
+                                {
+                                    Comment = remoteAction.Comment,
+                                    Reason = remoteAction.Reason,
+                                    Price = localBillsRow.CurrentPrice,
+                                    Employee = remoteAction.Employee,
+                                    LocalBillsRow = localBillsRow
+                                };
+
+
+
+                            if (remoteAction.AmountToReturn == 0) // вернуть все что осталось
                             {
-                                ChangeAmount(remoteAction.LocalBillsRowID, -1*localBillsRow.Amount);
+                                ChangeAmount(remoteAction.LocalBillsRowID, -1 * localBillsRow.Amount);
                                 suppliesReturnHistoryRow.Amount = localBillsRow.Amount;
-        
+
                             }
                             else // вернуть часть того что осталось
                             {
@@ -129,39 +131,40 @@ namespace Apteka.Plus.Logic.DAL.Accessors
                                 }
                             }
 
-                            SuppliesReturnHistoryAccessor srha =
-                                SuppliesReturnHistoryAccessor.CreateInstance<SuppliesReturnHistoryAccessor>(db);
+                            var srha = CreateInstance<SuppliesReturnHistoryAccessor>(db);
 
                             srha.Insert(suppliesReturnHistoryRow);
-                            
+
                         }
                         break;
                     case RemoteActionEnum.PriceChange:
-                    {
-                        LocalBillsRowEx localBillsRow = GetRowByID(remoteAction.LocalBillsRowID);
-
-                        if (localBillsRow != null)
                         {
-                            PriceChangesAccessor pca = PriceChangesAccessor.CreateInstance<PriceChangesAccessor>(db);
-                            PriceChangeRow priceChangeRow = new PriceChangeRow();
-                            priceChangeRow.DateAccepted = DateTime.Now;
-                            priceChangeRow.LocalBillsRowID = remoteAction.LocalBillsRowID;
-                            priceChangeRow.Count = localBillsRow.Amount;
-                            priceChangeRow.Difference = remoteAction.NewPrice*localBillsRow.Amount -
-                                                        localBillsRow.CurrentPrice*localBillsRow.Amount;
-                            priceChangeRow.NewPrice = remoteAction.NewPrice;
+                            var localBillsRow = GetRowByID(remoteAction.LocalBillsRowID);
 
-                            pca.Insert(priceChangeRow);
-                            UpdatePrice(remoteAction.LocalBillsRowID, remoteAction.NewPrice);
+                            if (localBillsRow != null)
+                            {
+                                var pca = CreateInstance<PriceChangesAccessor>(db);
+                                var priceChangeRow = new PriceChangeRow
+                                {
+                                    DateAccepted = DateTime.Now,
+                                    LocalBillsRowID = remoteAction.LocalBillsRowID,
+                                    Count = localBillsRow.Amount,
+                                    Difference = remoteAction.NewPrice * localBillsRow.Amount -
+                                                 localBillsRow.CurrentPrice * localBillsRow.Amount,
+                                    NewPrice = remoteAction.NewPrice
+                                };
+
+                                pca.Insert(priceChangeRow);
+                                UpdatePrice(remoteAction.LocalBillsRowID, remoteAction.NewPrice);
+                            }
                         }
-                    }
                         break;
-                    case    RemoteActionEnum.SalesReturn:
+                    case RemoteActionEnum.SalesReturn:
                         {
                             ChangeAmount(remoteAction.LocalBillsRowID, remoteAction.AmountToReturn);
-                            SalesAccessor salesAccessor = SalesAccessor.CreateInstance<SalesAccessor>(db);
-                            SalesRow salesRow =salesAccessor.GetRowByID(remoteAction.SalesRowID);
-                            if (salesRow.Count==remoteAction.AmountToReturn)
+                            var salesAccessor = CreateInstance<SalesAccessor>(db);
+                            var salesRow = salesAccessor.GetRowByID(remoteAction.SalesRowID);
+                            if (salesRow.Count == remoteAction.AmountToReturn)
                             {
                                 salesAccessor.Query.DeleteByKey(remoteAction.SalesRowID);
                             }
@@ -169,15 +172,14 @@ namespace Apteka.Plus.Logic.DAL.Accessors
                             {
                                 salesAccessor.ChangeAmount(remoteAction.SalesRowID, -1 * remoteAction.AmountToReturn);
                             }
-                            
+
                         }
                         break;
                 }
 
             }
 
-            raa.Update(newLastActionID);
-
+            raa.Update(newLastActionId);
         }
 
         [SqlQuery("Delete from LocalBills")]
@@ -187,19 +189,9 @@ namespace Apteka.Plus.Logic.DAL.Accessors
         public abstract void DeleteByMainStoreID(long @MainStoreRowID);
 
         private SqlQuery<LocalBillsRowEx> _query;
-        public SqlQuery<LocalBillsRowEx> Query
-        {
-            get
-            {
-                if (_query == null)
-                    _query = new SqlQuery<LocalBillsRowEx>(DbManager);
-                return _query;
-            }
-        }
+        public SqlQuery<LocalBillsRowEx> Query => _query ?? (_query = new SqlQuery<LocalBillsRowEx>(DbManager));
 
         [SprocName("LocalBills_UpdatePriceChangedMark")]
         public abstract int UpdatePriceChangedMark(long id, bool flag);
-
-        
     }
 }

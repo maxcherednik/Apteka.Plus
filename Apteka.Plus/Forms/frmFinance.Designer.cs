@@ -914,7 +914,6 @@
             this.sales.Name = "sales";
             this.sales.Size = new System.Drawing.Size(182, 22);
             this.sales.Text = "Итоги дня";
-            this.sales.Click += new System.EventHandler(this.sales_Click);
             // 
             // transfers
             // 

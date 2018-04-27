@@ -1,15 +1,14 @@
-using System;
+п»їusing System;
 using System.Windows.Forms;
-using Apteka.Helpers;
 using Apteka.Plus.Logic.BLL;
 using Apteka.Plus.Logic.BLL.Entities;
-using Apteka.Plus.Logic.DAL.Accessors;
+using log4net;
 
 namespace Apteka.Plus.Forms
 {
     public partial class frmAuth : Form
     {
-        private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         public frmAuth()
         {
@@ -18,41 +17,30 @@ namespace Apteka.Plus.Forms
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
-            log.Info("Пользователь отменил авторизацию. Выход из приложения");
+            Log.Info("РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РѕС‚РјРµРЅРёР» Р°РІС‚РѕСЂРёР·Р°С†РёСЋ. Р’С‹С…РѕРґ РёР· РїСЂРёР»РѕР¶РµРЅРёСЏ");
             Application.Exit();
         }
 
         private void btnOK_Click(object sender, EventArgs e)
         {
-            log.InfoFormat("Пользователь подтвердил авторизацию. Логин: {0}",tbLogin.Text);
+            Log.InfoFormat("РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РїРѕРґС‚РІРµСЂРґРёР» Р°РІС‚РѕСЂРёР·Р°С†РёСЋ. Р›РѕРіРёРЅ: {0}", tbLogin.Text);
 
-            EmployeesAccessor ea = EmployeesAccessor.CreateInstance<EmployeesAccessor>();
-            //Employee employee = ea.Auth(tbLogin.Text, tbPassword.Text);            
-
-            Employee employee = new Employee();
-            employee.ID = 1;
-            employee.Login =tbLogin.Text;
-            
-            if (employee == null)
+            var employee = new Employee
             {
-                log.Warn("Авторизация не пройдена");
-                MessageBox.Show("Учетная запись '" + tbLogin.Text + "' не найдена или неверный пароль!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Stop);
-            }
-            else
-            {
-                log.Warn("Авторизация пройдена");
-                Session.User = employee;
+                ID = 1,
+                Login = tbLogin.Text
+            };
 
-                frmMainMenu frmMainMenu = new frmMainMenu();
-                frmMainMenu.Show();
-                this.Hide();
-            }
+            Session.User = employee;
 
+            var frmMainMenu = new frmMainMenu();
+            frmMainMenu.Show();
+            Hide();
         }
 
         private void frmAuth_Load(object sender, EventArgs e)
         {
-            log.Info("Загружена форма авторизации");
+            Log.Info("Р—Р°РіСЂСѓР¶РµРЅР° С„РѕСЂРјР° Р°РІС‚РѕСЂРёР·Р°С†РёРё");
         }
     }
 }

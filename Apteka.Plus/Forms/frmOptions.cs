@@ -2,7 +2,6 @@
 using System.Windows.Forms;
 using Apteka.Plus.Logic.BLL.Collections;
 using Apteka.Plus.Logic.BLL.Entities;
-using Apteka.Plus.Properties;
 using System.Collections.Generic;
 using Apteka.Plus.SettingsUtils;
 
@@ -26,21 +25,18 @@ namespace Apteka.Plus.Forms
 
         private void RestoreOverrridedIPs()
         {
-            Dictionary<int, String> dictIps = UserSettings.GetAllOverridedIps();
+            var dictIps = UserSettings.GetAllOverridedIps();
 
-            for (int i = 0; i < dataGridView1.RowCount; i++)
+            for (var i = 0; i < dataGridView1.RowCount; i++)
             {
-                var row = dataGridView1.Rows[i].DataBoundItem as MyStore;
+                var row = (MyStore)dataGridView1.Rows[i].DataBoundItem;
 
-                string ip = null;
-                if (dictIps.TryGetValue(row.ID, out ip))
+                if (dictIps.TryGetValue(row.ID, out var ip))
                 {
                     dataGridView1["overridedIP", i].Value = ip;
                 }
             }
         }
-
-
 
         private void btnSave_Click(object sender, EventArgs e)
         {
@@ -49,21 +45,21 @@ namespace Apteka.Plus.Forms
 
         private void SaveOverridedIPs()
         {
-            Dictionary<int, String> dictIps = new Dictionary<int, string>();
-            for (int i = 0; i < dataGridView1.RowCount; i++)
+            var dictIps = new Dictionary<int, string>();
+            for (var i = 0; i < dataGridView1.RowCount; i++)
             {
-                var row = dataGridView1.Rows[i].DataBoundItem as MyStore;
+                var row = (MyStore)dataGridView1.Rows[i].DataBoundItem;
                 if (dataGridView1["overridedIP", i].Value != null
                     && !string.IsNullOrEmpty(((string)dataGridView1["overridedIP", i].Value).Trim()))
                 {
                     dictIps.Add(row.ID, dataGridView1["overridedIP", i].Value.ToString());
-
                 }
             }
+
             UserSettings.SaveOverridedIps(dictIps);
 
             MyStoresCollection.Refresh();
-            this.Close();
+            Close();
         }
     }
 }

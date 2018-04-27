@@ -20,6 +20,5 @@ namespace Apteka.Plus.Logic.DAL.Accessors
 
         [SprocName("DefectProccessedRows_UpdateReminderAndStatus")]
         public abstract void UpdateReminder(SmartDefectRow row);
-        
     }
 }

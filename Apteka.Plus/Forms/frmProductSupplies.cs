@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using Apteka.Helpers;
 using Apteka.Plus.Properties;
 using Apteka.Plus.UserControls;
 
@@ -8,9 +7,6 @@ namespace Apteka.Plus.Forms
 {
     public partial class frmProductSupplies : Form
     {
-
-        private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
         public frmProductSupplies()
         {
             InitializeComponent();
@@ -23,7 +19,7 @@ namespace Apteka.Plus.Forms
             ucFullProductInfoBase1.Select();
         }
 
-        void ucFullProductInfoBase1_CurrentRowChanged(object sender, ucFullProductInfoBase.CurrentRowChangedEventArgs e)
+        private void ucFullProductInfoBase1_CurrentRowChanged(object sender, ucFullProductInfoBase.CurrentRowChangedEventArgs e)
         {
             ucProductSupplies1.GetInfo(e.FullProductInfo, 15, 25);
         }
@@ -35,8 +31,7 @@ namespace Apteka.Plus.Forms
 
         private void frmProductSupplies_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (this.Owner != null)
-                this.Owner.Show();
+            Owner?.Show();
         }
     }
 }

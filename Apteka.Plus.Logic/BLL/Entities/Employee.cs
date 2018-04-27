@@ -1,4 +1,4 @@
-using Apteka.Helpers;
+﻿using Apteka.Helpers;
 using BLToolkit.DataAccess;
 using BLToolkit.Mapping;
 
@@ -14,32 +14,16 @@ namespace Apteka.Plus.Logic.BLL.Entities
         public string MiddleName;
 
         [MapIgnore()]
-        public string FullName
-        {
-            get { return LastName + " " + FirstName + " " + MiddleName; }
-        }
+        public string FullName => LastName + " " + FirstName + " " + MiddleName;
         public string Login;
         public string Password;
 
-        public override string ToString()
-        {
-            return FullName;
-        }
-
-        #region IUserInfo Members
+        public override string ToString() => FullName;
 
         [MapIgnore()]
-        string IUserInfo.ID
-        {
-            get { return ID.ToString(); }
-        }
+        string IUserInfo.ID => ID.ToString();
 
         [MapIgnore()]
-        string IUserInfo.Name
-        {
-            get { return Login; }
-        }
-
-        #endregion
+        string IUserInfo.Name => Login;
     }
 }

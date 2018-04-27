@@ -6,33 +6,30 @@ namespace Apteka.Helpers
 {
     public class DataLoader<TResult>
     {
-        #region Private fields
-        private BackgroundWorker _bgwDataLoader;
+        private readonly BackgroundWorker _bgwDataLoader;
         private bool _needRequery;
-        private Func<TResult> _dataSource;
-        private readonly object _syncRoot = new object();
-        private int _timeoutInMilliseconds;
-        private SynchronizationContext _syncContext;
+        private readonly Func<TResult> _dataSource;
+        private readonly int _timeoutInMilliseconds;
+        private readonly SynchronizationContext _syncContext;
         private TimeSpan _previousRequestTime = TimeSpan.MaxValue;
-        #endregion
 
-        #region Constructor
         public DataLoader(Func<TResult> dataSource, int timeoutInMilliseconds)
         {
             _syncContext = SynchronizationContext.Current;
             _dataSource = dataSource;
             _timeoutInMilliseconds = timeoutInMilliseconds;
-            _bgwDataLoader = new BackgroundWorker();
-            _bgwDataLoader.WorkerSupportsCancellation = true;
-            _bgwDataLoader.DoWork += new DoWorkEventHandler(_bgwDataLoader_DoWork);
-            _bgwDataLoader.RunWorkerCompleted += new RunWorkerCompletedEventHandler(_bgwDataLoader_RunWorkerCompleted);
-        }
-        #endregion
+            _bgwDataLoader = new BackgroundWorker
+            {
+                WorkerSupportsCancellation = true
+            };
 
-        #region Backgroundworker handlers
-        void _bgwDataLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+            _bgwDataLoader.DoWork += _bgwDataLoader_DoWork;
+            _bgwDataLoader.RunWorkerCompleted += _bgwDataLoader_RunWorkerCompleted;
+        }
+
+        private void _bgwDataLoader_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            BackgroundWorker worker = sender as BackgroundWorker;
+            var worker = (BackgroundWorker)sender;
             if (e.Cancelled || worker.CancellationPending)// we only cancel when we need to start another search 
             {
                 MakeRequest();
@@ -43,7 +40,6 @@ namespace Apteka.Helpers
             }
             else // we are finished 
             {
-
                 OnRequestCompleted((TResult)e.Result);
 
                 if (_needRequery)
@@ -54,10 +50,10 @@ namespace Apteka.Helpers
             }
         }
 
-        void _bgwDataLoader_DoWork(object sender, DoWorkEventArgs e)
+        private void _bgwDataLoader_DoWork(object sender, DoWorkEventArgs e)
         {
             var startTime = DateTime.Now;
-            BackgroundWorker worker = sender as BackgroundWorker;
+            var worker = (BackgroundWorker)sender;
 
             var asyncResult = _dataSource.BeginInvoke(null, null);
             if (_previousRequestTime.TotalMilliseconds > _timeoutInMilliseconds)
@@ -79,75 +75,56 @@ namespace Apteka.Helpers
                 e.Cancel = true;
             }
         }
-        #endregion
 
-        #region Public methods
         public void MakeRequest()
         {
             if (_bgwDataLoader.IsBusy)
             {
                 _needRequery = true;
                 _bgwDataLoader.CancelAsync();
-
             }
             else
             {
                 _bgwDataLoader.RunWorkerAsync();
             }
         }
-        #endregion
 
-        #region Public properties
-        public object SyncRoot
-        {
-            get { return _syncRoot; }
-        }
-        #endregion
+        public object SyncRoot { get; } = new object();
 
-        #region Events
-        #region RequestCompleted
         public event EventHandler<RequestCompletedEventArgs> RequestCompleted;
 
         protected virtual void OnRequestCompleted(TResult liResults)
         {
-            if (RequestCompleted != null)
-            {
-                RequestCompleted(this, new RequestCompletedEventArgs(liResults));
-            }
+            RequestCompleted?.Invoke(this, new RequestCompletedEventArgs(liResults));
         }
 
         public class RequestCompletedEventArgs : EventArgs
         {
-            public RequestCompletedEventArgs(TResult Results)
+            public RequestCompletedEventArgs(TResult results)
             {
-                this.Results = Results;
+                Results = results;
             }
-            public TResult Results { get; private set; }
-        }
-        #endregion
 
-        #region ErrorGenerated
+            public TResult Results { get; }
+        }
+
         public event EventHandler<ErrorGeneratedEventArgs> ErrorGenerated;
 
         protected virtual void OnErrorGenerated(Exception exc)
         {
-            if (ErrorGenerated != null)
-            {
-                ErrorGenerated(this, new ErrorGeneratedEventArgs(exc));
-            }
+            ErrorGenerated?.Invoke(this, new ErrorGeneratedEventArgs(exc));
         }
 
         public class ErrorGeneratedEventArgs : EventArgs
         {
             public ErrorGeneratedEventArgs(Exception exc)
             {
-                this.Exception = exc;
+                Exception = exc;
             }
-            public Exception Exception { get; private set; }
-        }
-        #endregion
 
-        #region It's gonna take a while event
+            public Exception Exception { get; }
+        }
+
         public event EventHandler<ItsGonnaTakeAWhileEventArgs> ItsGonnaTakeAWhile;
 
         protected virtual void OnItsGonnaTakeAWhile()
@@ -158,14 +135,10 @@ namespace Apteka.Helpers
                 _syncContext.Post(obj =>
                 {
                     itsGonnaTakeAWhile(this, new ItsGonnaTakeAWhileEventArgs());
-                },null);
+                }, null);
             }
         }
 
         public class ItsGonnaTakeAWhileEventArgs : EventArgs { }
-        #endregion
-
-        #endregion
-
     }
 }

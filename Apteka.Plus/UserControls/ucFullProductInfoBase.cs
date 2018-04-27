@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using Apteka.Helpers;
 using Apteka.Plus.Common.Controls;
 using Apteka.Plus.Logic.BLL;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
+using BLToolkit.DataAccess;
 
 namespace Apteka.Plus.UserControls
 {
     public partial class ucFullProductInfoBase : UserControl
     {
-        private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
         private List<FullProductInfo> _liFullProductInfo;
 
         public FullProductInfo SeletedItem { get; private set; }
@@ -25,32 +23,28 @@ namespace Apteka.Plus.UserControls
         private void ucFullProductInfoBase_Load(object sender, EventArgs e)
         {
             if (DesignMode) return;
-            dgvFullProductInfoList.SetStateSourceAndLoadState(Session.User, DataGridViewColumnSettingsAccessor.CreateInstance<DataGridViewColumnSettingsAccessor>());
+            dgvFullProductInfoList.SetStateSourceAndLoadState(Session.User, DataAccessor.CreateInstance<DataGridViewColumnSettingsAccessor>());
         }
         public void Init()
         {
-            FullProductInfoAccessor fpia = FullProductInfoAccessor.CreateInstance<FullProductInfoAccessor>();
+            var fpia = DataAccessor.CreateInstance<FullProductInfoAccessor>();
             _liFullProductInfo = fpia.GetAllActiveProductInfosByLetter("А");
             fullProductInfoBindingSource.DataSource = _liFullProductInfo;
         }
 
         void dgvFullProductInfoList_CurrentRowChanged(object sender, MyDataGridView.CurrentRowChangedEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
-            FullProductInfo fpi = dgv.Rows[e.RowIndex].DataBoundItem as FullProductInfo;
+            var dgv = (DataGridView)sender;
+            var fpi = (FullProductInfo)dgv.Rows[e.RowIndex].DataBoundItem;
             SeletedItem = fpi;
             OnCurrentRowChange(fpi);
         }
 
-        #region CurrentRowChanged
         public event EventHandler<CurrentRowChangedEventArgs> CurrentRowChanged;
 
         private void OnCurrentRowChange(FullProductInfo fullProductInfo)
         {
-            if (CurrentRowChanged != null)
-            {
-                CurrentRowChanged(dgvFullProductInfoList, new CurrentRowChangedEventArgs(fullProductInfo));
-            }
+            CurrentRowChanged?.Invoke(dgvFullProductInfoList, new CurrentRowChangedEventArgs(fullProductInfo));
 
         }
         public class CurrentRowChangedEventArgs : EventArgs
@@ -60,47 +54,37 @@ namespace Apteka.Plus.UserControls
                 FullProductInfo = fullProductInfo;
             }
 
-            public FullProductInfo FullProductInfo { get; private set; }
+            public FullProductInfo FullProductInfo { get; }
         }
-        #endregion
 
         private void tbSearch_TextChanged(object sender, EventArgs e)
         {
             if (tbSearch.Text.Length == 1)
             {
-                FullProductInfoAccessor fpia = FullProductInfoAccessor.CreateInstance<FullProductInfoAccessor>();
+                var fpia = DataAccessor.CreateInstance<FullProductInfoAccessor>();
                 _liFullProductInfo = fpia.GetAllActiveProductInfosByLetter(tbSearch.Text);
                 fullProductInfoBindingSource.DataSource = _liFullProductInfo;
             }
             else if (tbSearch.Text.Length > 1)
             {
 
-                List<FullProductInfo> liFiltered = _liFullProductInfo.FindAll(p =>
-                {
-
-                    return p.ProductName.IndexOf(tbSearch.Text, StringComparison.InvariantCultureIgnoreCase) >= 0
-                        || p.PackageName.IndexOf(tbSearch.Text, StringComparison.InvariantCultureIgnoreCase) >= 0
-                        || p.EAN13.IndexOf(tbSearch.Text, StringComparison.InvariantCultureIgnoreCase) >= 0;
-                });
+                var liFiltered = _liFullProductInfo.FindAll(p => p.ProductName.IndexOf(tbSearch.Text, StringComparison.InvariantCultureIgnoreCase) >= 0
+                                                                 || p.PackageName.IndexOf(tbSearch.Text, StringComparison.InvariantCultureIgnoreCase) >= 0
+                                                                 || p.EAN13.IndexOf(tbSearch.Text, StringComparison.InvariantCultureIgnoreCase) >= 0);
 
                 fullProductInfoBindingSource.DataSource = liFiltered;
 
             }
             else
             {
-                //_liFiltered = null;
                 fullProductInfoBindingSource.DataSource = _liFullProductInfo;
             }
         }
 
         private void dgvFullProductInfoList_KeyDown(object sender, KeyEventArgs e)
         {
-            log.DebugFormat("Key down:{0}", e.KeyCode.ToString());
-            DataGridView dgv = sender as DataGridView;
-
             switch (e.KeyCode)
             {
-
                 case Keys.Enter:
                     OnKeyDown(e);
                     e.SuppressKeyPress = true;
@@ -127,7 +111,6 @@ namespace Apteka.Plus.UserControls
                         e.SuppressKeyPress = true;
                     }
                     break;
-
             }
         }
 
@@ -138,41 +121,21 @@ namespace Apteka.Plus.UserControls
 
         private void dgvFullProductInfoList_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
-            FullProductInfo row = dgv.Rows[e.RowIndex].DataBoundItem as FullProductInfo;
+            var dgv = (DataGridView)sender;
+            var row = (FullProductInfo)dgv.Rows[e.RowIndex].DataBoundItem;
 
-            switch (dgv.Columns[e.ColumnIndex].DataPropertyName)
+            if (dgv.Columns[e.ColumnIndex].DataPropertyName == "Divider")
             {
-                case "Divider":
-                    {
-                        if (row.Divider == 0)
-                        {
-                            e.Value = "";
-                            e.FormattingApplied = true;
-                        }
-
-                    }
-                    break;
-
-                case "IsDiscountExcluded":
-                    {
-                        if (row.IsDiscountExcluded)
-                        {
-                            e.Value = "Не разрешена";
-                        }
-                        else
-                        {
-                            e.Value = "";
-                        }
-                        e.FormattingApplied = true;
-
-                    }
-                    break;
-
-
-
-                default:
-                    break;
+                if (row.Divider == 0)
+                {
+                    e.Value = "";
+                    e.FormattingApplied = true;
+                }
+            }
+            else if (dgv.Columns[e.ColumnIndex].DataPropertyName == "IsDiscountExcluded")
+            {
+                    e.Value = row.IsDiscountExcluded ? "Не разрешена" : "";
+                    e.FormattingApplied = true;
             }
         }
 

@@ -18,9 +18,8 @@ namespace Apteka.Plus.Satelite.Forms
 
         private void tbStoreId_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            TextBox tb = sender as TextBox;
-            int result = -1;
-            e.Cancel = !int.TryParse(tb.Text, out result);
+            var tb = (TextBox)sender;
+            e.Cancel = !int.TryParse(tb.Text, out _);
             if (e.Cancel)
             {
                 errorProvider1.SetError(tb, "Введите число");
@@ -33,9 +32,8 @@ namespace Apteka.Plus.Satelite.Forms
 
         private void tbFontSize_Validating(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            TextBox tb = sender as TextBox;
-            int result = -1;
-            e.Cancel = !(int.TryParse(tb.Text, out result) && result>1);
+            var tb = (TextBox)sender;
+            e.Cancel = !(int.TryParse(tb.Text, out var result) && result > 1);
             if (e.Cancel)
             {
                 errorProvider1.SetError(tb, "Введите число больше 0");
@@ -45,6 +43,5 @@ namespace Apteka.Plus.Satelite.Forms
                 errorProvider1.Clear();
             }
         }
-
     }
 }

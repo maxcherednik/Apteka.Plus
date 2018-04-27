@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using Apteka.Plus.Forms;
-using OrderConverter.BLL;
-using OrderConverter.DAL;
 using Apteka.Plus.Logic.OrderConverter.BLL;
+using Apteka.Plus.Logic.OrderConverter.DAL;
 
-namespace OrderConverter
+namespace Apteka.Plus.Forms
 {
     public partial class frmConvertOrder : Form
     {
@@ -23,24 +21,22 @@ namespace OrderConverter
 
         private void btnExit_Click(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
             if (liFirms.SelectedIndex == -1)
             {
-                MessageBox.Show("Вы не выбрали фирму", "Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(@"Вы не выбрали фирму", @"Внимание!", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
-            
+
             if (openFileDialog1.ShowDialog() == DialogResult.OK)
             {
                 IList<IForeignOrderConverter> foreignOrderRows;
-                // ConfigurationSettings.   
-                #region Choosing Foreign Order Gateway
 
-                DBFFileReader gwForeignOrderAccessor = new DBFFileReader(openFileDialog1.FileName);
+                var gwForeignOrderAccessor = new DbfFileReader(openFileDialog1.FileName);
 
                 switch (liFirms.Text.ToLower())
                 {
@@ -71,42 +67,28 @@ namespace OrderConverter
                         }
                     default:
                         {
-                            MessageBox.Show("Произошла ошибка. Не нашел обработчика для накладных фирмы " + liFirms.Text, "Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+                            MessageBox.Show(@"Произошла ошибка. Не нашел обработчика для накладных фирмы " + liFirms.Text, @"Ошибка!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
                             return;
-
                         }
                 }
 
-                List<LocalOrder> liLocalOrderRows = new List<LocalOrder>();
-                foreach (IForeignOrderConverter iForeignOrderRow in foreignOrderRows)
+                var liLocalOrderRows = foreignOrderRows.Select(iForeignOrderRow => iForeignOrderRow.ConvertToLocalOrder()).ToList();
+
+                var file = new FileInfo(openFileDialog1.FileName);
+
+                var di = file.Directory;
+                foreach (var fileInfo in di.GetFiles("*.dbf"))
                 {
-                    LocalOrder localOrderRow = iForeignOrderRow.ConvertToLocalOrder();
-                    liLocalOrderRows.Add(localOrderRow);
-                }
-
-                #endregion
-
-                FileInfo file = new FileInfo(openFileDialog1.FileName);
-
-                #region Clean Old Files
-
-                DirectoryInfo di= file.Directory;
-                foreach (FileInfo fileInfo in di.GetFiles("*.dbf"))
-                {
-                    if(fileInfo.CreationTime<DateTime.Today.AddDays(-2))
+                    if (fileInfo.CreationTime < DateTime.Today.AddDays(-2))
                         fileInfo.Delete();
                 }
 
-                #endregion
-
                 FileName = file.Name;
-                
+
                 SupplierName = liFirms.Text;
-                frmForeignOrderViewer frmForeignOrderViewer = new frmForeignOrderViewer(liLocalOrderRows);
                 ConvertedOrder = liLocalOrderRows;
-                this.DialogResult = DialogResult.OK;
-                this.Close();
-                
+                DialogResult = DialogResult.OK;
+                Close();
             }
         }
     }

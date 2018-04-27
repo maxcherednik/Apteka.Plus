@@ -1,6 +1,7 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
+using BLToolkit.DataAccess;
 
 namespace Apteka.Plus.Logic.BLL.Collections
 {
@@ -13,7 +14,7 @@ namespace Apteka.Plus.Logic.BLL.Collections
             {
                 if (_liMyStores == null)
                 {
-                    MyStoresAccessor msa = MyStoresAccessor.CreateInstance<MyStoresAccessor>();
+                    var msa = DataAccessor.CreateInstance<MyStoresAccessor>();
                     _liMyStores = msa.SelectAll();
                 }
                 return new List<MyStore>(_liMyStores);

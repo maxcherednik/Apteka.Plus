@@ -3,96 +3,97 @@ using Apteka.Plus.Logic.BLL.Collections;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
 using BLToolkit.Data;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using BLToolkit.DataAccess;
 
 namespace Apteka.Plus.Logic.BLL
 {
     public class SateliteDataHelper
     {
-        private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         #region Office
 
         public static string PrepareDataForMyStore(MyStore myStore)
         {
-
-            log.Info("Подготовка данных для отправки в пункт");
-            log.InfoFormat("Пункт id: {0} name: {1} ip: {2}", myStore.ID, myStore.Name, myStore.IP);
-            DirectoryInfo di = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + "DataTransfer");
+            Log.Info("Подготовка данных для отправки в пункт");
+            Log.InfoFormat("Пункт id: {0} name: {1} ip: {2}", myStore.ID, myStore.Name, myStore.IP);
+            var di = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + "DataTransfer");
             if (!di.Exists)
                 di.Create();
 
-            DirectoryInfo diDate = new DirectoryInfo(di.FullName + "\\" + DateTime.Now.ToShortDateString());
+            var diDate = new DirectoryInfo(di.FullName + "\\" + DateTime.Now.ToShortDateString());
             if (!diDate.Exists)
                 diDate.Create();
 
-            using (DbManager dbSatelite = new DbManager(myStore.Name))
+            using (var dbSatelite = new DbManager(myStore.Name))
             {
+                var lba = DataAccessor.CreateInstance<LocalBillsAccessor>(dbSatelite);
+                var raa = DataAccessor.CreateInstance<RemoteActionAccessor>(dbSatelite);
+                var ea = DataAccessor.CreateInstance<EmployeesAccessor>(dbSatelite);
+                var pa = DataAccessor.CreateInstance<PropertyAccessor>(dbSatelite);
+                var sa = DataAccessor.CreateInstance<SalesAccessor>(dbSatelite);
+                var lbta = DataAccessor.CreateInstance<LocalBillsTransfersAccessor>(dbSatelite);
+                var pca = DataAccessor.CreateInstance<PriceChangesAccessor>(dbSatelite);
+                var srha = DataAccessor.CreateInstance<SuppliesReturnHistoryAccessor>(dbSatelite);
+                var clientAccessor = DataAccessor.CreateInstance<ClientAccessor>();
+                var fpia = DataAccessor.CreateInstance<FullProductInfoAccessor>();
 
-                LocalBillsAccessor lba = LocalBillsAccessor.CreateInstance<LocalBillsAccessor>(dbSatelite);
-                RemoteActionAccessor raa = RemoteActionAccessor.CreateInstance<RemoteActionAccessor>(dbSatelite);
-                EmployeesAccessor ea = EmployeesAccessor.CreateInstance<EmployeesAccessor>(dbSatelite);
-                PropertyAccessor pa = PropertyAccessor.CreateInstance<PropertyAccessor>(dbSatelite);
-                SalesAccessor sa = SalesAccessor.CreateInstance<SalesAccessor>(dbSatelite);
-                LocalBillsTransfersAccessor lbta = LocalBillsTransfersAccessor.CreateInstance<LocalBillsTransfersAccessor>(dbSatelite);
-                PriceChangesAccessor pca = PriceChangesAccessor.CreateInstance<PriceChangesAccessor>(dbSatelite);
-                SuppliesReturnHistoryAccessor srha = SuppliesReturnHistoryAccessor.CreateInstance<SuppliesReturnHistoryAccessor>(dbSatelite);
-                ClientAccessor clientAccessor = ClientAccessor.CreateInstance<ClientAccessor>();
-                FullProductInfoAccessor fpia = FullProductInfoAccessor.CreateInstance<FullProductInfoAccessor>();
+                Log.Info("Читаем oLocalBillsRows");
+                var liLocalBillsRows = lba.GetUnsyncedRows();
+                Log.InfoFormat("oLocalBillsRows: {0} позиций", liLocalBillsRows.Count);
 
-                log.Info("Читаем oLocalBillsRows");
-                List<LocalBillsRowEx> liLocalBillsRows = lba.GetUnsyncedRows();
-                log.InfoFormat("oLocalBillsRows: {0} позиций", liLocalBillsRows.Count);
+                Log.Info("Читаем liRemoteActions");
+                var liRemoteActions = raa.GetUnsyncedRows();
+                Log.InfoFormat("liRemoteActions: {0} позиций", liRemoteActions.Count);
 
-                log.Info("Читаем liRemoteActions");
-                List<RemoteAction> liRemoteActions = raa.GetUnsyncedRows();
-                log.InfoFormat("liRemoteActions: {0} позиций", liRemoteActions.Count);
+                Log.Info("Читаем liProperties");
+                var liProperties = pa.GetAllRows();
+                Log.InfoFormat("liProperties: {0} позиций", liProperties.Count);
 
-                log.Info("Читаем liProperties");
-                IList<Property> liProperties = pa.GetAllRows();
-                log.InfoFormat("liProperties: {0} позиций", liProperties.Count);
+                Log.Info("Читаем liEmployees");
+                var liEmployees = ea.GetAllActiveEmployees();
+                Log.InfoFormat("liEmployees: {0} позиций", liEmployees.Count);
 
-                log.Info("Читаем liEmployees");
-                List<Employee> liEmployees = ea.GetAllActiveEmployees();
-                log.InfoFormat("liEmployees: {0} позиций", liEmployees.Count);
+                Log.Info("Читаем liMyStores");
+                var liMyStores = MyStoresCollection.AllStores;
+                Log.InfoFormat("liMyStores: {0} позиций", liMyStores.Count);
 
-                log.Info("Читаем liMyStores");
-                List<MyStore> liMyStores = MyStoresCollection.AllStores;
-                log.InfoFormat("liMyStores: {0} позиций", liMyStores.Count);
+                Log.Info("Читаем Clients");
+                var liClients = clientAccessor.Query.SelectAll();
+                Log.InfoFormat("liClients: {0} позиций", liClients.Count);
 
-                log.Info("Читаем Clients");
-                List<Client> liClients = clientAccessor.Query.SelectAll();
-                log.InfoFormat("liClients: {0} позиций", liClients.Count);
-
-                log.Info("Читаем Products");
-                List<FullProductInfo> liFullProductInfo = fpia.GetAllActiveProductInfos();
-                log.InfoFormat("FullProductInfo: {0} позиций", liFullProductInfo.Count);
+                Log.Info("Читаем Products");
+                var liFullProductInfo = fpia.GetAllActiveProductInfos();
+                Log.InfoFormat("FullProductInfo: {0} позиций", liFullProductInfo.Count);
 
                 #region Получение информации по таблицам
-                log.Info("Получение информации по таблицам");
+                Log.Info("Получение информации по таблицам");
 
-                long maxLocalBillsTransferID = lbta.GetMaxRowID();
-                long maxSalesRowID = sa.GetMaxRowID();
-                long maxPriceChangesRowID = pca.GetMaxRowID();
-                long maxSuppliesReturnHistoryRowID = srha.GetMaxRowID();
+                var maxLocalBillsTransferId = lbta.GetMaxRowID();
+                var maxSalesRowId = sa.GetMaxRowID();
+                var maxPriceChangesRowId = pca.GetMaxRowID();
+                var maxSuppliesReturnHistoryRowId = srha.GetMaxRowID();
 
-                log.InfoFormat("maxLocalBillsTransferID: {0}", maxLocalBillsTransferID);
-                log.InfoFormat("maxSalesRowID: {0}", maxSalesRowID);
-                log.InfoFormat("maxPriceChangesRowID: {0}", maxPriceChangesRowID);
-                log.InfoFormat("maxSuppliesReturnHistoryRowID: {0}", maxSuppliesReturnHistoryRowID);
+                Log.InfoFormat("maxLocalBillsTransferID: {0}", maxLocalBillsTransferId);
+                Log.InfoFormat("maxSalesRowID: {0}", maxSalesRowId);
+                Log.InfoFormat("maxPriceChangesRowID: {0}", maxPriceChangesRowId);
+                Log.InfoFormat("maxSuppliesReturnHistoryRowID: {0}", maxSuppliesReturnHistoryRowId);
 
-                List<TableInfo> liTablesInfo = new List<TableInfo>(4);
-
-                liTablesInfo.Add(new TableInfo("Sales", maxSalesRowID));
-                liTablesInfo.Add(new TableInfo("PriceChanges", maxPriceChangesRowID));
-                liTablesInfo.Add(new TableInfo("LocalBillsTransfers", maxLocalBillsTransferID));
-                liTablesInfo.Add(new TableInfo("SuppliesReturnHistory", maxSuppliesReturnHistoryRowID));
+                var liTablesInfo = new List<TableInfo>(4)
+                {
+                    new TableInfo("Sales", maxSalesRowId),
+                    new TableInfo("PriceChanges", maxPriceChangesRowId),
+                    new TableInfo("LocalBillsTransfers", maxLocalBillsTransferId),
+                    new TableInfo("SuppliesReturnHistory", maxSuppliesReturnHistoryRowId)
+                };
 
                 #endregion
 
-                log.Info("Сериализация...");
+                Log.Info("Сериализация...");
                 SerializeHelper.SerializeObjectToFile(liLocalBillsRows, diDate.FullName + "\\LocalBillsRows.xml");
                 SerializeHelper.SerializeObjectToFile(liRemoteActions, diDate.FullName + "\\RemoteActions.xml");
                 SerializeHelper.SerializeObjectToFile((List<Property>)liProperties, diDate.FullName + "\\Properties.xml");
@@ -101,14 +102,13 @@ namespace Apteka.Plus.Logic.BLL
                 SerializeHelper.SerializeObjectToFile(liMyStores, diDate.FullName + "\\MyStores.xml");
                 SerializeHelper.SerializeObjectToFile(liClients, diDate.FullName + "\\Clients.xml");
                 SerializeHelper.SerializeObjectToFile(liFullProductInfo, diDate.FullName + "\\ProductInfo.xml");
-
             }
 
-            log.Info("Архивация...");
-            string archiveName = di.FullName + "\\to" + myStore.ID + ".zip";
+            Log.Info("Архивация...");
+            var archiveName = di.FullName + "\\to" + myStore.ID + ".zip";
             ZipHelper.ZipFile(diDate.FullName, archiveName);
 
-            log.InfoFormat("Результирующий архив: {0}", archiveName);
+            Log.InfoFormat("Результирующий архив: {0}", archiveName);
             return archiveName;
         }
 
@@ -119,58 +119,54 @@ namespace Apteka.Plus.Logic.BLL
 
         public static void ProcessNewDataFromSatelite(MyStore myStore, Stream fsStream)
         {
-            log.Info("Обработка данных из пункта");
-            log.InfoFormat("Пункт id: {0} name: {1} ip: {2}", myStore.ID, myStore.Name, myStore.IP);
-            log.Info("Разархивация..");
-            DirectoryInfo diDestination = Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + "Temp\\" + Guid.NewGuid().ToString() + ".ext");
+            Log.Info("Обработка данных из пункта");
+            Log.InfoFormat("Пункт id: {0} name: {1} ip: {2}", myStore.ID, myStore.Name, myStore.IP);
+            Log.Info("Разархивация..");
+            var diDestination = Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + "Temp\\" + Guid.NewGuid().ToString() + ".ext");
             ZipHelper.Unzip(fsStream, diDestination);
 
-            log.Info("Десериализация");
-            List<PriceChangeRow> liPriceChangeRow = SerializeHelper.DeserializeObjectFromFile<List<PriceChangeRow>>(diDestination.FullName + "\\PriceChangeRows.xml");
-            List<SalesRow> liSalesRow = SerializeHelper.DeserializeObjectFromFile<List<SalesRow>>(diDestination.FullName + "\\SalesRows.xml");
-            List<LocalBillsTransferRow> liLocalBillsTransferRow = SerializeHelper.DeserializeObjectFromFile<List<LocalBillsTransferRow>>(diDestination.FullName + "\\LocalBillsTransferRows.xml");
-            List<SuppliesReturnHistoryRow> liSuppliesReturnHistoryRows = SerializeHelper.DeserializeObjectFromFile<List<SuppliesReturnHistoryRow>>(diDestination.FullName + "\\SuppliesReturnHistory.xml");
-            List<TableInfo> liTablesInfo = SerializeHelper.DeserializeObjectFromFile<List<TableInfo>>(diDestination.FullName + "\\TablesInfo.xml");
+            Log.Info("Десериализация");
+            var liPriceChangeRow = SerializeHelper.DeserializeObjectFromFile<List<PriceChangeRow>>(diDestination.FullName + "\\PriceChangeRows.xml");
+            var liSalesRow = SerializeHelper.DeserializeObjectFromFile<List<SalesRow>>(diDestination.FullName + "\\SalesRows.xml");
+            var liLocalBillsTransferRow = SerializeHelper.DeserializeObjectFromFile<List<LocalBillsTransferRow>>(diDestination.FullName + "\\LocalBillsTransferRows.xml");
+            var liSuppliesReturnHistoryRows = SerializeHelper.DeserializeObjectFromFile<List<SuppliesReturnHistoryRow>>(diDestination.FullName + "\\SuppliesReturnHistory.xml");
+            var liTablesInfo = SerializeHelper.DeserializeObjectFromFile<List<TableInfo>>(diDestination.FullName + "\\TablesInfo.xml");
 
-            DbManager dbSatelite = new DbManager(myStore.Name);
-            DbManager dbSklad = new DbManager();
+            var dbSatelite = new DbManager(myStore.Name);
+            var dbSklad = new DbManager();
 
             try
             {
-                log.Info("Открываем транзакции...");
+                Log.Info("Открываем транзакции...");
                 dbSatelite.BeginTransaction();
                 dbSklad.BeginTransaction();
 
-                LocalBillsAccessor lba = LocalBillsAccessor.CreateInstance<LocalBillsAccessor>(dbSatelite);
-                RemoteActionAccessor raa = RemoteActionAccessor.CreateInstance<RemoteActionAccessor>(dbSatelite);
-                EmployeesAccessor ea = EmployeesAccessor.CreateInstance<EmployeesAccessor>(dbSatelite);
-                PropertyAccessor pa = PropertyAccessor.CreateInstance<PropertyAccessor>(dbSatelite);
-                SalesAccessor sa = SalesAccessor.CreateInstance<SalesAccessor>(dbSatelite);
-                LocalBillsTransfersAccessor lbta = LocalBillsTransfersAccessor.CreateInstance<LocalBillsTransfersAccessor>(dbSatelite);
-                PriceChangesAccessor pca = PriceChangesAccessor.CreateInstance<PriceChangesAccessor>(dbSatelite);
-                SuppliesReturnHistoryAccessor srha =
-                    SuppliesReturnHistoryAccessor.CreateInstance<SuppliesReturnHistoryAccessor>(dbSatelite);
+                var lba = DataAccessor.CreateInstance<LocalBillsAccessor>(dbSatelite);
+                var raa = DataAccessor.CreateInstance<RemoteActionAccessor>(dbSatelite);
+                var sa = DataAccessor.CreateInstance<SalesAccessor>(dbSatelite);
+                var lbta = DataAccessor.CreateInstance<LocalBillsTransfersAccessor>(dbSatelite);
+                var pca = DataAccessor.CreateInstance<PriceChangesAccessor>(dbSatelite);
+                var srha = DataAccessor.CreateInstance<SuppliesReturnHistoryAccessor>(dbSatelite);
 
                 #region SalesRows
 
-                long SalesRowMaxID = sa.GetMaxRowID();
-                foreach (SalesRow varSalesRow in liSalesRow)
+                var salesRowMaxId = sa.GetMaxRowID();
+                foreach (var varSalesRow in liSalesRow)
                 {
-                    if (varSalesRow.ID > SalesRowMaxID)
+                    if (varSalesRow.ID > salesRowMaxId)
                     {
                         lba.ChangeAmount(varSalesRow.LocalBillsRow.ID, -1 * varSalesRow.Count);
                         sa.Insert(varSalesRow);
                     }
-
                 }
                 #endregion
 
                 #region SuppliesReturnHistoryRows
 
-                long SuppliesReturnHistoryMaxID = srha.GetMaxRowID();
-                foreach (SuppliesReturnHistoryRow suppliesReturnHistoryRow in liSuppliesReturnHistoryRows)
+                var suppliesReturnHistoryMaxId = srha.GetMaxRowID();
+                foreach (var suppliesReturnHistoryRow in liSuppliesReturnHistoryRows)
                 {
-                    if (suppliesReturnHistoryRow.ID > SuppliesReturnHistoryMaxID)
+                    if (suppliesReturnHistoryRow.ID > suppliesReturnHistoryMaxId)
                     {
                         lba.ChangeAmount(suppliesReturnHistoryRow.LocalBillsRow.ID, -1 * suppliesReturnHistoryRow.Amount);
                         srha.Insert(suppliesReturnHistoryRow);
@@ -181,14 +177,13 @@ namespace Apteka.Plus.Logic.BLL
 
                 #region TransferRows
 
-                long LocalBillsTransferRowMaxID = lbta.GetMaxRowID();
-                foreach (LocalBillsTransferRow varLocalBillsTransferRow in liLocalBillsTransferRow)
+                var localBillsTransferRowMaxId = lbta.GetMaxRowID();
+                foreach (var varLocalBillsTransferRow in liLocalBillsTransferRow)
                 {
-                    if (varLocalBillsTransferRow.ID > LocalBillsTransferRowMaxID)
+                    if (varLocalBillsTransferRow.ID > localBillsTransferRowMaxId)
                     {
                         lba.ChangeAmount(varLocalBillsTransferRow.LocalBillsRow.ID, -1 * varLocalBillsTransferRow.Count);
                         lbta.Insert(varLocalBillsTransferRow);
-
                     }
 
                 }
@@ -196,20 +191,19 @@ namespace Apteka.Plus.Logic.BLL
 
                 #region PriceChangesRows
 
-                long PriceChangesRowMaxID = pca.GetMaxRowID();
-                foreach (PriceChangeRow varPriceChangeRow in liPriceChangeRow)
+                var priceChangesRowMaxId = pca.GetMaxRowID();
+                foreach (var varPriceChangeRow in liPriceChangeRow)
                 {
-                    if (varPriceChangeRow.ID > PriceChangesRowMaxID)
+                    if (varPriceChangeRow.ID > priceChangesRowMaxId)
                     {
                         pca.Insert(varPriceChangeRow);
                         lba.UpdatePrice(varPriceChangeRow.LocalBillsRowID, varPriceChangeRow.NewPrice);
-
                     }
                 }
                 #endregion
 
                 #region Очитска
-                foreach (TableInfo tableInfo in liTablesInfo)
+                foreach (var tableInfo in liTablesInfo)
                 {
                     if (tableInfo.Name == "LocalBillsMaxRowID")
                     {
@@ -223,22 +217,21 @@ namespace Apteka.Plus.Logic.BLL
 
                 #endregion
 
-                log.Info("Завершаем транзакции...");
+                Log.Info("Завершаем транзакции...");
                 dbSatelite.CommitTransaction();
                 dbSklad.CommitTransaction();
-
             }
             catch (Exception e)
             {
-                log.Error("Ошибка при обработке данных из пункта " + myStore.ID, e);
-                log.Info("Откатываем транзакции...");
+                Log.Error("Ошибка при обработке данных из пункта " + myStore.ID, e);
+                Log.Info("Откатываем транзакции...");
                 dbSatelite.RollbackTransaction();
                 dbSklad.RollbackTransaction();
 
                 throw;
             }
 
-            log.InfoFormat("Удаляем директорию {0}", diDestination.Name);
+            Log.InfoFormat("Удаляем директорию {0}", diDestination.Name);
             diDestination.Delete(true);
         }
 
@@ -248,131 +241,125 @@ namespace Apteka.Plus.Logic.BLL
 
         public static string PrepareDataFromSateliteToBase()
         {
-            log.Info("Подготовка данных для выгрузки на главный компьютер");
+            Log.Info("Подготовка данных для выгрузки на главный компьютер");
 
-            DirectoryInfo di = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + "Download");
+            var di = new DirectoryInfo(AppDomain.CurrentDomain.BaseDirectory + "Download");
             if (!di.Exists)
                 di.Create();
 
-            string pathToArchiveName = Guid.NewGuid().ToString();
-            DirectoryInfo diPathToArchive = new DirectoryInfo(di.FullName + "\\" + pathToArchiveName);
+            var pathToArchiveName = Guid.NewGuid().ToString();
+            var diPathToArchive = new DirectoryInfo(di.FullName + "\\" + pathToArchiveName);
             diPathToArchive.Create();
-            log.InfoFormat("Создана директория {0}", diPathToArchive.Name);
+            Log.InfoFormat("Создана директория {0}", diPathToArchive.Name);
 
-            List<PriceChangeRow> liPriceChangeRow = null;
-            List<SalesRow> liSalesRow = null;
-            List<LocalBillsTransferRow> liLocalBillsTransferRow = null;
-            List<SuppliesReturnHistoryRow> liSuppliesReturnHistoryRows = null;
-            List<TableInfo> liTableInfos = new List<TableInfo>();
+            var liTableInfos = new List<TableInfo>();
 
-            using (DbManager db = new DbManager())
+            using (var db = new DbManager())
             {
+                List<PriceChangeRow> liPriceChangeRow;
+                List<SalesRow> liSalesRow;
+                List<LocalBillsTransferRow> liLocalBillsTransferRow;
+                List<SuppliesReturnHistoryRow> liSuppliesReturnHistoryRows;
                 try
                 {
                     db.BeginTransaction();
-                    log.Info("Транзакция в базу открыта");
+                    Log.Info("Транзакция в базу открыта");
 
-                    log.Info("Подготовка данных");
-                    LocalBillsAccessor lba = LocalBillsAccessor.CreateInstance<LocalBillsAccessor>(db);
-                    PriceChangesAccessor pca = PriceChangesAccessor.CreateInstance<PriceChangesAccessor>(db);
-                    SalesAccessor sa = SalesAccessor.CreateInstance<SalesAccessor>(db);
-                    LocalBillsTransfersAccessor lbta = LocalBillsTransfersAccessor.CreateInstance<LocalBillsTransfersAccessor>(db);
-                    RemoteActionAccessor raa = RemoteActionAccessor.CreateInstance<RemoteActionAccessor>(db);
+                    Log.Info("Подготовка данных");
+                    var lba = DataAccessor.CreateInstance<LocalBillsAccessor>(db);
+                    var pca = DataAccessor.CreateInstance<PriceChangesAccessor>(db);
+                    var sa = DataAccessor.CreateInstance<SalesAccessor>(db);
+                    var lbta = DataAccessor.CreateInstance<LocalBillsTransfersAccessor>(db);
+                    var raa = DataAccessor.CreateInstance<RemoteActionAccessor>(db);
 
-                    SuppliesReturnHistoryAccessor srha = SuppliesReturnHistoryAccessor.CreateInstance<SuppliesReturnHistoryAccessor>(db);
+                    var srha = DataAccessor.CreateInstance<SuppliesReturnHistoryAccessor>(db);
 
                     liPriceChangeRow = pca.GetUnsyncedRows();
                     liSalesRow = sa.GetUnsyncedRows();
                     liLocalBillsTransferRow = lbta.GetUnsyncedRows();
                     liSuppliesReturnHistoryRows = srha.GetUnsyncedRows();
 
-                    long maxLocalBillsRowID = lba.GetMaxRowID();
-                    long lastRemoteActionID = raa.GetMaxRowID();
+                    var maxLocalBillsRowId = lba.GetMaxRowID();
+                    var lastRemoteActionId = raa.GetMaxRowID();
 
-                    liTableInfos.Add(new TableInfo("LocalBillsMaxRowID", maxLocalBillsRowID));
-                    liTableInfos.Add(new TableInfo("RemoteActionsMaxID", lastRemoteActionID));
+                    liTableInfos.Add(new TableInfo("LocalBillsMaxRowID", maxLocalBillsRowId));
+                    liTableInfos.Add(new TableInfo("RemoteActionsMaxID", lastRemoteActionId));
 
                     db.CommitTransaction();
-                    log.Info("Транзакция в базу закрыта");
-
+                    Log.Info("Транзакция в базу закрыта");
                 }
                 catch (Exception e)
                 {
-                    log.Error("Ошибка при подготовке данных из пункта в центральную базу", e);
-                    log.Info("Транзакция в базу отменяется...");
+                    Log.Error("Ошибка при подготовке данных из пункта в центральную базу", e);
+                    Log.Info("Транзакция в базу отменяется...");
                     db.RollbackTransaction();
-                    log.Info("Транзакция в базу отменена");
+                    Log.Info("Транзакция в базу отменена");
                     throw;
                 }
 
-                log.Info("Сериализация данных...");
+                Log.Info("Сериализация данных...");
                 SerializeHelper.SerializeObjectToFile(liPriceChangeRow, diPathToArchive.FullName + "\\PriceChangeRows.xml");
                 SerializeHelper.SerializeObjectToFile(liSalesRow, diPathToArchive.FullName + "\\SalesRows.xml");
                 SerializeHelper.SerializeObjectToFile(liLocalBillsTransferRow, diPathToArchive.FullName + "\\LocalBillsTransferRows.xml");
                 SerializeHelper.SerializeObjectToFile(liTableInfos, diPathToArchive.FullName + "\\TablesInfo.xml");
                 SerializeHelper.SerializeObjectToFile(liSuppliesReturnHistoryRows, diPathToArchive.FullName + "\\SuppliesReturnHistory.xml");
 
-                log.Info("Архивация...");
-                string zipSateliteData = di.FullName + "\\" + pathToArchiveName + ".zip";
+                Log.Info("Архивация...");
+                var zipSateliteData = di.FullName + "\\" + pathToArchiveName + ".zip";
                 ZipHelper.ZipFile(diPathToArchive.FullName, zipSateliteData);
-                log.InfoFormat("Создан архив {0}", zipSateliteData);
+                Log.InfoFormat("Создан архив {0}", zipSateliteData);
 
                 diPathToArchive.Delete(true);
-                log.InfoFormat("Удалена директория {0}", diPathToArchive.Name);
+                Log.InfoFormat("Удалена директория {0}", diPathToArchive.Name);
 
                 return zipSateliteData;
-
             }
         }
 
         public static void InsertNewData(Stream fileStream)
         {
-            log.Info("Обработка новых данных с главного компьютера");
+            Log.Info("Обработка новых данных с главного компьютера");
 
-            log.Info("Разархивация..");
-            DirectoryInfo diDestination = Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + "Temp\\" + Guid.NewGuid().ToString() + ".ext");
+            Log.Info("Разархивация..");
+            var diDestination = Directory.CreateDirectory(AppDomain.CurrentDomain.BaseDirectory + "Temp\\" + Guid.NewGuid().ToString() + ".ext");
             ZipHelper.Unzip(fileStream, diDestination);
 
-            log.Info("Десериализация данных...");
-            List<LocalBillsRowEx> liLocalBillRows = SerializeHelper.DeserializeObjectFromFile<List<LocalBillsRowEx>>(diDestination.FullName + "\\LocalBillsRows.xml");
-            List<RemoteAction> liRemoteActions = SerializeHelper.DeserializeObjectFromFile<List<RemoteAction>>(diDestination.FullName + "\\RemoteActions.xml");
-            List<Employee> liEmployees = SerializeHelper.DeserializeObjectFromFile<List<Employee>>(diDestination.FullName + "\\Employees.xml");
-            List<Property> liProperties = SerializeHelper.DeserializeObjectFromFile<List<Property>>(diDestination.FullName + "\\Properties.xml");
-            List<TableInfo> liTablesInfo = SerializeHelper.DeserializeObjectFromFile<List<TableInfo>>(diDestination.FullName + "\\TablesInfo.xml");
-            List<MyStore> liMyStores = SerializeHelper.DeserializeObjectFromFile<List<MyStore>>(diDestination.FullName + "\\MyStores.xml");
-            List<Client> liClients = SerializeHelper.DeserializeObjectFromFile<List<Client>>(diDestination.FullName + "\\Clients.xml");
-            List<FullProductInfo> liFullProductInfo = SerializeHelper.DeserializeObjectFromFile<List<FullProductInfo>>(diDestination.FullName + "\\ProductInfo.xml");
-            
-                
-            using (DbManager db = new DbManager())
+            Log.Info("Десериализация данных...");
+            var liLocalBillRows = SerializeHelper.DeserializeObjectFromFile<List<LocalBillsRowEx>>(diDestination.FullName + "\\LocalBillsRows.xml");
+            var liRemoteActions = SerializeHelper.DeserializeObjectFromFile<List<RemoteAction>>(diDestination.FullName + "\\RemoteActions.xml");
+            var liEmployees = SerializeHelper.DeserializeObjectFromFile<List<Employee>>(diDestination.FullName + "\\Employees.xml");
+            var liProperties = SerializeHelper.DeserializeObjectFromFile<List<Property>>(diDestination.FullName + "\\Properties.xml");
+            var liTablesInfo = SerializeHelper.DeserializeObjectFromFile<List<TableInfo>>(diDestination.FullName + "\\TablesInfo.xml");
+            var liMyStores = SerializeHelper.DeserializeObjectFromFile<List<MyStore>>(diDestination.FullName + "\\MyStores.xml");
+            var liClients = SerializeHelper.DeserializeObjectFromFile<List<Client>>(diDestination.FullName + "\\Clients.xml");
+            var liFullProductInfo = SerializeHelper.DeserializeObjectFromFile<List<FullProductInfo>>(diDestination.FullName + "\\ProductInfo.xml");
+
+
+            using (var db = new DbManager())
             {
                 try
                 {
                     db.BeginTransaction();
-                    log.Info("Транзакция в базу открыта");
+                    Log.Info("Транзакция в базу открыта");
 
-                    MainStoreRowsAccessor msra = MainStoreRowsAccessor.CreateInstance<MainStoreRowsAccessor>(db);
-                    LocalBillsAccessor lba = LocalBillsAccessor.CreateInstance<LocalBillsAccessor>(db);
-                    PropertyAccessor pa = PropertyAccessor.CreateInstance<PropertyAccessor>(db);
-                    EmployeesAccessor ea = EmployeesAccessor.CreateInstance<EmployeesAccessor>(db);
-                    TablesInfoAccessor tia = TablesInfoAccessor.CreateInstance<TablesInfoAccessor>(db);
-                    RemoteActionAccessor ra = RemoteActionAccessor.CreateInstance<RemoteActionAccessor>(db);
-                    MyStoresAccessor msa = MyStoresAccessor.CreateInstance<MyStoresAccessor>(db);
-                    FullProductInfoAccessor fpia = FullProductInfoAccessor.CreateInstance<FullProductInfoAccessor>(db);
-                    SuppliersAccessor supa = SuppliersAccessor.CreateInstance<SuppliersAccessor>(db);
-                    ClientAccessor clientAccessor = ClientAccessor.CreateInstance<ClientAccessor>(db);
+                    var msra = DataAccessor.CreateInstance<MainStoreRowsAccessor>(db);
+                    var lba = DataAccessor.CreateInstance<LocalBillsAccessor>(db);
+                    var pa = DataAccessor.CreateInstance<PropertyAccessor>(db);
+                    var ea = DataAccessor.CreateInstance<EmployeesAccessor>(db);
+                    var tia = DataAccessor.CreateInstance<TablesInfoAccessor>(db);
+                    var msa = DataAccessor.CreateInstance<MyStoresAccessor>(db);
+                    var fpia = DataAccessor.CreateInstance<FullProductInfoAccessor>(db);
+                    var supa = DataAccessor.CreateInstance<SuppliersAccessor>(db);
+                    var clientAccessor = DataAccessor.CreateInstance<ClientAccessor>(db);
 
                     #region Update Clients
 
-                    List<Client> liSateliteClients = clientAccessor.Query.SelectAll();
-                    foreach (Client client in liSateliteClients)
+                    var liSateliteClients = clientAccessor.Query.SelectAll();
+                    foreach (var client in liSateliteClients)
                     {
-                        Client clientFind = liClients.Find(delegate(Client c)
-                        {
-                            return c.Id == client.Id;
-                        });
+                        var clientFind = liClients.Find(c => c.Id == client.Id);
 
-                        log.InfoFormat("Client id: {0} discount: {1}", client.Id, client.Discount);
+                        Log.InfoFormat("Client id: {0} discount: {1}", client.Id, client.Discount);
 
                         if (clientFind == null)
                         {
@@ -388,31 +375,27 @@ namespace Apteka.Plus.Logic.BLL
                     }
 
                     liSateliteClients = clientAccessor.Query.SelectAll();
-                    foreach (Client client in liClients)
+                    foreach (var client in liClients)
                     {
-                        Client clientFind = liSateliteClients.Find(delegate(Client c)
-                        {
-                            return c.Id == client.Id;
-                        });
+                        var clientFind = liSateliteClients.Find(c => c.Id == client.Id);
 
-                        log.InfoFormat("Client id: {0} discount: {1}", client.Id, client.Discount);
+                        Log.InfoFormat("Client id: {0} discount: {1}", client.Id, client.Discount);
 
                         if (clientFind == null)
                         {
                             clientAccessor.Query.Insert(client);
                         }
-
                     }
 
                     #endregion
 
                     #region Update MyStores
 
-                    foreach (MyStore myStore in liMyStores)
+                    foreach (var myStore in liMyStores)
                     {
-                        log.InfoFormat("MyStore : {0} value: {1}", myStore.ID, myStore.Name);
+                        Log.InfoFormat("MyStore : {0} value: {1}", myStore.ID, myStore.Name);
 
-                        MyStore myStoreFind = msa.Query.SelectByKey(db, myStore.ID);
+                        var myStoreFind = msa.Query.SelectByKey(db, myStore.ID);
                         if (myStoreFind == null)
                         {
                             msa.Insert(myStore);
@@ -433,7 +416,7 @@ namespace Apteka.Plus.Logic.BLL
                     #region Update FullProductInfo
                     foreach (var productInfo in liFullProductInfo)
                     {
-                        FullProductInfo fpi = fpia.SelectByKey(productInfo.ID);
+                        var fpi = fpia.SelectByKey(productInfo.ID);
                         if (fpi == null)
                         {
                             fpia.Insert(productInfo);
@@ -448,23 +431,21 @@ namespace Apteka.Plus.Logic.BLL
 
                     #region Update Dictionaries
 
-
-
-                    List<FullProductInfo> liFullProductInfos = new List<FullProductInfo>();
-                    List<Supplier> liSuppliers = new List<Supplier>();
-                    List<MainStoreRow> liMainStoreRows = new List<MainStoreRow>();
+                    var liFullProductInfos = new List<FullProductInfo>();
+                    var liSuppliers = new List<Supplier>();
+                    var liMainStoreRows = new List<MainStoreRow>();
 
                     if (liLocalBillRows.Count > 0)
                     {
-                        long LocalBillsMaxRowID = lba.GetMaxRowID();
+                        var localBillsMaxRowId = lba.GetMaxRowID();
 
-                        foreach (LocalBillsRowEx localBillsRow in liLocalBillRows)
+                        foreach (var localBillsRow in liLocalBillRows)
                         {
-                            if (localBillsRow.ID > LocalBillsMaxRowID)
+                            if (localBillsRow.ID > localBillsMaxRowId)
                             {
                                 if (!liFullProductInfos.Contains(localBillsRow.MainStoreRow.FullProductInfo))
                                 {
-                                    FullProductInfo fpi = fpia.SelectByKey(localBillsRow.MainStoreRow.FullProductInfo.ID);
+                                    var fpi = fpia.SelectByKey(localBillsRow.MainStoreRow.FullProductInfo.ID);
                                     if (fpi == null)
                                     {
                                         fpia.Insert(localBillsRow.MainStoreRow.FullProductInfo);
@@ -479,7 +460,7 @@ namespace Apteka.Plus.Logic.BLL
 
                                 if (!liSuppliers.Contains(localBillsRow.MainStoreRow.Supplier))
                                 {
-                                    Supplier supplier = supa.Query.SelectByKey(db, localBillsRow.MainStoreRow.Supplier.ID);
+                                    var supplier = supa.Query.SelectByKey(db, localBillsRow.MainStoreRow.Supplier.ID);
                                     if (supplier == null)
                                     {
                                         supa.Insert(localBillsRow.MainStoreRow.Supplier);
@@ -494,15 +475,11 @@ namespace Apteka.Plus.Logic.BLL
 
                                 if (!liMainStoreRows.Contains(localBillsRow.MainStoreRow))
                                 {
-                                    MainStoreRow mainStoreRow = msra.GetRowByID(localBillsRow.MainStoreRow.ID);
+                                    var mainStoreRow = msra.GetRowByID(localBillsRow.MainStoreRow.ID);
                                     if (mainStoreRow == null)
                                     {
                                         msra.Insert(localBillsRow.MainStoreRow);
                                     }
-                                    //else if (!supplier.Equals(localBillsRow.MainStoreRow.Supplier))
-                                    //{
-                                    //    supa.Query.Update(localBillsRow.MainStoreRow.Supplier);
-                                    //}
 
                                     liMainStoreRows.Add(localBillsRow.MainStoreRow);
                                 }
@@ -516,9 +493,9 @@ namespace Apteka.Plus.Logic.BLL
 
                     #region Update Employees
 
-                    foreach (Employee employee in liEmployees)
+                    foreach (var employee in liEmployees)
                     {
-                        Employee employeeFind = ea.Query.SelectByKey(db, employee.ID);
+                        var employeeFind = ea.Query.SelectByKey(db, employee.ID);
                         if (employeeFind == null)
                         {
                             ea.Insert(employee);
@@ -531,9 +508,9 @@ namespace Apteka.Plus.Logic.BLL
                     #endregion
 
                     #region Update Properties
-                    foreach (Property property in liProperties)
+                    foreach (var property in liProperties)
                     {
-                        log.InfoFormat("Параметр: {0} value: {1}", property.Name, property.Value);
+                        Log.InfoFormat("Параметр: {0} value: {1}", property.Name, property.Value);
                         pa.Query.Delete(db, property);
                         pa.Query.Insert(db, property);
                     }
@@ -544,17 +521,16 @@ namespace Apteka.Plus.Logic.BLL
                     #endregion
 
                     db.CommitTransaction();
-                    log.Info("Транзакция в базу закрыта");
+                    Log.Info("Транзакция в базу закрыта");
                 }
                 catch (Exception e)
                 {
-                    log.Error("Ошибка при обработке новых данных с главного компьютера", e);
-                    log.Info("Транзакция в базу отменяется...");
+                    Log.Error("Ошибка при обработке новых данных с главного компьютера", e);
+                    Log.Info("Транзакция в базу отменяется...");
                     db.RollbackTransaction();
-                    log.Info("Транзакция в базу отменена");
+                    Log.Info("Транзакция в базу отменена");
                     throw;
                 }
-
             }
 
             diDestination.Delete(true);
@@ -562,4 +538,3 @@ namespace Apteka.Plus.Logic.BLL
         #endregion
     }
 }
-

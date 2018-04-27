@@ -5,14 +5,13 @@ using Apteka.Helpers;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
 using BLToolkit.Data;
+using BLToolkit.DataAccess;
 
 namespace Apteka.Plus.UserControls
 {
     public partial class ucLocalBillsTransfersHistory : UserControl
     {
         private List<LocalBillsTransferRow> _liLocalBillsTransferRows;
-
-        private int _rowCount;
 
         public ucLocalBillsTransfersHistory()
         {
@@ -21,15 +20,14 @@ namespace Apteka.Plus.UserControls
 
         public void LoadData(MyStore myStore, DateTime startDate, DateTime endDate)
         {
-            using (DbManager dbSatelite = new DbManager(myStore.Name))
+            using (var dbSatelite = new DbManager(myStore.Name))
             {
-                LocalBillsTransfersAccessor lbta =
-                    LocalBillsTransfersAccessor.CreateInstance<LocalBillsTransfersAccessor>(dbSatelite);
+                var lbta = DataAccessor.CreateInstance<LocalBillsTransfersAccessor>(dbSatelite);
 
                 _liLocalBillsTransferRows = lbta.GetRows(startDate, endDate);
-                _rowCount = _liLocalBillsTransferRows.Count;
+                RowCount = _liLocalBillsTransferRows.Count;
 
-                this.InvokeInGUIThread(() =>
+                this.InvokeInGuiThread(() =>
                 {
                     OnRowCountChanged(_liLocalBillsTransferRows.Count);
                     localBillsTransferRowBindingSource.DataSource = _liLocalBillsTransferRows;
@@ -38,13 +36,7 @@ namespace Apteka.Plus.UserControls
 
         }
 
-        public int RowCount
-        {
-            get
-            {
-                return _rowCount;
-            }
-        }
+        public int RowCount { get; private set; }
 
         public class RowCountChangedEventArgs : EventArgs
         {
@@ -53,17 +45,14 @@ namespace Apteka.Plus.UserControls
                 RowCount = rowCount;
             }
 
-            public int RowCount { get; private set; }
+            public int RowCount { get; }
         }
 
         public event EventHandler<RowCountChangedEventArgs> RowCountChanged;
 
         protected virtual void OnRowCountChanged(int rowCount)
         {
-            var eventHandler = RowCountChanged;
-            if (eventHandler != null)
-                eventHandler(this, new RowCountChangedEventArgs(rowCount));
+            RowCountChanged?.Invoke(this, new RowCountChangedEventArgs(rowCount));
         }
-
     }
 }

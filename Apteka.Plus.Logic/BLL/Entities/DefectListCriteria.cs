@@ -7,6 +7,7 @@ namespace Apteka.Plus.Logic.BLL.Entities
     {
         [PrimaryKey, NonUpdatable]
         public int ID { get; set; }
+
         public string FieldName { get; set; }
 
         public string SearchValue { get; set; }

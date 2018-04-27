@@ -10,50 +10,25 @@ namespace Apteka.Plus.Logic.BLL.Entities
     [MapField("MyStoreID", "MyStore.ID")]
     public class LocalBillsTransferRow
     {
+        [PrimaryKey, NonUpdatable]
+        public long ID { get; set; }
 
-        #region Private fields
-        private Employee _Employee = new Employee();
-        private LocalBillsRowEx _LocalBillsRow = new LocalBillsRowEx();
-        private MyStore _MyStore = new MyStore();       
-
-        #endregion
-        
-        
-        
-        [PrimaryKey,NonUpdatable]
-        public long ID{get;set;}
         public DateTime DateAccepted { get; set; }
+
         public int Count { get; set; }
+
         public double Price { get; set; }
-        
+
         public bool IsSynced { get; set; }
 
-        public Employee Employee
-        {
-            get { return _Employee; }
-            set { _Employee = value; }
-        }
+        public Employee Employee { get; set; } = new Employee();
 
-        public LocalBillsRowEx LocalBillsRow
-        {
-            get { return _LocalBillsRow; }
-            set { _LocalBillsRow = value; }
-        }
+        public LocalBillsRowEx LocalBillsRow { get; set; } = new LocalBillsRowEx();
 
-        public MyStore MyStore
-        {
-            get { return _MyStore; }
-            set { _MyStore = value; }
-        }
+        public MyStore MyStore { get; set; } = new MyStore();
 
-        public string ProductName
-        {
-            get { return _LocalBillsRow.ProductName; }
-        }
+        public string ProductName => LocalBillsRow.ProductName;
 
-        public string PackageName
-        {
-            get { return _LocalBillsRow.PackageName; }
-        }
+        public string PackageName => LocalBillsRow.PackageName;
     }
 }

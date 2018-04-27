@@ -69,7 +69,6 @@
             this.btnLoad.TabIndex = 35;
             this.btnLoad.Text = "Показать";
             this.btnLoad.UseVisualStyleBackColor = true;
-            this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
             // 
             // dtpStartDate
             // 

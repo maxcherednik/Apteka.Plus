@@ -1,11 +1,10 @@
-using System;
-using BLToolkit.Mapping; 
+﻿using System;
+using BLToolkit.Mapping;
 
-namespace OrderConverter.BLL
+namespace Apteka.Plus.Logic.OrderConverter.BLL
 {
-    public class SIAOrder:IForeignOrderConverter
+    public class SIAOrder : IForeignOrderConverter
     {
-        
         [MapField("CODE")]
         public long SupplierProductID { get; set; }
 
@@ -30,7 +29,7 @@ namespace OrderConverter.BLL
         [MapField("NDS_PR")]
         public int NDS { get; set; }
 
-        
+
         [MapField("SERIES")]
         public string Series { get; set; }
 
@@ -40,7 +39,7 @@ namespace OrderConverter.BLL
         [MapField("PRICE_REES")]
         public double PriceReestr { get; set; }
 
-        
+
         [MapField("PRODUCER")]
         public string Producer { get; set; }
 
@@ -49,31 +48,26 @@ namespace OrderConverter.BLL
 
         [MapField("GV")]
         public bool IsLifeImportant { get; set; }
-        
-
-        #region IForeignOrderConverter Members
 
         LocalOrder IForeignOrderConverter.ConvertToLocalOrder()
         {
-            LocalOrder localOrder = new LocalOrder();
-            localOrder.Count = Count;
-            localOrder.PriceReestr = PriceReestr;
-            localOrder.EAN13 = EAN13;
-            localOrder.NDS = NDS;
-            localOrder.VendorPriceWithoutNDS = VendorPriceWithoutNDS;
-            localOrder.VendorPriceWithNDS = VendorPriceWithNDS;
-            localOrder.SupplierPriceWithNDS = SupplierPriceWithNDS;
-            localOrder.Producer = Producer;
-            localOrder.Country =Country;
-            localOrder.Series = Series;
-            localOrder.ExpirationDate = ExpirationDate;
-            localOrder.SupplierProductID = SupplierProductID;
-            localOrder.SupplierProductName = SupplierProductName;
-            localOrder.IsLifeImportant = IsLifeImportant;
-            return localOrder; 
-
+            return new LocalOrder
+            {
+                Count = Count,
+                PriceReestr = PriceReestr,
+                EAN13 = EAN13,
+                NDS = NDS,
+                VendorPriceWithoutNDS = VendorPriceWithoutNDS,
+                VendorPriceWithNDS = VendorPriceWithNDS,
+                SupplierPriceWithNDS = SupplierPriceWithNDS,
+                Producer = Producer,
+                Country = Country,
+                Series = Series,
+                ExpirationDate = ExpirationDate,
+                SupplierProductID = SupplierProductID,
+                SupplierProductName = SupplierProductName,
+                IsLifeImportant = IsLifeImportant
+            };
         }
-
-        #endregion
     }
 }

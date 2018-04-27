@@ -3,8 +3,7 @@ using Apteka.Plus.Logic.BLL.Entities;
 using BLToolkit.DataAccess;
 
 namespace Apteka.Plus.Logic.DAL.Accessors
-{
-    
+{   
     public abstract class LocalBillsAccountingAccessor: DataAccessor<LocalBillsRowEx>
     {
         [SprocName("LocalBillsAccounting_GetRowsByStartLetter")]
@@ -21,12 +20,10 @@ namespace Apteka.Plus.Logic.DAL.Accessors
 
         public void InsertList(List<LocalBillsRowEx> lilocalBillsRows)
         {
-            foreach (LocalBillsRowEx localBillsRow in lilocalBillsRows)
+            foreach (var localBillsRow in lilocalBillsRows)
             {
                 Insert(localBillsRow);
             }
-
         }
-        
     }
 }

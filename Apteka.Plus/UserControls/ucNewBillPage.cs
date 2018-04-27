@@ -1,63 +1,48 @@
-using Apteka.Helpers;
-using Apteka.Plus.Common.Controls;
+п»їusing Apteka.Plus.Common.Controls;
 using Apteka.Plus.Forms;
 using Apteka.Plus.Logic.BLL;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
-using Apteka.Plus.Properties;
 using BLToolkit.Data;
-using OrderConverter.BLL;
+using log4net;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
+using Apteka.Plus.Logic.OrderConverter.BLL;
+using BLToolkit.DataAccess;
 
 namespace Apteka.Plus.UserControls
 {
     public partial class UcNewBillPage : UserControl
     {
-        private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private IList<MyStore> _liMyStores;
         private MyStore _selectedStoreForEOrder;
 
-        private DateTime _billDate;
-
-        public DateTime BillDate
-        {
-            get { return _billDate; }
-
-        }
+        public DateTime BillDate { get; private set; }
 
         public double BillSum
         {
             get
             {
                 double sum = 0;
-                foreach (MainStoreInsertRow mainStoreInsertRow in _liMainStoreInsertRows)
+                foreach (var mainStoreInsertRow in _liMainStoreInsertRows)
                 {
                     sum += mainStoreInsertRow.SupplierPrice * mainStoreInsertRow.Amount;
                 }
 
                 return sum;
-
             }
 
         }
-        private string _billNumber;
-        private Supplier _supplier;
 
-        public string BillNumber
-        {
-            get { return _billNumber; }
+        public string BillNumber { get; private set; }
 
-        }
-        public Supplier Supplier
-        {
-            get { return _supplier; }
-        }
+        public Supplier Supplier { get; private set; }
 
-        private List<MainStoreInsertRow> _liMainStoreInsertRows = new List<MainStoreInsertRow>();
+        private readonly List<MainStoreInsertRow> _liMainStoreInsertRows = new List<MainStoreInsertRow>();
 
         private bool _lifeImportant;
 
@@ -67,57 +52,59 @@ namespace Apteka.Plus.UserControls
             mainStoreInsertRowBindingSource.DataSource = _liMainStoreInsertRows;
         }
 
-        #region Public
         public void Initialize(IList<MyStore> liMyStores)
         {
             _liMyStores = liMyStores;
 
-            int i = 3;
+            var i = 3;
 
-            foreach (MyStore varMyStore in liMyStores)
+            foreach (var varMyStore in liMyStores)
             {
-                var column = new DataGridViewTextBoxColumn();
-                column.HeaderText = varMyStore.Name;
-                column.Tag = varMyStore;
-                column.Name = varMyStore.ID.ToString();
-                column.SortMode = DataGridViewColumnSortMode.NotSortable;
-                column.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                column.ValueType = typeof(int);
+                var column = new DataGridViewTextBoxColumn
+                {
+                    HeaderText = varMyStore.Name,
+                    Tag = varMyStore,
+                    Name = varMyStore.ID.ToString(),
+                    SortMode = DataGridViewColumnSortMode.NotSortable,
+                    DefaultCellStyle = { Alignment = DataGridViewContentAlignment.MiddleRight },
+                    ValueType = typeof(int)
+                };
+
                 dgvBill.Columns.Insert(i, column);
 
                 i++;
             }
 
-            dgvBill.CurrentRowChanged += new EventHandler<MyDataGridView.CurrentRowChangedEventArgs>(dgvBill_CurrentRowChanged);
+            dgvBill.CurrentRowChanged += dgvBill_CurrentRowChanged;
 
         }
 
-        void dgvBill_CurrentRowChanged(object sender, MyDataGridView.CurrentRowChangedEventArgs e)
+        private void dgvBill_CurrentRowChanged(object sender, MyDataGridView.CurrentRowChangedEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
-            MainStoreInsertRow msir = dgv.Rows[e.RowIndex].DataBoundItem as MainStoreInsertRow;
+            var dgv = (DataGridView)sender;
+            var msir = (MainStoreInsertRow)dgv.Rows[e.RowIndex].DataBoundItem;
             OnCurrentRowChange(msir.FullProductInfo);
         }
 
-        public bool IsEverythingOK()
+        public bool IsEverythingOk()
         {
             if (_liMainStoreInsertRows.Count == 0)
             {
-                MessageBox.Show("Нечего сохранять. Вы не ввели ни одной позиции!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(@"РќРµС‡РµРіРѕ СЃРѕС…СЂР°РЅСЏС‚СЊ. Р’С‹ РЅРµ РІРІРµР»Рё РЅРё РѕРґРЅРѕР№ РїРѕР·РёС†РёРё!", @"Р’РЅРёРјР°РЅРёРµ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return false;
             }
 
-            int i = 0;
+            var i = 0;
             foreach (var varMainStoreInsertRow in _liMainStoreInsertRows)
             {
                 if (varMainStoreInsertRow.FullProductInfo.ID == 0)
                 {
-                    MessageBox.Show("Вы не до конца обработали накладную!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show(@"Р’С‹ РЅРµ РґРѕ РєРѕРЅС†Р° РѕР±СЂР°Р±РѕС‚Р°Р»Рё РЅР°РєР»Р°РґРЅСѓСЋ!", @"Р’РЅРёРјР°РЅРёРµ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     mainStoreInsertRowBindingSource.Position = i;
                     return false;
                 }
 
-                int amountSum = 0;
+                var amountSum = 0;
                 foreach (var myStoresAmount in varMainStoreInsertRow.MyStoresAmount)
                 {
                     amountSum += myStoresAmount.Value;
@@ -125,7 +112,7 @@ namespace Apteka.Plus.UserControls
 
                 if (amountSum != varMainStoreInsertRow.Amount)
                 {
-                    MessageBox.Show("Вы отпустили не все позиции!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                    MessageBox.Show(@"Р’С‹ РѕС‚РїСѓСЃС‚РёР»Рё РЅРµ РІСЃРµ РїРѕР·РёС†РёРё!", @"Р’РЅРёРјР°РЅРёРµ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     mainStoreInsertRowBindingSource.Position = i;
                     return false;
                 }
@@ -133,29 +120,24 @@ namespace Apteka.Plus.UserControls
                 i++;
             }
 
-            if (!IsLocalPricesOk())
-                return false;
-
-            return true;
+            return IsLocalPricesOk();
         }
 
         private bool IsLocalPricesOk()
         {
-            int i = 0;
+            var i = 0;
             foreach (var row in _liMainStoreInsertRows)
             {
                 if (row.IsSomethingWrongWithLocalPrice)
                 {
-                    if (DialogResult.Yes == MessageBox.Show("Цены на некоторые позиции отличаются от предыдущих! Вы уверены, что хотите сохранить накладную так как есть? ",
-                        "Внимание", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation))
+                    if (DialogResult.Yes == MessageBox.Show(@"Р¦РµРЅС‹ РЅР° РЅРµРєРѕС‚РѕСЂС‹Рµ РїРѕР·РёС†РёРё РѕС‚Р»РёС‡Р°СЋС‚СЃСЏ РѕС‚ РїСЂРµРґС‹РґСѓС‰РёС…! Р’С‹ СѓРІРµСЂРµРЅС‹, С‡С‚Рѕ С…РѕС‚РёС‚Рµ СЃРѕС…СЂР°РЅРёС‚СЊ РЅР°РєР»Р°РґРЅСѓСЋ С‚Р°Рє РєР°Рє РµСЃС‚СЊ? ",
+                        @"Р’РЅРёРјР°РЅРёРµ", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation))
                     {
                         return true;
                     }
-                    else
-                    {
-                        mainStoreInsertRowBindingSource.Position = i;
-                        return false;
-                    }
+
+                    mainStoreInsertRowBindingSource.Position = i;
+                    return false;
                 }
                 i++;
             }
@@ -163,119 +145,108 @@ namespace Apteka.Plus.UserControls
             return true;
         }
 
-        public bool IsBillOpen
-        {
-            get
-            {
-                return _liMainStoreInsertRows.Count > 0;
-            }
-        }
+        public bool IsBillOpen => _liMainStoreInsertRows.Count > 0;
 
         public void SaveNewBill(bool delayLocalBills)
         {
-
-            DbManager dbSklad = new DbManager();
+            var dbSklad = new DbManager();
 
             try
             {
-
                 dbSklad.BeginTransaction();
-                MainStoreRowsAccessor msra = MainStoreRowsAccessor.CreateInstance<MainStoreRowsAccessor>(dbSklad);
+                var msra = DataAccessor.CreateInstance<MainStoreRowsAccessor>(dbSklad);
 
-                int i = 0;
-                foreach (MainStoreInsertRow varMainStoreInsertRow in _liMainStoreInsertRows)
+                var i = 0;
+                foreach (var varMainStoreInsertRow in _liMainStoreInsertRows)
                 {
-                    OnProcessNotification("Подготовка данных для сохраниения", i, _liMainStoreInsertRows.Count);
+                    OnProcessNotification("РџРѕРґРіРѕС‚РѕРІРєР° РґР°РЅРЅС‹С… РґР»СЏ СЃРѕС…СЂР°РЅРёРµРЅРёСЏ", i, _liMainStoreInsertRows.Count);
 
-                    #region New MainStoreRow Preparing
-                    MainStoreRow newMainStoreRow = new MainStoreRow();
-                    newMainStoreRow.Amount = varMainStoreInsertRow.Amount;
-                    newMainStoreRow.StartAmount = varMainStoreInsertRow.Amount;
-                    newMainStoreRow.SupplierPrice = varMainStoreInsertRow.SupplierPrice;
-                    newMainStoreRow.Extra = varMainStoreInsertRow.Extra;
-                    newMainStoreRow.LocalPrice = varMainStoreInsertRow.LocalPrice;
-                    newMainStoreRow.FullProductInfo = varMainStoreInsertRow.FullProductInfo;
-                    newMainStoreRow.Series = varMainStoreInsertRow.Series;
-                    newMainStoreRow.ExpirationDate = varMainStoreInsertRow.ExpirationDate;
-                    newMainStoreRow.EAN13 = varMainStoreInsertRow.EAN13;
-                    newMainStoreRow.DateSupply = _billDate;
-                    newMainStoreRow.Supplier = _supplier;
-                    newMainStoreRow.SupplierBillNumber = _billNumber;
+                    var newMainStoreRow = new MainStoreRow
+                    {
+                        Amount = varMainStoreInsertRow.Amount,
+                        StartAmount = varMainStoreInsertRow.Amount,
+                        SupplierPrice = varMainStoreInsertRow.SupplierPrice,
+                        Extra = varMainStoreInsertRow.Extra,
+                        LocalPrice = varMainStoreInsertRow.LocalPrice,
+                        FullProductInfo = varMainStoreInsertRow.FullProductInfo,
+                        Series = varMainStoreInsertRow.Series,
+                        ExpirationDate = varMainStoreInsertRow.ExpirationDate,
+                        EAN13 = varMainStoreInsertRow.EAN13,
+                        DateSupply = BillDate,
+                        Supplier = Supplier,
+                        SupplierBillNumber = BillNumber
+                    };
 
-                    #endregion
-
-                    long id = msra.Insert(newMainStoreRow);
+                    var id = msra.Insert(newMainStoreRow);
                     newMainStoreRow.ID = id;
                     varMainStoreInsertRow.MainStoreRow = newMainStoreRow;
 
                     i++;
-
                 }
 
                 dbSklad.CommitTransaction();
 
-                OnProcessNotification("Сохраниение в базу данных", 0, dgvBill.RowCount);
+                OnProcessNotification("РЎРѕС…СЂР°РЅРёРµРЅРёРµ РІ Р±Р°Р·Сѓ РґР°РЅРЅС‹С…", 0, dgvBill.RowCount);
 
             }
-            catch (Exception)
+            catch
             {
                 dbSklad.RollbackTransaction();
-                OnProcessNotification("Ошибка сохранения! Данные не сохранены!", 0, dgvBill.RowCount);
+                OnProcessNotification("РћС€РёР±РєР° СЃРѕС…СЂР°РЅРµРЅРёСЏ! Р”Р°РЅРЅС‹Рµ РЅРµ СЃРѕС…СЂР°РЅРµРЅС‹!", 0, dgvBill.RowCount);
 
                 throw;
             }
 
-            foreach (MyStore varMyStore in _liMyStores)
+            foreach (var varMyStore in _liMyStores)
             {
-                DbManager db = new DbManager(varMyStore.Name);
+                var db = new DbManager(varMyStore.Name);
                 try
                 {
                     dbSklad.BeginTransaction();
                     db.BeginTransaction();
-                    PropertyAccessor pa = PropertyAccessor.CreateInstance<PropertyAccessor>(db);
-                    Property pLocalBillNumber = pa.GetByName("LocalBillNumber");
-                    long LocalBillNumber = long.Parse(pLocalBillNumber.Value);
+                    var pa = DataAccessor.CreateInstance<PropertyAccessor>(db);
+                    var pLocalBillNumber = pa.GetByName("LocalBillNumber");
+                    var localBillNumber = long.Parse(pLocalBillNumber.Value);
 
-                    LocalBillsAccessor lba = LocalBillsAccessor.CreateInstance<LocalBillsAccessor>(db);
-                    MainStoreRowsAccessor msra = MainStoreRowsAccessor.CreateInstance<MainStoreRowsAccessor>(dbSklad);
+                    var lba = DataAccessor.CreateInstance<LocalBillsAccessor>(db);
+                    var msra = DataAccessor.CreateInstance<MainStoreRowsAccessor>(dbSklad);
 
-                    bool SaveFlag = false;
-                    foreach (MainStoreInsertRow varMainStoreInsertRow in _liMainStoreInsertRows)
+                    var saveFlag = false;
+                    foreach (var varMainStoreInsertRow in _liMainStoreInsertRows)
                     {
-
-                        int myStoresAmount = 0;
-
-                        if (varMainStoreInsertRow.MyStoresAmount.TryGetValue(varMyStore.ID, out myStoresAmount))
+                        if (varMainStoreInsertRow.MyStoresAmount.TryGetValue(varMyStore.ID, out var myStoresAmount))
                         {
-                            LocalBillsRowEx newLocalBillsRowEx = new LocalBillsRowEx();
-                            newLocalBillsRowEx.StartAmount = myStoresAmount;
-                            newLocalBillsRowEx.Amount = myStoresAmount;
-                            newLocalBillsRowEx.CurrentPrice = varMainStoreInsertRow.LocalPrice;
-                            newLocalBillsRowEx.StartPrice = varMainStoreInsertRow.LocalPrice;
-                            newLocalBillsRowEx.MainStoreRow = varMainStoreInsertRow.MainStoreRow;
-                            newLocalBillsRowEx.LocalBillNumber = LocalBillNumber;
-                            newLocalBillsRowEx.DateAccepted = DateTime.Today.Date;
-                            newLocalBillsRowEx.IsDelayed = delayLocalBills;
+                            var newLocalBillsRowEx = new LocalBillsRowEx
+                            {
+                                StartAmount = myStoresAmount,
+                                Amount = myStoresAmount,
+                                CurrentPrice = varMainStoreInsertRow.LocalPrice,
+                                StartPrice = varMainStoreInsertRow.LocalPrice,
+                                MainStoreRow = varMainStoreInsertRow.MainStoreRow,
+                                LocalBillNumber = localBillNumber,
+                                DateAccepted = DateTime.Today.Date,
+                                IsDelayed = delayLocalBills
+                            };
 
                             lba.Insert(newLocalBillsRowEx);
                             msra.ChangeAmount(newLocalBillsRowEx.MainStoreRow.ID, -1 * newLocalBillsRowEx.Amount);
-                            SaveFlag = true;
+                            saveFlag = true;
                         }
-
                     }
-                    if (SaveFlag == true)
+
+                    if (saveFlag)
                     {
-                        LocalBillNumber++;
-                        pLocalBillNumber.Value = LocalBillNumber.ToString();
+                        localBillNumber++;
+                        pLocalBillNumber.Value = localBillNumber.ToString();
                         pa.Update(pLocalBillNumber);
                     }
 
                     db.CommitTransaction();
                     dbSklad.CommitTransaction();
                 }
-                catch (Exception)
+                catch
                 {
-                    OnProcessNotification("Ошибка сохранения! Данные не сохранены!", 0, dgvBill.RowCount);
+                    OnProcessNotification("РћС€РёР±РєР° СЃРѕС…СЂР°РЅРµРЅРёСЏ! Р”Р°РЅРЅС‹Рµ РЅРµ СЃРѕС…СЂР°РЅРµРЅС‹!", 0, dgvBill.RowCount);
 
                     dbSklad.RollbackTransaction();
                     db.RollbackTransaction();
@@ -284,23 +255,19 @@ namespace Apteka.Plus.UserControls
             }
             mainStoreInsertRowBindingSource.Clear();
 
-            MessageBox.Show("Накладная успешно сохранена!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(@"РќР°РєР»Р°РґРЅР°СЏ СѓСЃРїРµС€РЅРѕ СЃРѕС…СЂР°РЅРµРЅР°!", @"Р’РЅРёРјР°РЅРёРµ", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
         }
 
-        #endregion
-
-        #region CurrentRowChanged
         public event EventHandler<CurrentRowChangedEventArgs> CurrentRowChanged;
 
         private void OnCurrentRowChange(FullProductInfo fullProductInfo)
         {
             if (CurrentRowChanged != null)
             {
-                CurrentRowChangedEventArgs e = new CurrentRowChangedEventArgs(fullProductInfo);
+                var e = new CurrentRowChangedEventArgs(fullProductInfo);
                 CurrentRowChanged.Invoke(dgvBill, e);
             }
-
         }
         public class CurrentRowChangedEventArgs : EventArgs
         {
@@ -309,13 +276,8 @@ namespace Apteka.Plus.UserControls
                 FullProductInfo = fullProductInfo;
             }
 
-            public FullProductInfo FullProductInfo
-            {
-                get;
-                private set;
-            }
+            public FullProductInfo FullProductInfo { get; }
         }
-        #endregion
 
         public event EventHandler<ProcessNotificationEventArgs> ProcessNotification;
         public class ProcessNotificationEventArgs : EventArgs
@@ -327,64 +289,53 @@ namespace Apteka.Plus.UserControls
                 MaxValue = maxValue;
             }
 
-            public string CurrentAction { get; private set; }
-            public int CurrentValue { get; private set; }
-            public int MaxValue { get; private set; }
+            public string CurrentAction { get; }
+            public int CurrentValue { get; }
+            public int MaxValue { get; }
 
         }
         protected virtual void OnProcessNotification(string currentAction, int currentValue, int maxValue)
         {
-            if (ProcessNotification != null)
-                ProcessNotification(this, new ProcessNotificationEventArgs(currentAction, currentValue, maxValue));
+            ProcessNotification?.Invoke(this, new ProcessNotificationEventArgs(currentAction, currentValue, maxValue));
         }
 
         private void dgvBill_KeyUp(object sender, KeyEventArgs e)
         {
-            log.InfoFormat("Пользователь нажал клавишу {0}", e.KeyCode);
-            switch (e.KeyCode)
+            Log.InfoFormat("РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ РЅР°Р¶Р°Р» РєР»Р°РІРёС€Сѓ {0}", e.KeyCode);
+            if (e.KeyCode == Keys.Insert)
             {
-                case Keys.Insert:
-                    {
-                        frmMainStoreInsertNewPosition frmMainStoreInsertNewPosition = new frmMainStoreInsertNewPosition();
-                        if (frmMainStoreInsertNewPosition.ShowDialog() == DialogResult.OK)
-                        {
-                            _liMainStoreInsertRows.Add(frmMainStoreInsertNewPosition.NewMainStoreInsertRow);
-                            mainStoreInsertRowBindingSource.ResetBindings(false);
+                var frmMainStoreInsertNewPosition = new frmMainStoreInsertNewPosition();
+                if (frmMainStoreInsertNewPosition.ShowDialog() == DialogResult.OK)
+                {
+                    _liMainStoreInsertRows.Add(frmMainStoreInsertNewPosition.NewMainStoreInsertRow);
+                    mainStoreInsertRowBindingSource.ResetBindings(false);
 
-                            mainStoreInsertRowBindingSource.MoveLast();
-
-                        }
-
-                        break;
-                    }
-                case Keys.Delete:
-                    {
-                        if (mainStoreInsertRowBindingSource.Current != null)
-                            mainStoreInsertRowBindingSource.RemoveCurrent();
-                        break;
-                    }
-
+                    mainStoreInsertRowBindingSource.MoveLast();
+                }
+            }
+            else if (e.KeyCode == Keys.Delete)
+            {
+                if (mainStoreInsertRowBindingSource.Current != null)
+                    mainStoreInsertRowBindingSource.RemoveCurrent();
             }
         }
 
         private void ucNewBillPage_Load(object sender, EventArgs e)
         {
             if (DesignMode) return;
-            dgvBill.SetStateSourceAndLoadState(Session.User, DataGridViewColumnSettingsAccessor.CreateInstance<DataGridViewColumnSettingsAccessor>());
+            dgvBill.SetStateSourceAndLoadState(Session.User, DataAccessor.CreateInstance<DataGridViewColumnSettingsAccessor>());
         }
 
         private void dgvBill_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
-            MainStoreInsertRow row = dgv.Rows[e.RowIndex].DataBoundItem as MainStoreInsertRow;
+            var dgv = (DataGridView)sender;
+            var row = (MainStoreInsertRow)dgv.Rows[e.RowIndex].DataBoundItem;
 
-            foreach (MyStore varMyStore in _liMyStores)
+            foreach (var varMyStore in _liMyStores)
             {
-
                 if (varMyStore.ID.ToString() == dgv[e.ColumnIndex, e.RowIndex].OwningColumn.Name)
                 {
-                    int myStoresAmount = 0;
-                    if (row.MyStoresAmount.TryGetValue(varMyStore.ID, out myStoresAmount))
+                    if (row.MyStoresAmount.TryGetValue(varMyStore.ID, out var myStoresAmount))
                     {
                         e.Value = myStoresAmount;
                     }
@@ -396,91 +347,66 @@ namespace Apteka.Plus.UserControls
                 }
             }
 
-            switch (dgv[e.ColumnIndex, e.RowIndex].OwningColumn.Name)
+            if (dgv[e.ColumnIndex, e.RowIndex].OwningColumn.Name == "LocalPrice")
             {
-                case "LocalPrice":
-                    {
-                        if (row.IsSomethingWrongWithLocalPrice)
-                        {
-
-                            if (row.IsLocalPriceGrows)
-                            {
-                                e.CellStyle.BackColor = Color.LightGreen;
-                            }
-                            else
-                            {
-                                e.CellStyle.BackColor = Color.Red;
-                            }
-                        }
-
-                    }
-                    break;
+                if (row.IsSomethingWrongWithLocalPrice)
+                {
+                    e.CellStyle.BackColor = row.IsLocalPriceGrows ? Color.LightGreen : Color.Red;
+                }
             }
-
         }
 
         private void dgvBill_CellMouseDoubleClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             if (e.RowIndex >= 0 && e.ColumnIndex >= 0)
             {
-                DataGridView dgv = sender as DataGridView;
-                DataGridViewCell cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
-                MainStoreInsertRow mainStoreInsertCurrentRow = dgv.Rows[e.RowIndex].DataBoundItem as MainStoreInsertRow;
+                var dgv = (DataGridView)sender;
+                var cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
+                var mainStoreInsertCurrentRow = (MainStoreInsertRow)dgv.Rows[e.RowIndex].DataBoundItem;
 
-                switch (cell.OwningColumn.Name)
+                if (cell.OwningColumn.Name == "ProductName")
                 {
-                    case "ProductName":
-                        {
-                            frmFullProductInfoSelectBox frmFullProductInfoSelectBox = new frmFullProductInfoSelectBox();
+                    var frmFullProductInfoSelectBox = new frmFullProductInfoSelectBox();
 
-                            if (frmFullProductInfoSelectBox.ShowDialog(this) == DialogResult.OK)
+                    if (frmFullProductInfoSelectBox.ShowDialog(this) == DialogResult.OK)
+                    {
+                        var selectedFullProductInfo = frmFullProductInfoSelectBox.FullProductInfoSelected;
+                        mainStoreInsertCurrentRow.FullProductInfo = selectedFullProductInfo;
+
+                        if (mainStoreInsertCurrentRow.ProductIntegrationInfo != null)
+                        {
+                            var piia = DataAccessor.CreateInstance<ProductIntegrationInfoAccessor>();
+                            piia.DeleteByKey(mainStoreInsertCurrentRow.ProductIntegrationInfo.ID);
+
+                            var pii = new ProductIntegrationInfo
                             {
+                                SupplierProductID =
+                                    mainStoreInsertCurrentRow.ProductIntegrationInfo.SupplierProductID,
+                                Supplier = Supplier,
+                                ParentFullProductInfo = selectedFullProductInfo
+                            };
 
-                                FullProductInfo selectedFullProductInfo = (FullProductInfo)frmFullProductInfoSelectBox.FullProductInfoSelected;
-                                mainStoreInsertCurrentRow.FullProductInfo = selectedFullProductInfo;
+                            pii.ID = piia.Insert(pii);
+                            mainStoreInsertCurrentRow.ProductIntegrationInfo = pii;
 
-                                if (mainStoreInsertCurrentRow.ProductIntegrationInfo != null)
-                                {
-
-                                    ProductIntegrationInfoAccessor piia = ProductIntegrationInfoAccessor.CreateInstance<ProductIntegrationInfoAccessor>();
-                                    piia.DeleteByKey(mainStoreInsertCurrentRow.ProductIntegrationInfo.ID);
-
-                                    ProductIntegrationInfo pii = new ProductIntegrationInfo();
-                                    pii.SupplierProductID = mainStoreInsertCurrentRow.ProductIntegrationInfo.SupplierProductID;
-                                    pii.Supplier = _supplier;
-                                    pii.ParentFullProductInfo = selectedFullProductInfo;
-                                    pii.ID = piia.Insert(pii);
-                                    mainStoreInsertCurrentRow.ProductIntegrationInfo = pii;
-
-                                    ProcessEOrderRow(_selectedStoreForEOrder, mainStoreInsertCurrentRow);
-                                }
-                                mainStoreInsertRowBindingSource.ResetCurrentItem();
-
-                            }
-
+                            ProcessEOrderRow(_selectedStoreForEOrder, mainStoreInsertCurrentRow);
                         }
-                        break;
 
-                    case "Amount":
-                    case "LocalPrice":
-                    case "SupplierPrice":
-                    case "Extra":
-                        {
-                            //dgv.CurrentCell = dgv.CurrentRow.Cells["LocalPrice"];
-                            dgv.BeginEdit(true);
-                        }
-                        break;
-
+                        mainStoreInsertRowBindingSource.ResetCurrentItem();
+                    }
+                }
+                else if (cell.OwningColumn.Name == "Amount" || cell.OwningColumn.Name == "LocalPrice" ||
+                         cell.OwningColumn.Name == "SupplierPrice" || cell.OwningColumn.Name == "Extra")
+                {
+                    dgv.BeginEdit(true);
                 }
             }
         }
 
         private void dgvBill_CellValidating(object sender, DataGridViewCellValidatingEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
-            DataGridViewCell cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
-
-            MainStoreInsertRow MainStoreInsertRow = dgv.CurrentRow.DataBoundItem as MainStoreInsertRow;
+            var dgv = (DataGridView)sender;
+            var cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
 
             switch (cell.OwningColumn.Name)
             {
@@ -488,26 +414,22 @@ namespace Apteka.Plus.UserControls
                     {
                         if (cell.IsInEditMode)
                         {
-                            int Amount;
-                            string sAmount = cell.EditedFormattedValue.ToString().Replace(",", ".");
+                            var sAmount = cell.EditedFormattedValue.ToString().Replace(",", ".");
 
-                            if (int.TryParse(sAmount, out Amount))
+                            if (int.TryParse(sAmount, out var amount))
                             {
-                                if (Amount < 0)
+                                if (amount < 0)
                                 {
-                                    MessageBox.Show("Количество не может быть отрицательном", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                    MessageBox.Show(@"РљРѕР»РёС‡РµСЃС‚РІРѕ РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РѕС‚СЂРёС†Р°С‚РµР»СЊРЅРѕРј", @"Р’РЅРёРјР°РЅРёРµ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                     e.Cancel = true;
                                 }
-
                             }
                             else
                             {
-                                MessageBox.Show("Вы ввели некорректное значение! Допускаются только числа.", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                MessageBox.Show(@"Р’С‹ РІРІРµР»Рё РЅРµРєРѕСЂСЂРµРєС‚РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ! Р”РѕРїСѓСЃРєР°СЋС‚СЃСЏ С‚РѕР»СЊРєРѕ С‡РёСЃР»Р°.", @"Р’РЅРёРјР°РЅРёРµ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                 e.Cancel = true;
                             }
-
                         }
-
                     }
                     break;
 
@@ -515,26 +437,22 @@ namespace Apteka.Plus.UserControls
                     {
                         if (cell.IsInEditMode)
                         {
-                            double LocalPrice;
-                            string newPrice = cell.EditedFormattedValue.ToString().Replace(",", ".");
+                            var newPrice = cell.EditedFormattedValue.ToString().Replace(",", ".");
 
-                            if (double.TryParse(newPrice, out LocalPrice))
+                            if (double.TryParse(newPrice, out var localPrice))
                             {
-                                if (LocalPrice < 0)
+                                if (localPrice < 0)
                                 {
-                                    MessageBox.Show("Цена не может быть отрицательной", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                    MessageBox.Show(@"Р¦РµРЅР° РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РѕС‚СЂРёС†Р°С‚РµР»СЊРЅРѕР№", @"Р’РЅРёРјР°РЅРёРµ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                     e.Cancel = true;
                                 }
-
                             }
                             else
                             {
-                                MessageBox.Show("Вы ввели некорректное значение! Допускаются только числа.", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                MessageBox.Show(@"Р’С‹ РІРІРµР»Рё РЅРµРєРѕСЂСЂРµРєС‚РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ! Р”РѕРїСѓСЃРєР°СЋС‚СЃСЏ С‚РѕР»СЊРєРѕ С‡РёСЃР»Р°.", @"Р’РЅРёРјР°РЅРёРµ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                 e.Cancel = true;
                             }
-
                         }
-
                     }
                     break;
 
@@ -542,26 +460,22 @@ namespace Apteka.Plus.UserControls
                     {
                         if (cell.IsInEditMode)
                         {
-                            double SupplierPrice;
-                            string newPrice = cell.EditedFormattedValue.ToString().Replace(",", ".");
+                            var newPrice = cell.EditedFormattedValue.ToString().Replace(",", ".");
 
-                            if (double.TryParse(newPrice, out SupplierPrice))
+                            if (double.TryParse(newPrice, out var supplierPrice))
                             {
-                                if (SupplierPrice < 0)
+                                if (supplierPrice < 0)
                                 {
-                                    MessageBox.Show("Цена не может быть отрицательной", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                    MessageBox.Show(@"Р¦РµРЅР° РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РѕС‚СЂРёС†Р°С‚РµР»СЊРЅРѕР№", @"Р’РЅРёРјР°РЅРёРµ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                     e.Cancel = true;
                                 }
-
                             }
                             else
                             {
-                                MessageBox.Show("Вы ввели некорректное значение! Допускаются только числа.", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                MessageBox.Show(@"Р’С‹ РІРІРµР»Рё РЅРµРєРѕСЂСЂРµРєС‚РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ! Р”РѕРїСѓСЃРєР°СЋС‚СЃСЏ С‚РѕР»СЊРєРѕ С‡РёСЃР»Р°.", @"Р’РЅРёРјР°РЅРёРµ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                 e.Cancel = true;
                             }
-
                         }
-
                     }
                     break;
 
@@ -569,59 +483,40 @@ namespace Apteka.Plus.UserControls
                     {
                         if (cell.IsInEditMode)
                         {
-                            double Extra;
-                            string newExtra = cell.EditedFormattedValue.ToString().Replace(",", ".");
+                            var newExtra = cell.EditedFormattedValue.ToString().Replace(",", ".");
 
-                            if (double.TryParse(newExtra, out Extra))
+                            if (double.TryParse(newExtra, out var extra))
                             {
-                                if (Extra < 0)
+                                if (extra < 0)
                                 {
-                                    MessageBox.Show("Наценка не может быть отрицательной", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                    MessageBox.Show(@"РќР°С†РµРЅРєР° РЅРµ РјРѕР¶РµС‚ Р±С‹С‚СЊ РѕС‚СЂРёС†Р°С‚РµР»СЊРЅРѕР№", @"Р’РЅРёРјР°РЅРёРµ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                     e.Cancel = true;
                                 }
-
                             }
                             else
                             {
-                                MessageBox.Show("Вы ввели некорректное значение! Допускаются только числа.", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                                MessageBox.Show(@"Р’С‹ РІРІРµР»Рё РЅРµРєРѕСЂСЂРµРєС‚РЅРѕРµ Р·РЅР°С‡РµРЅРёРµ! Р”РѕРїСѓСЃРєР°СЋС‚СЃСЏ С‚РѕР»СЊРєРѕ С‡РёСЃР»Р°.", @"Р’РЅРёРјР°РЅРёРµ", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                                 e.Cancel = true;
                             }
-
                         }
-
                     }
                     break;
-
             }
         }
 
         private void dgvBill_CellParsing(object sender, DataGridViewCellParsingEventArgs e)
         {
-            DataGridView dgv = sender as DataGridView;
-            DataGridViewCell cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            var dgv = (DataGridView)sender;
+            var cell = dgv.Rows[e.RowIndex].Cells[e.ColumnIndex];
 
             switch (cell.OwningColumn.Name)
             {
-                //case "Amount":
-                //    {
-                //        MainStoreInsertRow mainStoreInsertRow = dgv.Rows[e.RowIndex].DataBoundItem as MainStoreInsertRow;
-
-                //        string newPrice = e.Value.ToString().Replace(",", ".");
-                //        double dNewPrice = double.Parse(newPrice);
-                //        e.Value = dNewPrice;
-
-                //        mainStoreInsertRow.Extra = ((dNewPrice - mainStoreInsertRow.SupplierPrice) / mainStoreInsertRow.SupplierPrice) * 100.0;
-
-                //        e.ParsingApplied = true;
-                //    }
-                //    break;
-
                 case "LocalPrice":
                     {
-                        MainStoreInsertRow mainStoreInsertRow = dgv.Rows[e.RowIndex].DataBoundItem as MainStoreInsertRow;
+                        var mainStoreInsertRow = (MainStoreInsertRow)dgv.Rows[e.RowIndex].DataBoundItem;
 
-                        string newPrice = e.Value.ToString().Replace(",", ".");
-                        double dNewPrice = double.Parse(newPrice);
+                        var newPrice = e.Value.ToString().Replace(",", ".");
+                        var dNewPrice = double.Parse(newPrice);
                         e.Value = dNewPrice;
 
                         mainStoreInsertRow.Extra = ((dNewPrice - mainStoreInsertRow.SupplierPrice) / mainStoreInsertRow.SupplierPrice) * 100.0;
@@ -632,10 +527,10 @@ namespace Apteka.Plus.UserControls
 
                 case "SupplierPrice":
                     {
-                        MainStoreInsertRow mainStoreInsertRow = dgv.Rows[e.RowIndex].DataBoundItem as MainStoreInsertRow;
+                        var mainStoreInsertRow = (MainStoreInsertRow)dgv.Rows[e.RowIndex].DataBoundItem;
 
-                        string newPrice = e.Value.ToString().Replace(",", ".");
-                        double dNewPrice = double.Parse(newPrice);
+                        var newPrice = e.Value.ToString().Replace(",", ".");
+                        var dNewPrice = double.Parse(newPrice);
                         e.Value = dNewPrice;
 
                         mainStoreInsertRow.LocalPrice = dNewPrice + dNewPrice * mainStoreInsertRow.Extra / 100.0;
@@ -646,10 +541,10 @@ namespace Apteka.Plus.UserControls
 
                 case "Extra":
                     {
-                        MainStoreInsertRow mainStoreInsertRow = dgv.Rows[e.RowIndex].DataBoundItem as MainStoreInsertRow;
+                        var mainStoreInsertRow = (MainStoreInsertRow)dgv.Rows[e.RowIndex].DataBoundItem;
 
-                        string newExtra = e.Value.ToString().Replace(",", ".");
-                        double dnewExtra = double.Parse(newExtra);
+                        var newExtra = e.Value.ToString().Replace(",", ".");
+                        var dnewExtra = double.Parse(newExtra);
                         e.Value = dnewExtra;
 
                         mainStoreInsertRow.LocalPrice = mainStoreInsertRow.SupplierPrice + mainStoreInsertRow.SupplierPrice * dnewExtra / 100.0;
@@ -657,24 +552,25 @@ namespace Apteka.Plus.UserControls
                         e.ParsingApplied = true;
                     }
                     break;
-
             }
         }
 
-        internal void ProcessEOrder(List<LocalOrder> liLocalOrderRows, MyStore selectedStore, bool LifeImportant)
+        internal void ProcessEOrder(List<LocalOrder> liLocalOrderRows, MyStore selectedStore, bool lifeImportant)
         {
             _selectedStoreForEOrder = selectedStore;
-            _lifeImportant = LifeImportant;
-            List<MainStoreInsertRow> liNewMainStoreInsertRows = new List<MainStoreInsertRow>(liLocalOrderRows.Count);
-            foreach (LocalOrder varLocalOrderRow in liLocalOrderRows)
+            _lifeImportant = lifeImportant;
+            var liNewMainStoreInsertRows = new List<MainStoreInsertRow>(liLocalOrderRows.Count);
+
+            foreach (var varLocalOrderRow in liLocalOrderRows)
             {
-                MainStoreInsertRow newMainStoreInsertRow = new MainStoreInsertRow();
-                newMainStoreInsertRow.EOrderRow = varLocalOrderRow;
+                var newMainStoreInsertRow = new MainStoreInsertRow
+                {
+                    EOrderRow = varLocalOrderRow
+                };
 
                 ProcessEOrderRow(_selectedStoreForEOrder, newMainStoreInsertRow);
 
                 liNewMainStoreInsertRows.Add(newMainStoreInsertRow);
-
             }
 
             AddNewRows(liNewMainStoreInsertRows);
@@ -691,12 +587,12 @@ namespace Apteka.Plus.UserControls
 
             #region ProductName searching
 
-            ProductIntegrationInfoAccessor piia = ProductIntegrationInfoAccessor.CreateInstance<ProductIntegrationInfoAccessor>();
-            FullProductInfoAccessor fpia = FullProductInfoAccessor.CreateInstance<FullProductInfoAccessor>();
+            var piia = DataAccessor.CreateInstance<ProductIntegrationInfoAccessor>();
+            var fpia = DataAccessor.CreateInstance<FullProductInfoAccessor>();
 
-            DbManager db = new DbManager(selectedStore.Name);
-            LocalBillsAccessor lba = LocalBillsAccessor.CreateInstance<LocalBillsAccessor>(db);
-            ProductIntegrationInfo productIntegrationInfo = piia.Get(newMainStoreInsertRow.EOrderRow.SupplierProductID, _supplier.ID);
+            var db = new DbManager(selectedStore.Name);
+            var lba = DataAccessor.CreateInstance<LocalBillsAccessor>(db);
+            var productIntegrationInfo = piia.Get(newMainStoreInsertRow.EOrderRow.SupplierProductID, Supplier.ID);
             FullProductInfo fullProductInfo = null;
             if (productIntegrationInfo == null)
             {
@@ -704,7 +600,7 @@ namespace Apteka.Plus.UserControls
                 newMainStoreInsertRow.ProductIntegrationInfo = productIntegrationInfo;
 
                 productIntegrationInfo.SupplierProductID = newMainStoreInsertRow.EOrderRow.SupplierProductID;
-                productIntegrationInfo.Supplier.ID = _supplier.ID;
+                productIntegrationInfo.Supplier.ID = Supplier.ID;
 
             }
             else
@@ -719,9 +615,8 @@ namespace Apteka.Plus.UserControls
 
             if (newMainStoreInsertRow.EOrderRow.NDS == 10 && (_lifeImportant || newMainStoreInsertRow.EOrderRow.IsLifeImportant))
             {
-
-                double chosenPrice = newMainStoreInsertRow.EOrderRow.VendorPriceWithoutNDS;
-                double extra = 0;
+                var chosenPrice = newMainStoreInsertRow.EOrderRow.VendorPriceWithoutNDS;
+                double extra;
                 if (newMainStoreInsertRow.EOrderRow.VendorPriceWithNDS <= 50)
                 {
                     extra = 0.25;
@@ -743,7 +638,7 @@ namespace Apteka.Plus.UserControls
             }
             else
             {
-                double standardExtra = double.Parse(Settings.Default.StandartExtra);
+                double standardExtra;
                 if (newMainStoreInsertRow.SupplierPrice < 200)
                 {
                     standardExtra = 28.0;
@@ -752,14 +647,13 @@ namespace Apteka.Plus.UserControls
                 {
                     standardExtra = 25.0;
                 }
-                else 
+                else
                 {
                     standardExtra = 18.0;
                 }
 
                 newMainStoreInsertRow.LocalPrice = RoundUp(newMainStoreInsertRow.SupplierPrice + newMainStoreInsertRow.SupplierPrice * standardExtra / 100.0, 0.5);
                 newMainStoreInsertRow.Extra = standardExtra;
-
             }
 
             #endregion
@@ -769,7 +663,7 @@ namespace Apteka.Plus.UserControls
             {
                 newMainStoreInsertRow.FullProductInfo = fullProductInfo;
 
-                // делитель проверка
+                // РґРµР»РёС‚РµР»СЊ РїСЂРѕРІРµСЂРєР°
 
                 if (newMainStoreInsertRow.FullProductInfo.Divider > 0)
                 {
@@ -777,7 +671,6 @@ namespace Apteka.Plus.UserControls
                     newMainStoreInsertRow.LocalPrice = newMainStoreInsertRow.LocalPrice / newMainStoreInsertRow.FullProductInfo.Divider;
                     newMainStoreInsertRow.SupplierPrice = newMainStoreInsertRow.SupplierPrice / newMainStoreInsertRow.FullProductInfo.Divider;
                 }
-
             }
             #endregion
 
@@ -786,17 +679,16 @@ namespace Apteka.Plus.UserControls
 
             #region Prev LocalPrice Checking
 
-            List<LocalBillsRowEx> liLastSupplies = lba.GetProductSupplies(newMainStoreInsertRow.FullProductInfo.ID, 1, DateTime.Today.AddDays(-365));
+            var liLastSupplies = lba.GetProductSupplies(newMainStoreInsertRow.FullProductInfo.ID, 1, DateTime.Today.AddDays(-365));
 
             if (liLastSupplies.Count != 0)
             {
                 newMainStoreInsertRow.PrevLocalPrice = liLastSupplies[0].CurrentPrice;
             }
             #endregion
-
         }
 
-        private static double RoundDown(double value, Double roundto)
+        private static double RoundDown(double value, double roundto)
         {
             // 105.5 down to nearest 1 = 105
             // 105.5 down to nearest 10 = 100
@@ -810,13 +702,11 @@ namespace Apteka.Plus.UserControls
             {
                 return value;
             }
-            else
-            {
-                return Math.Floor(value / roundto) * roundto;
-            }
+
+            return Math.Floor(value / roundto) * roundto;
         }
 
-        private static double RoundUp(double value, Double roundto)
+        private static double RoundUp(double value, double roundto)
         {
             // 105.5 up to nearest 1 = 106
             // 105.5 up to nearest 10 = 110
@@ -830,12 +720,9 @@ namespace Apteka.Plus.UserControls
             {
                 return value;
             }
-            else
-            {
-                return Math.Ceiling(value / roundto) * roundto;
-            }
-        }
 
+            return Math.Ceiling(value / roundto) * roundto;
+        }
 
         internal void AddNewRows(List<MainStoreInsertRow> liNewMainStoreInsertRows)
         {
@@ -845,9 +732,9 @@ namespace Apteka.Plus.UserControls
         }
         internal void UpdateOrderInfo(DateTime billDate, string billNumber, Supplier supplier)
         {
-            _billDate = billDate;
-            _billNumber = billNumber;
-            _supplier = supplier;
+            BillDate = billDate;
+            BillNumber = billNumber;
+            Supplier = supplier;
         }
     }
 }

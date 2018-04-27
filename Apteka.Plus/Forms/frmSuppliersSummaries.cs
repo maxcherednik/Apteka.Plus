@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Windows.Forms;
+using Apteka.Plus.Common.Forms;
 using Apteka.Plus.Logic.BLL.Collections;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
 using BLToolkit.Data;
+using BLToolkit.DataAccess;
 
 namespace Apteka.Plus.Forms
 {
@@ -20,19 +21,21 @@ namespace Apteka.Plus.Forms
             Properties.Settings.Default.SuppliersSummariesStartDate = dtpStartDate.Value;
             Properties.Settings.Default.Save();
 
-            if (this.Owner != null)
-                this.Owner.Show();
+            Owner?.Show();
         }
 
         private void frmSuppliersSummaries_Load(object sender, EventArgs e)
         {
             dtpStartDate.Value = Properties.Settings.Default.SuppliersSummariesStartDate;
 
-            List<Supplier> liSuppliers = SuppliersCollection.AllSuppliers;
+            var liSuppliers = SuppliersCollection.AllSuppliers;
 
-            Supplier s = new Supplier();
-            s.ID = 0;
-            s.Name = "Все";
+            var s = new Supplier
+            {
+                ID = 0,
+                Name = "Все"
+            };
+
             liSuppliers.Insert(0, s);
 
             supplierBindingSource.DataSource = liSuppliers;
@@ -40,24 +43,24 @@ namespace Apteka.Plus.Forms
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
-            Supplier selectedSupplier = supplierBindingSource.Current as Supplier;
-            using (DbManager db = new DbManager())
+            var selectedSupplier = (Supplier)supplierBindingSource.Current;
+
+            using (var db = new DbManager())
             {
-                MainStoreRowsAccessor msra = MainStoreRowsAccessor.CreateInstance<MainStoreRowsAccessor>(db);
-                List<SupplierSummary> liSupplierSummary = msra.GetRowsBySupplier(selectedSupplier.ID, dtpStartDate.Value.Date, dtpEndDate.Value.Date);
+                var msra = DataAccessor.CreateInstance<MainStoreRowsAccessor>(db);
+                var liSupplierSummary = msra.GetRowsBySupplier(selectedSupplier.ID, dtpStartDate.Value.Date, dtpEndDate.Value.Date);
                 supplierSummaryBindingSource.DataSource = liSupplierSummary;
 
-                dgvSuppliersSummaries.Columns[0].HeaderCell.SortGlyphDirection = System.Windows.Forms.SortOrder.Descending;
+                dgvSuppliersSummaries.Columns[0].HeaderCell.SortGlyphDirection = SortOrder.Descending;
 
                 btnReport.Enabled = true;
                 dgvSuppliersSummaries.Select();
-
             }
         }
 
         private void btnReport_Click(object sender, EventArgs e)
         {
-            frmReportViewer frmReportViewer = new frmReportViewer("Apteka.Plus.Common.Reports.SuppliersSummaries.rdlc");
+            var frmReportViewer = new frmReportViewer("Apteka.Plus.Common.Reports.SuppliersSummaries.rdlc");
             frmReportViewer.SetDataSource("SupplierSummary", supplierSummaryBindingSource);
             frmReportViewer.ShowDialog();
         }

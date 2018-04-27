@@ -1,4 +1,6 @@
-﻿namespace Apteka.Plus.Forms
+﻿using Apteka.Plus.Logic.OrderConverter.BLL;
+
+namespace Apteka.Plus.Forms
 {
     partial class frmForeignOrderViewer
     {
@@ -218,7 +220,7 @@
             // 
             // localOrderBindingSource
             // 
-            this.localOrderBindingSource.DataSource = typeof(OrderConverter.BLL.LocalOrder);
+            this.localOrderBindingSource.DataSource = typeof(LocalOrder);
             // 
             // frmForeignOrderViewer
             // 

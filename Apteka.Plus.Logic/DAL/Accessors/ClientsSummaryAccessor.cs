@@ -8,7 +8,6 @@ namespace Apteka.Plus.Logic.DAL.Accessors
     {
         [SprocName("GetClientsSummary")]
         public abstract List<ClientSummaryRow> GetClientsSummary();
-
     }
 }
 

@@ -6,17 +6,8 @@ namespace Apteka.Plus.Logic.DAL.Accessors
 {
     public abstract class RemoteActionAccessor : DataAccessor<RemoteAction>
     {
-
         private SqlQuery<RemoteAction> _query;
-        public SqlQuery<RemoteAction> Query
-        {
-            get
-            {
-                if (_query == null)
-                    _query = new SqlQuery<RemoteAction>(DbManager);
-                return _query;
-            }
-        }
+        public SqlQuery<RemoteAction> Query => _query ?? (_query = new SqlQuery<RemoteAction>(DbManager));
 
         public abstract List<RemoteAction> GetUnsyncedRows();
 
@@ -29,6 +20,5 @@ namespace Apteka.Plus.Logic.DAL.Accessors
         public abstract int Insert(RemoteAction remoteAction);
 
         public abstract int Update(long @ID);
-
     }
 }

@@ -1,9 +1,7 @@
 ﻿using System;
 using System.IO;
-using System.ServiceModel;
 using System.Windows.Forms;
 using Apteka.Helpers;
-using Apteka.Plus.Logic;
 using Apteka.Plus.Logic.BLL;
 using Apteka.Plus.Satelite.Properties;
 
@@ -26,24 +24,24 @@ namespace Apteka.Plus.Satelite.Forms
             MakeGenericCopy(CopyDataFromStore);
         }
 
-        private bool CopyDataFromStore(DriveInfo choosenDriveInfo)
+        private static bool CopyDataFromStore(DriveInfo choosenDriveInfo)
         {
-            string fileName = SateliteDataHelper.PrepareDataFromSateliteToBase();
+            var fileName = SateliteDataHelper.PrepareDataFromSateliteToBase();
 
-            FileInfo fi = new FileInfo(fileName);
+            var fi = new FileInfo(fileName);
             fi.CopyTo(choosenDriveInfo.RootDirectory + "\\from" + Settings.Default.SateliteID + ".zip", true);
             return true;
         }
 
         private bool CopyDataToStore(DriveInfo choosenDriveInfo)
         {
-            int SateliteID = int.Parse(Settings.Default.SateliteID);
+            var sateliteId = int.Parse(Settings.Default.SateliteID);
 
-            FileInfo newArchiveFile = new FileInfo(choosenDriveInfo.RootDirectory + "\\to" + SateliteID + ".zip");
+            var newArchiveFile = new FileInfo(choosenDriveInfo.RootDirectory + "\\to" + sateliteId + ".zip");
 
             if (!newArchiveFile.Exists)
             {
-                MessageBox.Show("Не удалось найти файл '" + newArchiveFile.Name + "' на носителе информации с меткой 'APTEKA'!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show($@"Не удалось найти файл '{newArchiveFile.Name}' на носителе информации с меткой 'APTEKA'!", @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return false;
             }
 
@@ -59,18 +57,18 @@ namespace Apteka.Plus.Satelite.Forms
             return true;
         }
 
-        private void MakeGenericCopy(Func<DriveInfo, bool> copyAction)
+        private static void MakeGenericCopy(Func<DriveInfo, bool> copyAction)
         {
-            DriveInfo choosenDriveInfo = DriveHelper.CheckDrive();
+            var choosenDriveInfo = DriveHelper.CheckDrive();
 
             if (choosenDriveInfo == null)
             {
-                MessageBox.Show("Не удалось найти носитель информации с меткой 'APTEKA'!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBox.Show(@"Не удалось найти носитель информации с меткой 'APTEKA'!", @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             }
             else
             {
-                if(copyAction(choosenDriveInfo))
-                    MessageBox.Show("Копирование успешно завершено!", "Внимание", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                if (copyAction(choosenDriveInfo))
+                    MessageBox.Show(@"Копирование успешно завершено!", @"Внимание", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
     }

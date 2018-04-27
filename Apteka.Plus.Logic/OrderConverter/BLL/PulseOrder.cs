@@ -1,6 +1,5 @@
 ﻿using System;
 using BLToolkit.Mapping;
-using OrderConverter.BLL;
 
 namespace Apteka.Plus.Logic.OrderConverter.BLL
 {
@@ -50,28 +49,25 @@ namespace Apteka.Plus.Logic.OrderConverter.BLL
         [MapField("GNLVS")]
         public bool IsLifeImportant { get; set; }
         
-        #region IForeignOrderConverter Members
-
         public LocalOrder ConvertToLocalOrder()
         {
-            LocalOrder localOrder = new LocalOrder();
-            localOrder.Count = Count;
-            localOrder.PriceReestr = PriceReestr;
-            localOrder.EAN13 = EAN13;
-            localOrder.NDS = NDS;
-            localOrder.VendorPriceWithoutNDS = VendorPriceWithoutNDS;
-            localOrder.VendorPriceWithNDS = VendorPriceWithNDS;
-            localOrder.SupplierPriceWithNDS = SupplierPriceWithNDS;
-            localOrder.Producer = Producer;
-            localOrder.Country = Country;
-            localOrder.Series = Series;
-            localOrder.ExpirationDate = ExpirationDate;
-            localOrder.SupplierProductID = SupplierProductID;
-            localOrder.SupplierProductName = SupplierProductName;
-            localOrder.IsLifeImportant = IsLifeImportant;
-            return localOrder; 
+            return new LocalOrder
+            {
+                Count = Count,
+                PriceReestr = PriceReestr,
+                EAN13 = EAN13,
+                NDS = NDS,
+                VendorPriceWithoutNDS = VendorPriceWithoutNDS,
+                VendorPriceWithNDS = VendorPriceWithNDS,
+                SupplierPriceWithNDS = SupplierPriceWithNDS,
+                Producer = Producer,
+                Country = Country,
+                Series = Series,
+                ExpirationDate = ExpirationDate,
+                SupplierProductID = SupplierProductID,
+                SupplierProductName = SupplierProductName,
+                IsLifeImportant = IsLifeImportant
+            };
         }
-
-        #endregion
     }
 }

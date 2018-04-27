@@ -5,40 +5,41 @@ using Apteka.Plus.Logic.BLL.Collections;
 using Apteka.Plus.Logic.BLL.Entities;
 using Apteka.Plus.Logic.DAL.Accessors;
 using BLToolkit.Data;
+using BLToolkit.DataAccess;
 
 namespace Apteka.Plus.Forms
 {
     public partial class frmClientBuysDetailed : Form
     {
-        private ClientSummaryRow _ClientSummaryRow;
+        private readonly ClientSummaryRow _clientSummaryRow;
 
         public frmClientBuysDetailed(ClientSummaryRow clientSummaryRow)
         {
             InitializeComponent();
 
-            _ClientSummaryRow = clientSummaryRow;
-            lblClientID.Text = _ClientSummaryRow.ClientID;
+            _clientSummaryRow = clientSummaryRow;
+            lblClientID.Text = _clientSummaryRow.ClientID;
         }
 
         private void frmClientBuysDetailed_Load(object sender, System.EventArgs e)
         {
-            dgvSales.SetStateSourceAndLoadState(Session.User, DataGridViewColumnSettingsAccessor.CreateInstance<DataGridViewColumnSettingsAccessor>());
-            List<SalesRow> liSalesRow = new List<SalesRow>();
+            dgvSales.SetStateSourceAndLoadState(Session.User, DataAccessor.CreateInstance<DataGridViewColumnSettingsAccessor>());
+            var liSalesRow = new List<SalesRow>();
 
-            foreach (MyStore myStore in MyStoresCollection.AllStores)
+            foreach (var myStore in MyStoresCollection.AllStores)
             {
-                using (DbManager dbSatelite = new DbManager(myStore.Name))
+                using (var dbSatelite = new DbManager(myStore.Name))
                 {
-                    SalesAccessor sa = SalesAccessor.CreateInstance<SalesAccessor>(dbSatelite);
-                    List<SalesRow> SalesRowTemp = sa.GetRowsByClientID(_ClientSummaryRow.ClientID);
-                    SalesRowTemp.ForEach(row => row.MyStore = myStore);
-                    liSalesRow.AddRange(SalesRowTemp);
+                    var sa = DataAccessor.CreateInstance<SalesAccessor>(dbSatelite);
+                    var salesRowTemp = sa.GetRowsByClientID(_clientSummaryRow.ClientID);
+                    salesRowTemp.ForEach(row => row.MyStore = myStore);
+                    liSalesRow.AddRange(salesRowTemp);
                 }
             }
+
             liSalesRow.Sort(SalesRow.DateComparison);
             liSalesRow.Reverse();
             salesRowBindingSource.DataSource = liSalesRow;
-
         }
     }
 }

@@ -1,4 +1,4 @@
-namespace Apteka.Plus.Forms
+п»їnamespace Apteka.Plus.Forms
 {
     partial class frmNewBillInfo
     {
@@ -60,7 +60,7 @@ namespace Apteka.Plus.Forms
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 3;
-            this.btnCancel.Text = "Отмена";
+            this.btnCancel.Text = "РћС‚РјРµРЅР°";
             this.btnCancel.UseVisualStyleBackColor = true;
             // 
             // dtpDate
@@ -77,7 +77,7 @@ namespace Apteka.Plus.Forms
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(93, 13);
             this.label1.TabIndex = 3;
-            this.label1.Text = "Дата накладной:";
+            this.label1.Text = "Р”Р°С‚Р° РЅР°РєР»Р°РґРЅРѕР№:";
             // 
             // label2
             // 
@@ -86,7 +86,7 @@ namespace Apteka.Plus.Forms
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(101, 13);
             this.label2.TabIndex = 4;
-            this.label2.Text = "Номер накладной:";
+            this.label2.Text = "РќРѕРјРµСЂ РЅР°РєР»Р°РґРЅРѕР№:";
             // 
             // cbSuppliers
             // 
@@ -118,7 +118,7 @@ namespace Apteka.Plus.Forms
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(68, 13);
             this.label3.TabIndex = 7;
-            this.label3.Text = "Поставщик:";
+            this.label3.Text = "РџРѕСЃС‚Р°РІС‰РёРє:";
             // 
             // frmNewBillInfo
             // 
@@ -141,7 +141,7 @@ namespace Apteka.Plus.Forms
             this.Name = "frmNewBillInfo";
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Новая накладная";
+            this.Text = "РќРѕРІР°СЏ РЅР°РєР»Р°РґРЅР°СЏ";
             this.Load += new System.EventHandler(this.frmNewBillInfo_Load);
             ((System.ComponentModel.ISupportInitialize)(this.supplierBindingSource)).EndInit();
             this.ResumeLayout(false);

@@ -14,13 +14,12 @@ namespace Apteka.Plus.Forms
 
         private void frmSalesReturnHistory_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (this.Owner != null)
-                this.Owner.Show();  
+            Owner?.Show();
         }
 
-        private void btnLoad_Click(object sender, System.EventArgs e)
+        private void btnLoad_Click(object sender, EventArgs e)
         {
-            MyStore myStore = cbMyStores.SelectedItem as MyStore;
+            var myStore = (MyStore)cbMyStores.SelectedItem;
             ucSalesReturnHistory1.LoadData(myStore, dtpStartDate.Value, dtpEndDate.Value);
         }
 

@@ -1,36 +1,34 @@
 ﻿using System.Windows.Forms;
-using Apteka.Helpers;
 using Apteka.Plus.Logic.BLL.Collections;
 using Apteka.Plus.Logic.BLL.Entities;
+using log4net;
 
 namespace Apteka.Plus.UserControls
 {
     public partial class ucProductSupplies : UserControl
     {
-        #region Private fields
-        private readonly static Logger log = new Logger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
         private bool _isInited;
-        private int _DaysOfStockRotation;
+        private int _daysOfStockRotation;
         private FullProductInfo _selectedProduct;
         private int _topRows;
-        #endregion
 
-        #region Constructor
         public ucProductSupplies()
         {
             InitializeComponent();
         }
-        #endregion
 
         private void Init()
         {
-            log.DebugFormat("Init controls");
+            Log.DebugFormat("Init controls");
             tabControl1.TabPages.Clear();
 
-            foreach (MyStore myStore in MyStoresCollection.AllStores)
+            foreach (var myStore in MyStoresCollection.AllStores)
             {
-                ucProductSuppliesTable ucProductSuppliesTable = new ucProductSuppliesTable(myStore);
-                ucProductSuppliesTable.Dock = DockStyle.Fill;
+                var ucProductSuppliesTable = new ucProductSuppliesTable(myStore)
+                {
+                    Dock = DockStyle.Fill
+                };
 
                 tabControl1.TabPages.Add(myStore.ID.ToString(), myStore.Name);
 
@@ -41,14 +39,13 @@ namespace Apteka.Plus.UserControls
             _isInited = true;
         }
 
-        #region Public Methods
         public void GetInfo(FullProductInfo fullProductInfo, int topRows, int daysOfStockRotation)
         {
-            log.DebugFormat("Get info: {0} - {1}", fullProductInfo.ProductName, fullProductInfo.PackageName);
+            Log.DebugFormat("Get info: {0} - {1}", fullProductInfo.ProductName, fullProductInfo.PackageName);
 
             if (!_isInited)
                 Init();
-            _DaysOfStockRotation = daysOfStockRotation;
+            _daysOfStockRotation = daysOfStockRotation;
 
             _selectedProduct = fullProductInfo;
 
@@ -57,24 +54,17 @@ namespace Apteka.Plus.UserControls
             LoadProductSupplesForSelectedTab();
         }
 
-        #endregion
-
-        #region Private methods
         private void LoadProductSupplesForSelectedTab()
         {
-            ucProductSuppliesTable productSuppliesTable = tabControl1.SelectedTab.Tag as ucProductSuppliesTable;
-            productSuppliesTable.LoadProductSupples(_selectedProduct, _topRows, _DaysOfStockRotation);
+            var productSuppliesTable = (ucProductSuppliesTable) tabControl1.SelectedTab.Tag;
+            productSuppliesTable.LoadProductSupples(_selectedProduct, _topRows, _daysOfStockRotation);
         }
-        #endregion
 
-        #region Local handlers
         private void tabControl1_Selecting(object sender, TabControlCancelEventArgs e)
         {
             if (e.TabPage == null) return;
 
             LoadProductSupplesForSelectedTab();
         }
-        #endregion
-
     }
 }

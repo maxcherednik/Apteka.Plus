@@ -4,20 +4,12 @@ using BLToolkit.DataAccess;
 
 namespace Apteka.Plus.Logic.DAL.Accessors
 {
-    
-    public abstract class FullProductInfoAccessor: DataAccessor<FullProductInfo>
+
+    public abstract class FullProductInfoAccessor : DataAccessor<FullProductInfo>
     {
 
         private SqlQuery<FullProductInfo> _query;
-        public SqlQuery<FullProductInfo> Query
-        {
-            get
-            {
-                if (_query == null)
-                    _query = new SqlQuery<FullProductInfo>(DbManager);
-                return _query;
-            }
-        }
+        public SqlQuery<FullProductInfo> Query => _query ?? (_query = new SqlQuery<FullProductInfo>(DbManager));
 
         [SprocName("FullProductInfo_GetAllActiveProductInfos")]
         public abstract List<FullProductInfo> GetAllActiveProductInfos();
@@ -35,12 +27,10 @@ namespace Apteka.Plus.Logic.DAL.Accessors
 
         [SprocName("FullProductInfo_MarkAsDeleted")]
         public abstract long MarkAsDeleted(FullProductInfo row);
-        
 
         public abstract void DeleteAll();
 
         [SprocName("FullProductInfo_SelectByKey")]
         public abstract FullProductInfo SelectByKey(long ID);
-
     }
 }

@@ -1,4 +1,4 @@
-namespace Apteka.Plus.Forms
+п»їnamespace Apteka.Plus.Forms
 {
     partial class frmMainStoreInsert
     {
@@ -68,7 +68,7 @@ namespace Apteka.Plus.Forms
             this.tsbBillOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbBillOptions.Name = "tsbBillOptions";
             this.tsbBillOptions.Size = new System.Drawing.Size(153, 22);
-            this.tsbBillOptions.Text = "Параметры накладной";
+            this.tsbBillOptions.Text = "РџР°СЂР°РјРµС‚СЂС‹ РЅР°РєР»Р°РґРЅРѕР№";
             this.tsbBillOptions.Click += new System.EventHandler(this.tsbBillOptions_Click);
             // 
             // tsbRowEdit
@@ -77,7 +77,7 @@ namespace Apteka.Plus.Forms
             this.tsbRowEdit.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbRowEdit.Name = "tsbRowEdit";
             this.tsbRowEdit.Size = new System.Drawing.Size(107, 22);
-            this.tsbRowEdit.Text = "Редактировать";
+            this.tsbRowEdit.Text = "Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ";
             // 
             // tsbSaveBill
             // 
@@ -85,7 +85,7 @@ namespace Apteka.Plus.Forms
             this.tsbSaveBill.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbSaveBill.Name = "tsbSaveBill";
             this.tsbSaveBill.Size = new System.Drawing.Size(85, 22);
-            this.tsbSaveBill.Text = "Сохранить";
+            this.tsbSaveBill.Text = "РЎРѕС…СЂР°РЅРёС‚СЊ";
             this.tsbSaveBill.Click += new System.EventHandler(this.tsbSaveBill_Click);
             // 
             // tsbOptions
@@ -94,7 +94,7 @@ namespace Apteka.Plus.Forms
             this.tsbOptions.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbOptions.Name = "tsbOptions";
             this.tsbOptions.Size = new System.Drawing.Size(91, 22);
-            this.tsbOptions.Text = "Параметры";
+            this.tsbOptions.Text = "РџР°СЂР°РјРµС‚СЂС‹";
             this.tsbOptions.Click += new System.EventHandler(this.tsbOptions_Click);
             // 
             // tsbOpenEOrder
@@ -103,7 +103,7 @@ namespace Apteka.Plus.Forms
             this.tsbOpenEOrder.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.tsbOpenEOrder.Name = "tsbOpenEOrder";
             this.tsbOpenEOrder.Size = new System.Drawing.Size(138, 22);
-            this.tsbOpenEOrder.Text = "Открыть накладную";
+            this.tsbOpenEOrder.Text = "РћС‚РєСЂС‹С‚СЊ РЅР°РєР»Р°РґРЅСѓСЋ";
             this.tsbOpenEOrder.Click += new System.EventHandler(this.tsbOpenEOrder_Click);
             // 
             // statusStrip1
@@ -173,7 +173,7 @@ namespace Apteka.Plus.Forms
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.toolStrip1);
             this.Name = "frmMainStoreInsert";
-            this.Text = "Новое поступление";
+            this.Text = "РќРѕРІРѕРµ РїРѕСЃС‚СѓРїР»РµРЅРёРµ";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.Load += new System.EventHandler(this.frmMainStoreInsert_Load);
             this.Shown += new System.EventHandler(this.frmMainStoreInsert_Shown);

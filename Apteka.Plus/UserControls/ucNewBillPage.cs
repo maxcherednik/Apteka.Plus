@@ -555,7 +555,7 @@ namespace Apteka.Plus.UserControls
             }
         }
 
-        internal void ProcessEOrder(List<LocalOrder> liLocalOrderRows, MyStore selectedStore, bool lifeImportant)
+        internal void ProcessEOrder(IList<LocalOrder> liLocalOrderRows, MyStore selectedStore, bool lifeImportant)
         {
             _selectedStoreForEOrder = selectedStore;
             _lifeImportant = lifeImportant;

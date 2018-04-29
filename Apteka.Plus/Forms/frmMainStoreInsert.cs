@@ -12,14 +12,14 @@ namespace Apteka.Plus.Forms
     public partial class frmMainStoreInsert : Form
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-        private List<LocalOrder> _liLocalOrderRows;
+        private IList<LocalOrder> _liLocalOrderRows;
 
         public frmMainStoreInsert()
         {
             InitializeComponent();
         }
 
-        public frmMainStoreInsert(List<LocalOrder> liLocalOrderRows)
+        public frmMainStoreInsert(IList<LocalOrder> liLocalOrderRows)
             : this()
         {
             _liLocalOrderRows = liLocalOrderRows;

@@ -19,7 +19,7 @@ namespace Apteka.Plus.Forms
 
         private string _supplierName;
         private string _supplierBillNumber;
-        private List<LocalOrder> _liLocalOrderRows;
+        private IList<LocalOrder> _liLocalOrderRows;
 
         public frmForeignOrderViewer(List<LocalOrder> liLocalOrderRows)
         {

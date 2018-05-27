@@ -159,13 +159,12 @@
     <Compile Include="DAL\DAL.cs" />
     <Compile Include="DAL\Accessors\TablesInfoAccessor.cs" />
     <Compile Include="ISatelite.cs" />
-    <Compile Include="OrderConverter\BLL\PulseOrder.cs" />
-    <Compile Include="OrderConverter\BLL\TopOrder.cs" />
-    <Compile Include="OrderConverter\BLL\IForeignOrderConverter.cs" />
+    <Compile Include="OrderConverter\BLL\ExternalOrderMappingRow.cs" />
+    <Compile Include="OrderConverter\BLL\ExternalOrderSupplier.cs" />
     <Compile Include="OrderConverter\BLL\LocalOrder.cs" />
-    <Compile Include="OrderConverter\BLL\ProtekOrder.cs" />
-    <Compile Include="OrderConverter\BLL\SIAOrder.cs" />
     <Compile Include="OrderConverter\DAL\DBFFileReader.cs" />
+    <Compile Include="OrderConverter\DAL\ExternalOrderMappingAccessor.cs" />
+    <Compile Include="OrderConverter\DAL\IExternalOrderMappingAccessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

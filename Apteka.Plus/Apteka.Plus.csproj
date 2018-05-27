@@ -39,7 +39,7 @@
     <ProductName>Apteka.Plus</ProductName>
     <PublisherName>Chia Farm</PublisherName>
     <WebPage>publish.htm</WebPage>
-    <ApplicationRevision>164</ApplicationRevision>
+    <ApplicationRevision>165</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -191,6 +191,12 @@
     </Compile>
     <Compile Include="Forms\frmDefecturaOptions.Designer.cs">
       <DependentUpon>frmDefecturaOptions.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\frmExternalOrderMapEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\frmExternalOrderMapEditor.Designer.cs">
+      <DependentUpon>frmExternalOrderMapEditor.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\frmFinance.cs">
       <SubType>Form</SubType>
@@ -359,6 +365,9 @@
     <EmbeddedResource Include="Forms\frmClientsDiscountSettings.resx">
       <DependentUpon>frmClientsDiscountSettings.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\frmExternalOrderMapEditor.resx">
+      <DependentUpon>frmExternalOrderMapEditor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\frmOptions.resx">
       <DependentUpon>frmOptions.cs</DependentUpon>
     </EmbeddedResource>
@@ -524,6 +533,8 @@
       <DesignTime>True</DesignTime>
     </Compile>
     <None Include="packages.config" />
+    <None Include="Properties\DataSources\Apteka.Plus.Logic.OrderConverter.BLL.ExternalOrderMappingRow.datasource" />
+    <None Include="Properties\DataSources\Apteka.Plus.Logic.OrderConverter.BLL.ExternalOrderSupplier.datasource" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

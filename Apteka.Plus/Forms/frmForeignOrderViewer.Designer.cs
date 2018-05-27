@@ -66,7 +66,7 @@ namespace Apteka.Plus.Forms
             this.tsbProcess});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(1362, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(1354, 25);
             this.toolStrip1.TabIndex = 3;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -117,7 +117,7 @@ namespace Apteka.Plus.Forms
             this.dgvForeignOrder.Name = "dgvForeignOrder";
             this.dgvForeignOrder.ReadOnly = true;
             this.dgvForeignOrder.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvForeignOrder.Size = new System.Drawing.Size(1362, 443);
+            this.dgvForeignOrder.Size = new System.Drawing.Size(1354, 443);
             this.dgvForeignOrder.TabIndex = 0;
             // 
             // SupplierProductName
@@ -220,13 +220,13 @@ namespace Apteka.Plus.Forms
             // 
             // localOrderBindingSource
             // 
-            this.localOrderBindingSource.DataSource = typeof(LocalOrder);
+            this.localOrderBindingSource.DataSource = typeof(Apteka.Plus.Logic.OrderConverter.BLL.LocalOrder);
             // 
             // frmForeignOrderViewer
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1362, 471);
+            this.ClientSize = new System.Drawing.Size(1354, 471);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.dgvForeignOrder);
             this.Name = "frmForeignOrderViewer";

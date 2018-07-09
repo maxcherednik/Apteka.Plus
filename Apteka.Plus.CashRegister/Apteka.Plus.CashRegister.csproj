@@ -80,6 +80,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CashRegisterException.cs" />
     <Compile Include="GoodsFactory.cs" />
     <Compile Include="ICashRegister.cs" />
     <Compile Include="IGood.cs" />

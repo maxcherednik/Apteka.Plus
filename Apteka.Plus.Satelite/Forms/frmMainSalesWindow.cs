@@ -524,7 +524,7 @@ namespace Apteka.Plus.Satelite.Forms
                     {
                         var good = GoodsFactory.CreateGood();
                         good.Name = salesRow.ProductName + " " + salesRow.PackageName;
-                        good.Price = salesRow.Price;
+                        good.Price = _isDiscountActive ? salesRow.PriceWithDiscount : salesRow.Price;
                         good.Amount = salesRow.Count;
                         good.Discount = salesRow.Discount;
 

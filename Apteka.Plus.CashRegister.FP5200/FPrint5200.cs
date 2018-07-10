@@ -94,13 +94,31 @@ namespace Apteka.Plus.CashRegister.FP5200
                 {
                     // регистрация продажи
                     _ecr.Name = item.Name;
-                    _ecr.Price = item.Price;
+
+                    if (item.Discount != 0)
+                    {
+                        _ecr.Price = item.PriceWithDiscount;
+                    }
+                    else
+                    {
+                        _ecr.Price = item.Price;
+                    }
+
                     _ecr.Quantity = item.Amount;
                     _ecr.Department = 2;
+
                     var statusRegistration = _ecr.Registration();
                     if (statusRegistration != 0)
                     {
                         throw new CashRegisterException($"Cant make registration. Message: {_ecr.ResultDescription} Error code: {statusRegistration}");
+                    }
+
+                    if (item.Discount != 0)
+                    {
+                        _ecr.Caption = $"В том числе скидка: {(item.Price - item.PriceWithDiscount).ToString("0.00")}";
+                        _ecr.PrintString();
+                        _ecr.Caption = $"Цена без скидки: {item.Price.ToString("0.00")}";
+                        _ecr.PrintString();
                     }
                 }
 

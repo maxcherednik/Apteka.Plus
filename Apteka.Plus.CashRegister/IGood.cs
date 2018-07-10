@@ -8,6 +8,8 @@
 
         double Price { get; set; }
 
+        double PriceWithDiscount { get; set; }
+
         double Discount { get; set; }
     }
 }

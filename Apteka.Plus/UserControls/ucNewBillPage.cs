@@ -11,6 +11,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Apteka.Plus.Logic.OrderConverter.BLL;
 using BLToolkit.DataAccess;
+using Apteka.Helpers;
 
 namespace Apteka.Plus.UserControls
 {
@@ -631,7 +632,7 @@ namespace Apteka.Plus.UserControls
                     extra = 0.15;
                 }
 
-                newMainStoreInsertRow.LocalPrice = RoundDown(newMainStoreInsertRow.SupplierPrice + chosenPrice * extra, 0.05);
+                newMainStoreInsertRow.LocalPrice = MathHelper.RoundDown(newMainStoreInsertRow.SupplierPrice + chosenPrice * extra, 0.05);
                 newMainStoreInsertRow.Extra = ((newMainStoreInsertRow.LocalPrice -
                                                 newMainStoreInsertRow.SupplierPrice) /
                                                newMainStoreInsertRow.SupplierPrice) * 100.0;
@@ -652,7 +653,7 @@ namespace Apteka.Plus.UserControls
                     standardExtra = 18.0;
                 }
 
-                newMainStoreInsertRow.LocalPrice = RoundUp(newMainStoreInsertRow.SupplierPrice + newMainStoreInsertRow.SupplierPrice * standardExtra / 100.0, 0.5);
+                newMainStoreInsertRow.LocalPrice = MathHelper.RoundUp(newMainStoreInsertRow.SupplierPrice + newMainStoreInsertRow.SupplierPrice * standardExtra / 100.0, 0.5);
                 newMainStoreInsertRow.Extra = standardExtra;
             }
 
@@ -686,42 +687,6 @@ namespace Apteka.Plus.UserControls
                 newMainStoreInsertRow.PrevLocalPrice = liLastSupplies[0].CurrentPrice;
             }
             #endregion
-        }
-
-        private static double RoundDown(double value, double roundto)
-        {
-            // 105.5 down to nearest 1 = 105
-            // 105.5 down to nearest 10 = 100
-            // 105.5 down to nearest 7 = 105
-            // 105.5 down to nearest 100 = 100
-            // 105.5 down to nearest 0.2 = 105.4
-            // 105.5 down to nearest 0.3 = 105.3
-
-            //if no roundto then just pass original number back
-            if (roundto == 0)
-            {
-                return value;
-            }
-
-            return Math.Floor(value / roundto) * roundto;
-        }
-
-        private static double RoundUp(double value, double roundto)
-        {
-            // 105.5 up to nearest 1 = 106
-            // 105.5 up to nearest 10 = 110
-            // 105.5 up to nearest 7 = 112
-            // 105.5 up to nearest 100 = 200
-            // 105.5 up to nearest 0.2 = 105.6
-            // 105.5 up to nearest 0.3 = 105.6
-
-            //if no roundto then just pass original number back
-            if (roundto == 0)
-            {
-                return value;
-            }
-
-            return Math.Ceiling(value / roundto) * roundto;
         }
 
         internal void AddNewRows(List<MainStoreInsertRow> liNewMainStoreInsertRows)

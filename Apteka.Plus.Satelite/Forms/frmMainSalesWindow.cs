@@ -524,9 +524,10 @@ namespace Apteka.Plus.Satelite.Forms
                     {
                         var good = GoodsFactory.CreateGood();
                         good.Name = salesRow.ProductName + " " + salesRow.PackageName;
-                        good.Price = _isDiscountActive ? salesRow.PriceWithDiscount : salesRow.Price;
+                        good.Price = salesRow.Price;
                         good.Amount = salesRow.Count;
                         good.Discount = salesRow.Discount;
+                        good.PriceWithDiscount = salesRow.PriceWithDiscount;
 
                         liGoods.Add(good);
                     }
@@ -614,7 +615,7 @@ namespace Apteka.Plus.Satelite.Forms
 
                     if (!p.LocalBillsRow.MainStoreRow.FullProductInfo.IsDiscountExcluded && extra > _discountExtraLimit)
                     {
-                        p.PriceWithDiscount = p.Price - p.Price * p.Discount / 100.0;
+                        p.PriceWithDiscount = MathHelper.RoundDown(p.Price - p.Price * p.Discount / 100.0, 0.01);
                     }
                     else
                     {
